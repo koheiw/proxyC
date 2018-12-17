@@ -14,13 +14,19 @@ dist(x, y = NULL, margin = 1, method = c("euclidean", "chisquared",
   p = 2)
 }
 \arguments{
+\item{x}{a \link{matrix} or \link{Matrix} object}
+
 \item{y}{if a \link{matrix} or \link{Matrix} object is provided, proximity
 between documents or features in \code{x} and \code{y} is computed.}
+
+\item{method}{to compute similarity or distance}
 
 \item{min_proxy}{the minimum proximity value to be recoded.}
 
 \item{rank}{an integer value specifying top-n most proximity values to be
 recorded.}
+
+\item{p}{weight for minkowski distance}
 }
 \description{
 Compute similiarty/distance between raws or columns of large matrices

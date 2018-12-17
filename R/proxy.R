@@ -1,10 +1,14 @@
 #' Compute similiarty/distance between raws or columns of large matrices
 
+#' @param x a \link{matrix} or \link{Matrix} object
 #' @param y if a \link{matrix} or \link{Matrix} object is provided, proximity
 #'   between documents or features in \code{x} and \code{y} is computed.
+#' @param method to compute similarity or distance
 #' @param min_proxy the minimum proximity value to be recoded.
 #' @param rank an integer value specifying top-n most proximity values to be
 #'   recorded.
+#' @param p weight for minkowski distance
+#' @import methods Matrix
 #' @export
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
@@ -33,33 +37,38 @@ dist <- function(x, y = NULL, margin = 1,
 }
 
 #' @export
-#' @import Matrix
-simil.matrix <- function(x, y = NULL, margin = 1, ...) {
-    simil(as(x, "dgCMatrix"), as(y, "dgCMatrix"), ...)
+simil.matrix <- function(x, y = NULL, margin = 1,
+                         method = c("cosine", "correlation", "jaccard", "ejaccard",
+                                    "dice", "edice", "hamman", "simple matching", "faith"),
+                         min_proxy = NULL, rank = NULL) {
+    simil(as(x, "dgCMatrix"), as(y, "dgCMatrix"), min_proxy, rank)
 }
 
 #' @export
-#' @import Matrix
-dist.matrix <- function(x, y = NULL, margin = 1, ...) {
-    simil(as(x, "dgCMatrix"), as(y, "dgCMatrix"), ...)
+dist.matrix <- function(x, y = NULL, margin = 1,
+                        method = c("euclidean", "chisquared", "hamming", "kullback",
+                                   "manhattan", "maximum", "canberra", "minkowski"),
+                        p = 2) {
+    dist(as(x, "dgCMatrix"), as(y, "dgCMatrix"), p)
 }
 
 #' @export
 #' @import Matrix
 simil.Matrix <- function(x, y = NULL, margin = 1,
                          method = c("cosine", "correlation", "jaccard", "ejaccard",
-                                    "dice", "edice", "hamman", "simple matching", "faith"), ...) {
+                                    "dice", "edice", "hamman", "simple matching", "faith"),
+                         min_proxy = NULL, rank = NULL) {
     method <- match.arg(method)
-    proxy(x, y, margin, method, ...)
+    proxy(x, y, margin, method, min_proxy = min_proxy, rank = rank)
 }
 
 #' @export
 #' @import Matrix
 dist.Matrix <- function(x, y = NULL, margin = 1,
                         method = c("euclidean", "chisquared", "hamming", "kullback",
-                                   "manhattan", "maximum", "canberra", "minkowski"), ...) {
+                                   "manhattan", "maximum", "canberra", "minkowski"), p = 2) {
     method <- match.arg(method)
-    proxy(x, y, margin, method, ...)
+    proxy(x, y, margin, method, p = p)
 }
 
 #' @import RcppParallel Matrix
