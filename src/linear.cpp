@@ -1,3 +1,4 @@
+#include "armadillo.h"
 #include "proxyc.h"
 #include "dev.h"
 using namespace proxyc;
@@ -114,8 +115,8 @@ S4 prxc_linear(arma::sp_mat& mt1,
     Triplets simil_tri;
     mt1 = trans(mt1);
     proxy_linear proxy_linear(mt1, mt2, simil_tri,
-                                        square1, center1, square2, center2,
-                                        method, rank, limit, symm);
+                              square1, center1, square2, center2,
+                              method, rank, limit, symm);
     parallelFor(0, ncol2, proxy_linear);
     //dev::stop_timer("Compute similarity", timer);
 

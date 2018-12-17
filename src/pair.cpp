@@ -1,3 +1,4 @@
+#include "armadillo.h"
 #include "proxyc.h"
 #include "dev.h"
 using namespace proxyc;

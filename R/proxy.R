@@ -1,9 +1,14 @@
-# Compute similiarty/distance between raws or columns of large matrices
+#' Compute similiarty/distance between raws or columns of large matrices
 
+#' @param y if a \link{matrix} or \link{Matrix} object is provided, proximity
+#'   between documents or features in \code{x} and \code{y} is computed.
+#' @param min_proxy the minimum proximity value to be recoded.
+#' @param rank an integer value specifying top-n most proximity values to be
+#'   recorded.
 #' @export
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
-#' simil(mt)
+#' simil(mt, method = "cosine")
 simil <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
                              "dice", "edice", "hamman", "simple matching", "faith"),
@@ -13,7 +18,10 @@ simil <- function(x, y = NULL, margin = 1,
 
 }
 
+#' @rdname simil
 #' @export
+#' @examples
+#' dist(mt, method = "euclidean")
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "hamming", "kullback",
                             "manhattan", "maximum", "canberra", "minkowski"),
@@ -54,17 +62,6 @@ dist.Matrix <- function(x, y = NULL, margin = 1,
     proxy(x, y, margin, method, ...)
 }
 
-#' [Experimental] Compute document/feature proximity
-#'
-#' This is an underlying function for \code{textstat_dist} and
-#' \code{textstat_simil} but returns \code{TsparseMatrix}.
-#' @keywords internal
-#' @param y if a \link{dfm} object is provided, proximity between documents or
-#'   features in \code{x} and \code{y} is computed.
-#' @inheritParams textstat_dist
-#' @param min_proxy the minimum proximity value to be recoded.
-#' @param rank an integer value specifying top-n most proximity values to be
-#'   recorded.
 proxy <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
                              "dice", "edice", "hamman", "simple matching", "faith",
@@ -72,26 +69,20 @@ proxy <- function(x, y = NULL, margin = 1,
                              "manhattan", "maximum", "canberra", "minkowski"),
                   p = 2, min_proxy = NULL, rank = NULL) {
 
-    if (is.null(y)) {
-        y <- x
-    } else {
-        if (!is.dfm(y))
-            stop("y must be a dfm")
-        y <- as.dfm(y)
-        if (!sum(y)) stop(message_error("dfm_empty"))
-    }
-
-    if (margin %in% c(1, 2))
-        stop("Matrgin must be 1 (row) or 2 (column)")
     method <- match.arg(method)
 
+    if (is.null(y))
+        y <- x
+    if (!margin %in% c(1, 2))
+        stop("Matrgin must be 1 (row) or 2 (column)")
     if (margin == 1) {
-        f <- union(colnames(x), colnames(y))
-        x <- t(pad_dfm(x, f))
-        y <- t(pad_dfm(y, f))
+        if (ncol(x) != ncol(y))
+            stop("x and y must have the same number of columns")
+        x <- t(x)
+        y <- t(y)
     } else {
-        if (!identical(rownames(x), rownames(y)))
-            stop("x and y must contain the same documents")
+        if (nrow(x) != nrow(y))
+            stop("x and y must have the same number of rows")
     }
     if (is.null(min_proxy))
         min_proxy <- -1.0
@@ -124,8 +115,8 @@ proxy <- function(x, y = NULL, margin = 1,
         weight <- p
     }
     if (boolean) {
-        x <- dfm_weight(x, "boolean")
-        y <- dfm_weight(y, "boolean")
+        x <- as(x, "lgCMatrix")
+        y <- as(y, "lgCMatrix")
     }
     if (method %in% c("cosine", "correlation", "euclidean")) {
         result <- prxc_linear(x, y,
