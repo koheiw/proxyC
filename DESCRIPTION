@@ -16,4 +16,6 @@ Depends:
     methods
 Imports:
     Matrix (>= 1.2),
+    Rcpp (>= 0.12.12),
+    RcppParallel
 RoxygenNote: 6.1.1

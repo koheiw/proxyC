@@ -11,7 +11,7 @@ simil(x, y = NULL, margin = 1, method = c("cosine", "correlation",
 
 dist(x, y = NULL, margin = 1, method = c("euclidean", "chisquared",
   "hamming", "kullback", "manhattan", "maximum", "canberra", "minkowski"),
-  p = 2, min_proxy = NULL, rank = NULL)
+  p = 2)
 }
 \arguments{
 \item{y}{if a \link{matrix} or \link{Matrix} object is provided, proximity

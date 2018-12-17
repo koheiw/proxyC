@@ -25,10 +25,10 @@ simil <- function(x, y = NULL, margin = 1,
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "hamming", "kullback",
                             "manhattan", "maximum", "canberra", "minkowski"),
-                 p = 2, min_proxy = NULL, rank = NULL) {
+                 p = 2) {
 
     method <- match.arg(method)
-    UseMethod("simil")
+    UseMethod("dist")
 
 }
 
@@ -62,6 +62,7 @@ dist.Matrix <- function(x, y = NULL, margin = 1,
     proxy(x, y, margin, method, ...)
 }
 
+#' @import RcppParallel Matrix
 proxy <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
                              "dice", "edice", "hamman", "simple matching", "faith",
