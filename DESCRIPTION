@@ -1,0 +1,19 @@
+Package: proxyC
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Author: Who wrote it
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+Encoding: UTF-8
+LazyData: true
+LinkingTo: Rcpp, RcppParallel, RcppArmadillo (>= 0.7.600.1.0)
+SystemRequirements: C++11
+License: GPL-3
+Depends:
+    R (>= 3.1.0),
+    methods
+Imports:
+    Matrix (>= 1.2),
+RoxygenNote: 6.1.1
