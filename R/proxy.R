@@ -20,66 +20,34 @@
 #' @export
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
-#' simil(mt, method = "cosine")
+#' simil(mt, method = "cosine")[1:5, 1:5]
 simil <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
                              "dice", "edice", "hamman", "simple matching", "faith"),
                   min_simil = NULL, rank = NULL) {
 
-    UseMethod("simil")
+    method <- match.arg(method)
+    proxy(x, y, margin, method, min_proxy = min_simil, rank = rank)
 
 }
 
 #' @rdname simil
 #' @export
 #' @examples
-#' dist(mt, method = "euclidean")
+#' mt <- Matrix::rsparsematrix(100, 100, 0.01)
+#' dist(mt, method = "euclidean")[1:5, 1:5]
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "hamming", "kullback",
                             "manhattan", "maximum", "canberra", "minkowski"),
                  p = 2) {
 
     method <- match.arg(method)
-    UseMethod("dist")
-
-}
-
-#' @export
-simil.matrix <- function(x, y = NULL, margin = 1,
-                         method = c("cosine", "correlation", "jaccard", "ejaccard",
-                                    "dice", "edice", "hamman", "simple matching", "faith"),
-                         min_simil = NULL, rank = NULL) {
-    simil(as(x, "dgCMatrix"), as(y, "dgCMatrix"), min_simil, rank)
-}
-
-#' @export
-dist.matrix <- function(x, y = NULL, margin = 1,
-                        method = c("euclidean", "chisquared", "hamming", "kullback",
-                                   "manhattan", "maximum", "canberra", "minkowski"),
-                        p = 2) {
-    dist(as(x, "dgCMatrix"), as(y, "dgCMatrix"), p)
-}
-
-#' @export
-#' @import Matrix
-simil.Matrix <- function(x, y = NULL, margin = 1,
-                         method = c("cosine", "correlation", "jaccard", "ejaccard",
-                                    "dice", "edice", "hamman", "simple matching", "faith"),
-                         min_simil = NULL, rank = NULL) {
-    method <- match.arg(method)
-    proxy(x, y, margin, method, min_proxy = min_simil, rank = rank)
-}
-
-#' @export
-#' @import Matrix
-dist.Matrix <- function(x, y = NULL, margin = 1,
-                        method = c("euclidean", "chisquared", "hamming", "kullback",
-                                   "manhattan", "maximum", "canberra", "minkowski"), p = 2) {
-    method <- match.arg(method)
     proxy(x, y, margin, method, p = p)
+
 }
 
-
+#' @import Rcpp
+#' @useDynLib proxyC
 proxy <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
                              "dice", "edice", "hamman", "simple matching", "faith",
@@ -88,9 +56,20 @@ proxy <- function(x, y = NULL, margin = 1,
                   p = 2, min_proxy = NULL, rank = NULL) {
 
     method <- match.arg(method)
-
-    if (is.null(y))
+    if(is(x, 'sparseMatrix')) {
+        x <- as(x, "dgCMatrix")
+    } else {
+        stop("x must be a sparseMatrix")
+    }
+    if (is.null(y)) {
         y <- x
+    } else {
+        if(is(y, 'sparseMatrix')) {
+            y <- as(y, "dgCMatrix")
+        } else {
+            stop("y must be a sparseMatrix")
+        }
+    }
     if (!margin %in% c(1, 2))
         stop("Matrgin must be 1 (row) or 2 (column)")
     if (margin == 1) {
@@ -150,5 +129,4 @@ proxy <- function(x, y = NULL, margin = 1,
 
     dimnames(result) <- list(colnames(x), colnames(y))
     return(result)
-    # return(as(result, "CsparseMatrix"))
 }
