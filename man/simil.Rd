@@ -7,7 +7,7 @@
 \usage{
 simil(x, y = NULL, margin = 1, method = c("cosine", "correlation",
   "jaccard", "ejaccard", "dice", "edice", "hamman", "simple matching",
-  "faith"), min_proxy = NULL, rank = NULL)
+  "faith"), min_simil = NULL, rank = NULL)
 
 dist(x, y = NULL, margin = 1, method = c("euclidean", "chisquared",
   "hamming", "kullback", "manhattan", "maximum", "canberra", "minkowski"),
@@ -19,17 +19,24 @@ dist(x, y = NULL, margin = 1, method = c("euclidean", "chisquared",
 \item{y}{if a \link{matrix} or \link{Matrix} object is provided, proximity
 between documents or features in \code{x} and \code{y} is computed.}
 
-\item{method}{to compute similarity or distance}
+\item{margin}{integer indicating margin of similiarty/distance computation. 1
+indicates rows or 2 indicates columns.}
 
-\item{min_proxy}{the minimum proximity value to be recoded.}
+\item{method}{method to compute similarity or distance}
 
-\item{rank}{an integer value specifying top-n most proximity values to be
+\item{min_simil}{the minimum similiarty value to be recoded.}
+
+\item{rank}{an integer value specifying top-n most similiarty values to be
 recorded.}
 
 \item{p}{weight for minkowski distance}
 }
 \description{
-Compute similiarty/distance between raws or columns of large matrices
+Fast similarity/distance computation function for large sparse matrices. You
+can floor small similairty value to to save computation time and storage
+space by an arbitrary threashold (\code{min_simil}) or rank (\code{rank}).
+Please increase the numbner of threads for better perfromance using
+\code{\link[RcppParallel]{setThreadOptions}}.
 }
 \examples{
 mt <- Matrix::rsparsematrix(100, 100, 0.01)

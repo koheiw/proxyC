@@ -6,9 +6,9 @@
 
 using namespace Rcpp;
 
-// prxc_linear
-S4 prxc_linear(arma::sp_mat& mt1, arma::sp_mat& mt2, const int method, unsigned int rank, double limit);
-RcppExport SEXP _proxyC_prxc_linear(SEXP mt1SEXP, SEXP mt2SEXP, SEXP methodSEXP, SEXP rankSEXP, SEXP limitSEXP) {
+// cpp_linear
+S4 cpp_linear(arma::sp_mat& mt1, arma::sp_mat& mt2, const int method, unsigned int rank, double limit);
+RcppExport SEXP _proxyC_cpp_linear(SEXP mt1SEXP, SEXP mt2SEXP, SEXP methodSEXP, SEXP rankSEXP, SEXP limitSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -17,13 +17,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const int >::type method(methodSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type rank(rankSEXP);
     Rcpp::traits::input_parameter< double >::type limit(limitSEXP);
-    rcpp_result_gen = Rcpp::wrap(prxc_linear(mt1, mt2, method, rank, limit));
+    rcpp_result_gen = Rcpp::wrap(cpp_linear(mt1, mt2, method, rank, limit));
     return rcpp_result_gen;
 END_RCPP
 }
-// prxc_pair
-S4 prxc_pair(arma::sp_mat& mt1, arma::sp_mat& mt2, const int method, unsigned int rank, double limit, double weight);
-RcppExport SEXP _proxyC_prxc_pair(SEXP mt1SEXP, SEXP mt2SEXP, SEXP methodSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP weightSEXP) {
+// cpp_pair
+S4 cpp_pair(arma::sp_mat& mt1, arma::sp_mat& mt2, const int method, unsigned int rank, double limit, double weight);
+RcppExport SEXP _proxyC_cpp_pair(SEXP mt1SEXP, SEXP mt2SEXP, SEXP methodSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP weightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -33,14 +33,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< unsigned int >::type rank(rankSEXP);
     Rcpp::traits::input_parameter< double >::type limit(limitSEXP);
     Rcpp::traits::input_parameter< double >::type weight(weightSEXP);
-    rcpp_result_gen = Rcpp::wrap(prxc_pair(mt1, mt2, method, rank, limit, weight));
+    rcpp_result_gen = Rcpp::wrap(cpp_pair(mt1, mt2, method, rank, limit, weight));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_proxyC_prxc_linear", (DL_FUNC) &_proxyC_prxc_linear, 5},
-    {"_proxyC_prxc_pair", (DL_FUNC) &_proxyC_prxc_pair, 6},
+    {"_proxyC_cpp_linear", (DL_FUNC) &_proxyC_cpp_linear, 5},
+    {"_proxyC_cpp_pair", (DL_FUNC) &_proxyC_cpp_pair, 6},
     {NULL, NULL, 0}
 };
 

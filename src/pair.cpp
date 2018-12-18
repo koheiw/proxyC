@@ -167,12 +167,12 @@ struct proxy_pair : public Worker {
 };
 
 // [[Rcpp::export]]
-S4 prxc_pair(arma::sp_mat& mt1,
-             arma::sp_mat& mt2,
-             const int method,
-             unsigned int rank,
-             double limit = -1.0,
-             double weight = 1.0) {
+S4 cpp_pair(arma::sp_mat& mt1,
+            arma::sp_mat& mt2,
+            const int method,
+            unsigned int rank,
+            double limit = -1.0,
+            double weight = 1.0) {
 
     if (mt1.n_rows != mt2.n_rows)
         throw std::range_error("Invalid matrix objects");
@@ -192,3 +192,10 @@ S4 prxc_pair(arma::sp_mat& mt1,
     return to_matrix(simil_tri, ncol1, ncol2, symm);
 
 }
+
+/***R
+mt <- Matrix::rsparsematrix(100, 100, 0.01)
+system.time(
+out <- cpp_pair(mt, mt, 1, 100)
+)
+*/
