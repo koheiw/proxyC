@@ -1,0 +1,37 @@
+---
+output: github_document
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "##"
+)
+```
+
+# proxyC: R package for large-scale similarity/distance computation
+
+This code was originally written for **quanteda** to compute similarity/distance between documents or features in large corpora, but seprateted as a stand-alone package to make it availble for wider usage.
+
+```{r}
+require(proxyC)
+require(Matrix)
+
+mt1k <- rsparsematrix(1000, 1000, 0.01)
+mt10k <-  rsparsematrix(1000, 10000, 0.01)
+mt100k <- rsparsematrix(1000, 100000, 0.01)
+
+microbenchmark::microbenchmark(
+    simil(mt1k, margin = 1, method = "cosine"),
+    simil(mt10k, margin = 1, method = "cosine"),
+    simil(mt100k, margin = 1, method = "cosine")
+)
+
+microbenchmark::microbenchmark(
+    simil(mt1k, margin = 1, method = "cosine", rank = 10),
+    simil(mt10k, margin = 1, method = "cosine", rank = 10),
+    simil(mt100k, margin = 1, method = "cosine", rank = 10)
+)
+
+```
+
