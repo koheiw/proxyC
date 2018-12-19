@@ -49,7 +49,7 @@ bm1 <- microbenchmark(
 boxplot(bm1)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](man/images/unnamed-chunk-3-1.png)<!-- -->
 
 ## Top-10 cosine similarity
 
@@ -65,7 +65,7 @@ bm2 <- microbenchmark(
 boxplot(bm2)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](man/images/unnamed-chunk-4-1.png)<!-- -->
 
 ## Correlation greater than 0.9
 
@@ -80,4 +80,4 @@ bm3 <- microbenchmark(
 boxplot(bm3)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](man/images/unnamed-chunk-5-1.png)<!-- -->
