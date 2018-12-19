@@ -19,6 +19,9 @@ Imports:
     Matrix (>= 1.2),
     Rcpp (>= 0.12.12),
     RcppParallel
+Suggests:
+    testthat,
+    proxy
 Collate:
     'RcppExports.R'
     'proxy.R'
