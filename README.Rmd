@@ -18,6 +18,10 @@ knitr::opts_chunk$set(
 
 This code was originally written for [**quanteda**](https://github.com/quanteda/quanteda) to compute similarity/distance between documents or features in large corpora, but separated as a stand-alone package to make it available for broader data scientific purposes.
 
+```{r eval=FALSE}
+install.packages("proxyC")
+```
+
 ```{r}
 require(Matrix)
 require(microbenchmark)

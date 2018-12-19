@@ -14,6 +14,10 @@ separated as a stand-alone package to make it available for broader data
 scientific purposes.
 
 ``` r
+install.packages("proxyC")
+```
+
+``` r
 require(Matrix)
 ## Loading required package: Matrix
 require(microbenchmark)
@@ -49,7 +53,7 @@ bm1 <- microbenchmark(
 boxplot(bm1)
 ```
 
-![](man/images/unnamed-chunk-3-1.png)<!-- -->
+![](man/images/unnamed-chunk-4-1.png)<!-- -->
 
 ## Top-10 cosine similarity
 
@@ -65,7 +69,7 @@ bm2 <- microbenchmark(
 boxplot(bm2)
 ```
 
-![](man/images/unnamed-chunk-4-1.png)<!-- -->
+![](man/images/unnamed-chunk-5-1.png)<!-- -->
 
 ## Correlation greater than 0.9
 
@@ -80,4 +84,4 @@ bm3 <- microbenchmark(
 boxplot(bm3)
 ```
 
-![](man/images/unnamed-chunk-5-1.png)<!-- -->
+![](man/images/unnamed-chunk-6-1.png)<!-- -->
