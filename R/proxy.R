@@ -112,8 +112,8 @@ proxy <- function(x, y = NULL, margin = 1,
         weight <- p
     }
     if (boolean) {
-        x <- as(x, "lgCMatrix")
-        y <- as(y, "lgCMatrix")
+        x <- as(as(x, "lgCMatrix"), "dgCMatrix")
+        y <- as(as(y, "lgCMatrix"), "dgCMatrix")
     }
     if (method %in% c("cosine", "correlation", "euclidean")) {
         result <- cpp_linear(x, y,
