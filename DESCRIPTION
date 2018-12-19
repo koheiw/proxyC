@@ -4,9 +4,8 @@ Title: Computes Proximity in Large Sparse Matrices
 Version: 0.1.0
 Authors@R: 
     person("Kohei", "Watanabe", email = "watanabe.kohei@gmail.com", role = c("cre", "aut", "cph"), comment = c(ORCID = "0000-0001-6519-5265"))
-Description: proxyC computes proximity between rows or columns of large matrices efficiently in C++. 
-    It is optimized for large sparse matrices using the Armadillo and Intel TBB libraries. 
-    Among several built-in similarity/distance measures, computation of correlation, cosine similarity and Euclidean distance is particularly fast.Encoding: UTF-8
+Description: proxyC computes proximity between rows or columns of large matrices efficiently in C++. It is optimized for large sparse matrices using the Armadillo and Intel TBB libraries. Among several built-in similarity/distance measures, computation of correlation, cosine similarity and Euclidean distance is particularly fast.
+Encoding: UTF-8 
 LazyData: true
 LinkingTo: Rcpp, RcppParallel, RcppArmadillo (>= 0.7.600.1.0)
 BugReports: https://github.com/koheiw/proxyC/issues
