@@ -39,7 +39,7 @@ dm10k <- as.matrix(sm10k)
 
 ## Cosine similarity between columns
 
-With sparase matrices, **proxyC** is roughly 10 to 100 times faster than
+With sparse matrices, **proxyC** is roughly 10 to 100 times faster than
 **proxy**.
 
 ``` r
