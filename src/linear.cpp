@@ -5,7 +5,8 @@ using namespace proxyc;
 using namespace arma;
 
 rowvec stddev(const sp_mat& mt, const int norm_type) {
-    rowvec v(mt.n_cols);
+    rowvec v(mt.n_cols, fill::zeros);
+    if (mt.is_empty()) return(v);
     for (uword i = 0; i < mt.n_cols; i++) {
         v[i] = stddev(colvec(mt.col(i)), norm_type);
     }
@@ -13,7 +14,8 @@ rowvec stddev(const sp_mat& mt, const int norm_type) {
 }
 
 rowvec mean(const sp_mat& mt) {
-    rowvec v(mt.n_cols);
+    rowvec v(mt.n_cols, fill::zeros);
+    if (mt.is_empty()) return(v);
     for (uword i = 0; i < mt.n_cols; i++) {
         v[i] = mean(colvec(mt.col(i)));
     }
