@@ -27,7 +27,4 @@ Imports:
 Suggests:
     testthat,
     proxy
-Collate:
-    'RcppExports.R'
-    'proxy.R'
 RoxygenNote: 6.1.1
