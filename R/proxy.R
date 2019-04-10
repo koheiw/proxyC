@@ -1,22 +1,25 @@
-#' Compute similiarty/distance between raws or columns of large matrices
+#' Compute similarity/distance between rows or columns of large matrices
 #'
 #' Fast similarity/distance computation function for large sparse matrices. You
-#' can floor small similairty value to to save computation time and storage
+#' can floor small similarity value to to save computation time and storage
 #' space by an arbitrary threashold (\code{min_simil}) or rank (\code{rank}).
 #' Please increase the numbner of threads for better perfromance using
 #' \code{\link[RcppParallel]{setThreadOptions}}.
+#'
 #' @param x a \link{matrix} or \link{Matrix} object
 #' @param y if a \link{matrix} or \link{Matrix} object is provided, proximity
 #'   between documents or features in \code{x} and \code{y} is computed.
-#' @param margin integer indicating margin of similiarty/distance computation. 1
+#' @param margin integer indicating margin of similarity/distance computation. 1
 #'   indicates rows or 2 indicates columns.
 #' @param method method to compute similarity or distance
-#' @param min_simil the minimum similiarty value to be recoded.
-#' @param rank an integer value specifying top-n most similiarty values to be
+#' @param min_simil the minimum similarity value to be recoded.
+#' @param rank an integer value specifying top-n most similarity values to be
 #'   recorded.
 #' @param p weight for minkowski distance
+#'
 #' @import methods Matrix
 #' @importFrom RcppParallel RcppParallelLibs
+#'
 #' @export
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
