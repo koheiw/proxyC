@@ -1,0 +1,7 @@
+language: r
+dist: trusty
+cache: packages
+r_packages:
+- covr
+after_success:
+- R -e 'covr::codecov()'
