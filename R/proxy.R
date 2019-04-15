@@ -61,6 +61,9 @@ proxy <- function(x, y = NULL, margin = 1,
     } else {
         stop("x must be a sparseMatrix")
     }
+
+    symm <- is.null(y)
+
     if (is.null(y)) {
         y <- x
     } else {
@@ -116,15 +119,26 @@ proxy <- function(x, y = NULL, margin = 1,
         y <- as(as(y, "lgCMatrix"), "dgCMatrix")
     }
     if (method %in% c("cosine", "correlation", "euclidean")) {
-        result <- cpp_linear(x, y,
-                             match(method, c("cosine", "correlation", "euclidean")),
-                             rank, min_proxy)
+        result <- cpp_linear(
+            mt1 = x,
+            mt2 = y,
+            method = match(method, c("cosine", "correlation", "euclidean")),
+            rank = rank,
+            limit = min_proxy,
+            symm = symm
+        )
     } else {
-        result <- cpp_pair(x, y,
-                           match(method, c("ejaccard", "edice", "hamman", "simple matching",
-                                           "faith", "chisquared", "kullback", "manhattan",
-                                           "maximum", "canberra", "minkowski")),
-                           rank, min_proxy, weight)
+        result <- cpp_pair(
+            mt1 = x,
+            mt2 = y,
+            method = match(method, c("ejaccard", "edice", "hamman", "simple matching",
+                                     "faith", "chisquared", "kullback", "manhattan",
+                                     "maximum", "canberra", "minkowski")),
+            rank = rank,
+            limit = min_proxy,
+            weight = weight,
+            symm = symm
+        )
     }
 
     dimnames(result) <- list(colnames(x), colnames(y))
