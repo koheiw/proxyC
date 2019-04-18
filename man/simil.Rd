@@ -3,7 +3,7 @@
 \name{simil}
 \alias{simil}
 \alias{dist}
-\title{Compute similiarty/distance between raws or columns of large matrices}
+\title{Compute similarity/distance between rows or columns of large matrices}
 \usage{
 simil(x, y = NULL, margin = 1, method = c("cosine", "correlation",
   "jaccard", "ejaccard", "dice", "edice", "hamman", "simple matching",
@@ -19,21 +19,21 @@ dist(x, y = NULL, margin = 1, method = c("euclidean", "chisquared",
 \item{y}{if a \link{matrix} or \link{Matrix} object is provided, proximity
 between documents or features in \code{x} and \code{y} is computed.}
 
-\item{margin}{integer indicating margin of similiarty/distance computation. 1
+\item{margin}{integer indicating margin of similarity/distance computation. 1
 indicates rows or 2 indicates columns.}
 
 \item{method}{method to compute similarity or distance}
 
-\item{min_simil}{the minimum similiarty value to be recoded.}
+\item{min_simil}{the minimum similarity value to be recoded.}
 
-\item{rank}{an integer value specifying top-n most similiarty values to be
+\item{rank}{an integer value specifying top-n most similarity values to be
 recorded.}
 
 \item{p}{weight for minkowski distance}
 }
 \description{
 Fast similarity/distance computation function for large sparse matrices. You
-can floor small similairty value to to save computation time and storage
+can floor small similarity value to to save computation time and storage
 space by an arbitrary threashold (\code{min_simil}) or rank (\code{rank}).
 Please increase the numbner of threads for better perfromance using
 \code{\link[RcppParallel]{setThreadOptions}}.
