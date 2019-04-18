@@ -81,7 +81,8 @@ S4 cpp_linear(arma::sp_mat& mt1,
               arma::sp_mat& mt2,
               const int method,
               unsigned int rank,
-              double limit = -1.0) {
+              double limit = -1.0,
+              bool symm = false) {
 
     if (mt1.n_rows != mt2.n_rows)
         throw std::range_error("Invalid matrix objects");
@@ -89,7 +90,7 @@ S4 cpp_linear(arma::sp_mat& mt1,
     uword ncol1 = mt1.n_cols;
     uword ncol2 = mt2.n_cols;
     if (rank < 1) rank = 1;
-    bool symm = rank == ncol1 && rank == ncol2;
+    symm = symm && rank == ncol2;
 
     //dev::Timer timer;
     //dev::start_timer("Compute magnitude", timer);
@@ -128,7 +129,7 @@ S4 cpp_linear(arma::sp_mat& mt1,
 /***R
 mt <- Matrix::rsparsematrix(100, 100, 0.01)
 system.time(
-    out <- cpp_linear(mt, mt, 1, 100)
+    out <- cpp_linear(mt, mt, 1, 100, symm = TRUE)
 )
 */
 
