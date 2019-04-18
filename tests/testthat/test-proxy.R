@@ -69,3 +69,13 @@ test_that("proxyC:::proxy raises error when x or y is not a sparse matrix", {
     expect_error(proxyC:::proxy(test_mt, as.matrix(test_mt)),
                  "y must be a sparseMatrix")
 })
+
+test_that("digits is working", {
+    x <- Matrix::Matrix(c(1, 2, 5, 3), ncol = 2, sparse = TRUE)
+    sim1 <- simil(x, y = NULL, method = "cosine")
+    expect_true(all(sim1 <= 1))
+    sim2 <- simil(x, y = NULL, method = "cosine", digits = 3)
+    expect_identical(sim2@x, c(1.0, 0.925, 1.0))
+    sim3 <- simil(x, y = NULL, method = "cosine", digits = 1)
+    expect_identical(sim3@x, c(1.0, 0.9, 1.0))
+})
