@@ -8,7 +8,8 @@ knitr::opts_chunk$set(
   comment = "##",
   fig.path = "man/images/",
   fig.width = 6,
-  fig.retina = TRUE
+  fig.height = 2,
+  dpi = 150
 )
 ```
 
@@ -26,6 +27,7 @@ install.packages("proxyC")
 require(Matrix)
 require(microbenchmark)
 require(RcppParallel)
+require(ggplot2)
 
 # Set number of threads
 setThreadOptions(8)
@@ -51,7 +53,7 @@ bm1 <- microbenchmark(
     "proxy 10k" = proxy::simil(dm10k, method = "cosine"),
     times = 10
 )
-boxplot(bm1)
+autoplot(bm1)
 ```
 
 ## Top-10 cosine similarity
@@ -64,7 +66,7 @@ bm2 <- microbenchmark(
     "proxyC all" = proxyC::simil(sm1k, margin = 2, method = "cosine"),
     times = 10
 )
-boxplot(bm2)
+autoplot(bm2)
 ```
 
 ## Correlation greater than 0.9
@@ -77,6 +79,6 @@ bm3 <- microbenchmark(
     "proxyC all" = proxyC::simil(sm1k, margin = 2, method = "correlation"),
     times = 10
 )
-boxplot(bm3)
+autoplot(bm3)
 ```
 

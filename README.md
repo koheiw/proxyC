@@ -24,6 +24,8 @@ require(microbenchmark)
 ## Loading required package: microbenchmark
 require(RcppParallel)
 ## Loading required package: RcppParallel
+require(ggplot2)
+## Loading required package: ggplot2
 
 # Set number of threads
 setThreadOptions(8)
@@ -50,7 +52,8 @@ bm1 <- microbenchmark(
     "proxy 10k" = proxy::simil(dm10k, method = "cosine"),
     times = 10
 )
-boxplot(bm1)
+autoplot(bm1)
+## Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](man/images/unnamed-chunk-4-1.png)<!-- -->
@@ -66,7 +69,8 @@ bm2 <- microbenchmark(
     "proxyC all" = proxyC::simil(sm1k, margin = 2, method = "cosine"),
     times = 10
 )
-boxplot(bm2)
+autoplot(bm2)
+## Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](man/images/unnamed-chunk-5-1.png)<!-- -->
@@ -81,7 +85,8 @@ bm3 <- microbenchmark(
     "proxyC all" = proxyC::simil(sm1k, margin = 2, method = "correlation"),
     times = 10
 )
-boxplot(bm3)
+autoplot(bm3)
+## Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](man/images/unnamed-chunk-6-1.png)<!-- -->
