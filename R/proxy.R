@@ -16,10 +16,11 @@
 #' @param rank an integer value specifying top-n most similarity values to be
 #'   recorded.
 #' @param p weight for minkowski distance
-#'
+#' @param digits determines rounding of small values towards zero. Use
+#'   primarily to correct rounding errors in C++. See \link{zapsmall}.
 #' @import methods Matrix
 #' @importFrom RcppParallel RcppParallelLibs
-#'
+#' @seealso zapsmall
 #' @export
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
@@ -27,10 +28,10 @@
 simil <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
                              "dice", "edice", "hamman", "simple matching", "faith"),
-                  min_simil = NULL, rank = NULL) {
+                  min_simil = NULL, rank = NULL, digits = 14) {
 
     method <- match.arg(method)
-    proxy(x, y, margin, method, min_proxy = min_simil, rank = rank)
+    proxy(x, y, margin, method, min_proxy = min_simil, rank = rank, digits = digits)
 
 }
 
@@ -42,7 +43,7 @@ simil <- function(x, y = NULL, margin = 1,
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "hamming", "kullback",
                             "manhattan", "maximum", "canberra", "minkowski"),
-                 p = 2) {
+                 p = 2, digits = 14) {
 
     method <- match.arg(method)
     proxy(x, y, margin, method, p = p)
@@ -56,7 +57,7 @@ proxy <- function(x, y = NULL, margin = 1,
                              "dice", "edice", "hamman", "simple matching", "faith",
                              "euclidean", "chisquared", "hamming", "kullback",
                              "manhattan", "maximum", "canberra", "minkowski"),
-                  p = 2, min_proxy = NULL, rank = NULL) {
+                  p = 2, min_proxy = NULL, rank = NULL, digits = 14) {
 
     method <- match.arg(method)
     if(is(x, 'sparseMatrix')) {
@@ -143,7 +144,7 @@ proxy <- function(x, y = NULL, margin = 1,
             symm = symm
         )
     }
-
+    result@x <- zapsmall(result@x, digits)
     dimnames(result) <- list(colnames(x), colnames(y))
     return(result)
 }
