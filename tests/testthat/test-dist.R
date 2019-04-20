@@ -1,6 +1,6 @@
 context("test dist")
 
-test_mt <- Matrix::rsparsematrix(100, 100, 0.5)
+mat_test <- Matrix::rsparsematrix(100, 100, 0.5)
 
 test_dist <- function(x, method, margin, ignore_upper = FALSE, ...) {
     # test with only x
@@ -43,43 +43,43 @@ test_dist <- function(x, method, margin, ignore_upper = FALSE, ...) {
 
 test_that("test dist euclidean distance", {
     skip_if_not_installed("proxy")
-    test_dist(test_mt, "euclidean", margin = 1)
-    test_dist(test_mt, "euclidean", margin = 2)
+    test_dist(mat_test, "euclidean", margin = 1)
+    test_dist(mat_test, "euclidean", margin = 2)
 })
 
 # test_that("test kullback kullback distance", {
 #     skip_if_not_installed("proxy")
 #     # make dense matrix to avoide Inf in proxy::dist
-#     test_mt_dense <- test_mt + 1
+#     mat_test_dense <- mat_test + 1
 #     # proxy::dist() also incorrectly produces symmetric matrix
-#     test_dist(test_mt_dense, "kullback", margin = 1, ignore_upper = TRUE)
-#     test_dist(test_mt_dense, "kullback", margin = 2, ignore_upper = TRUE)
+#     test_dist(mat_test_dense, "kullback", margin = 1, ignore_upper = TRUE)
+#     test_dist(mat_test_dense, "kullback", margin = 2, ignore_upper = TRUE)
 # })
 
 test_that("test dist manhattan distance", {
     skip_if_not_installed("proxy")
-    test_dist(test_mt, "manhattan", margin = 1)
-    test_dist(test_mt, "manhattan", margin = 2)
+    test_dist(mat_test, "manhattan", margin = 1)
+    test_dist(mat_test, "manhattan", margin = 2)
 })
 
 test_that("test dist maximum distance", {
     skip_if_not_installed("proxy")
-    test_dist(test_mt, "maximum", margin = 1)
-    test_dist(test_mt, "maximum", margin = 2)
+    test_dist(mat_test, "maximum", margin = 1)
+    test_dist(mat_test, "maximum", margin = 2)
 })
 
 # test_that("test dist canberra distance", {
 #     skip_if_not_installed("proxy")
-#     test_dist(test_mt, "canberra", margin = 1)
-#     test_dist(test_mt, "canberra", margin = 2)
+#     test_dist(mat_test, "canberra", margin = 1)
+#     test_dist(mat_test, "canberra", margin = 2)
 # })
 
 test_that("test dist minkowski distance", {
     skip_if_not_installed("proxy")
-    test_dist(test_mt, "minkowski", margin = 1, p = 0.1)
-    test_dist(test_mt, "minkowski", margin = 2, p = 0.1)
-    test_dist(test_mt, "minkowski", margin = 1, p = 2)
-    test_dist(test_mt, "minkowski", margin = 2, p = 2)
-    test_dist(test_mt, "minkowski", margin = 1, p = 10)
-    test_dist(test_mt, "minkowski", margin = 2, p = 10)
+    test_dist(mat_test, "minkowski", margin = 1, p = 0.1)
+    test_dist(mat_test, "minkowski", margin = 2, p = 0.1)
+    test_dist(mat_test, "minkowski", margin = 1, p = 2)
+    test_dist(mat_test, "minkowski", margin = 2, p = 2)
+    test_dist(mat_test, "minkowski", margin = 1, p = 10)
+    test_dist(mat_test, "minkowski", margin = 2, p = 10)
 })

@@ -1,6 +1,6 @@
 context("test simil")
 
-test_mt <- Matrix::rsparsematrix(100, 100, 0.5)
+mat_test <- Matrix::rsparsematrix(100, 100, 0.5)
 
 test_simil <- function(x, method, margin, ignore_upper = FALSE, ignore_diag = TRUE, ...) {
     # test with only x
@@ -49,54 +49,54 @@ test_simil <- function(x, method, margin, ignore_upper = FALSE, ignore_diag = TR
 
 test_that("test textstat_proxy cosine similarity", {
     skip_if_not_installed("proxy")
-    test_simil(test_mt, "cosine", margin = 1)
-    test_simil(test_mt, "cosine", margin = 2)
+    test_simil(mat_test, "cosine", margin = 1)
+    test_simil(mat_test, "cosine", margin = 2)
 })
 
 test_that("test textstat_proxy correlation similarity", {
     skip_if_not_installed("proxy")
-    test_simil(test_mt, "correlation", margin = 1)
-    test_simil(test_mt, "correlation", margin = 2)
+    test_simil(mat_test, "correlation", margin = 1)
+    test_simil(mat_test, "correlation", margin = 2)
 })
 
 test_that("test textstat_proxy jaccard similarity", {
     skip_if_not_installed("proxy")
-    test_simil(test_mt, "jaccard", margin = 1)
-    test_simil(test_mt, "jaccard", margin = 2)
+    test_simil(mat_test, "jaccard", margin = 1)
+    test_simil(mat_test, "jaccard", margin = 2)
 })
 
 test_that("test textstat_proxy ejaccard similarity", {
     skip_if_not_installed("proxy")
-    test_simil(test_mt, "ejaccard", margin = 1)
-    test_simil(test_mt, "ejaccard", margin = 2)
+    test_simil(mat_test, "ejaccard", margin = 1)
+    test_simil(mat_test, "ejaccard", margin = 2)
 })
 
 test_that("test textstat_proxy dice similarity", {
     skip_if_not_installed("proxy")
-    test_simil(test_mt, "dice", margin = 1)
-    test_simil(test_mt, "dice", margin = 2)
+    test_simil(mat_test, "dice", margin = 1)
+    test_simil(mat_test, "dice", margin = 2)
 })
 
 test_that("test textstat_proxy edice similarity", {
     skip_if_not_installed("proxy")
-    test_simil(test_mt, "edice", margin = 1)
-    test_simil(test_mt, "edice", margin = 2)
+    test_simil(mat_test, "edice", margin = 1)
+    test_simil(mat_test, "edice", margin = 2)
 })
 
 test_that("test textstat_proxy simple matching similarity", {
     skip_if_not_installed("proxy")
-    test_simil(test_mt, "simple matching", margin = 1)
-    test_simil(test_mt, "simple matching", margin = 2)
+    test_simil(mat_test, "simple matching", margin = 1)
+    test_simil(mat_test, "simple matching", margin = 2)
 })
 
 test_that("test textstat_proxy hamman similarity", {
     skip_if_not_installed("proxy")
-    test_simil(test_mt, "hamman", margin = 1)
-    test_simil(test_mt, "hamman", margin = 2)
+    test_simil(mat_test, "hamman", margin = 1)
+    test_simil(mat_test, "hamman", margin = 2)
 })
 
 test_that("test textstat_proxy faith similarity", {
     skip_if_not_installed("proxy")
-    test_simil(test_mt, "faith", margin = 1, ignore_upper = TRUE)
-    test_simil(test_mt, "faith", margin = 2, ignore_upper = TRUE)
+    test_simil(mat_test, "faith", margin = 1, ignore_upper = TRUE)
+    test_simil(mat_test, "faith", margin = 2, ignore_upper = TRUE)
 })
