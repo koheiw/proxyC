@@ -2,13 +2,16 @@
 
 ## Purpose
 
-Upload the first CRAN release
+Fix bugs, update documentation and add a new feature
 
 ## Test environments
 
-* local KDE neon User Edition 5.13, R 3.4.4
-* local Windows 10, R 3.5
-* win-builder (devel and release)
+* local: KDE neon User Edition 5.13, R 3.5.3
+* local: Windows 10, R 3.5.3
+* R-hub: Ubuntu Linux 16.04 LTS, R-devel, GCC (ubuntu-gcc-devel)
+* R-hub: Ubuntu Linux 16.04 LTS, R-release, GCC (ubuntu-gcc-release)
+* R-hub: Windows Server 2008 R2 SP1, R-devel, 32/64 bit (windows-x86_64-devel)
+* R-hub: Windows Server 2008 R2 SP1, R-release, 32/64 bit (windows-x86_64-release)
 
 ## R CMD check results
 
@@ -16,4 +19,4 @@ Upload the first CRAN release
 
 ## Downstream dependencies
 
-There is no reverse dependencies as this is the first release.
+There is no downstream dependency on CRAN
