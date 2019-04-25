@@ -58,14 +58,14 @@ autoplot(bm1)
 
 ![](man/images/unnamed-chunk-4-1.png)<!-- -->
 
-## Top-10 cosine similarity
+## Cosine similarity greater than 0.9
 
-If `rank` is used, **proxyC** becomes even faster as many similarity
-scores are discarded (rounded to zero).
+If `min_simil` is used, **proxyC** becomes even faster because small
+similarity scores are floored to zero.
 
 ``` r
 bm2 <- microbenchmark(
-    "proxyC rank" = proxyC::simil(sm1k, margin = 2, method = "cosine", rank = 10),
+    "proxyC min_simil" = proxyC::simil(sm1k, margin = 2, method = "cosine", min_simil = 0.9),
     "proxyC all" = proxyC::simil(sm1k, margin = 2, method = "cosine"),
     times = 10
 )
@@ -75,13 +75,13 @@ autoplot(bm2)
 
 ![](man/images/unnamed-chunk-5-1.png)<!-- -->
 
-## Correlation greater than 0.9
+## Top-10 correlation
 
-`min_simil` also makes **proxyC** faster.
+If `rank` is used, **proxyC** only returns top-n values.
 
 ``` r
 bm3 <- microbenchmark(
-    "proxyC min_simil" = proxyC::simil(sm1k, margin = 2, method = "correlation", min_simil = 0.9),
+    "proxyC rank" = proxyC::simil(sm1k, margin = 2, method = "correlation", rank = 10),
     "proxyC all" = proxyC::simil(sm1k, margin = 2, method = "correlation"),
     times = 10
 )
