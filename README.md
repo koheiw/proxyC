@@ -26,6 +26,8 @@ require(RcppParallel)
 ## Loading required package: RcppParallel
 require(ggplot2)
 ## Loading required package: ggplot2
+require(magrittr)
+## Loading required package: magrittr
 
 # Set number of threads
 setThreadOptions(8)
@@ -46,10 +48,10 @@ With sparse matrices, **proxyC** is roughly 10 to 100 times faster than
 
 ``` r
 bm1 <- microbenchmark(
-    "proxyC 1k" = proxyC::simil(sm1k, margin = 2, method = "cosine"),
     "proxy 1k" = proxy::simil(dm1k, method = "cosine"),
-    "proxyC 10k" = proxyC::simil(sm10k, margin = 2, method = "cosine"),
+    "proxyC 1k" = proxyC::simil(sm1k, margin = 2, method = "cosine"),
     "proxy 10k" = proxy::simil(dm10k, method = "cosine"),
+    "proxyC 10k" = proxyC::simil(sm10k, margin = 2, method = "cosine"),
     times = 10
 )
 autoplot(bm1)
@@ -65,8 +67,8 @@ similarity scores are floored to zero.
 
 ``` r
 bm2 <- microbenchmark(
-    "proxyC min_simil" = proxyC::simil(sm1k, margin = 2, method = "cosine", min_simil = 0.9),
     "proxyC all" = proxyC::simil(sm1k, margin = 2, method = "cosine"),
+    "proxyC min_simil" = proxyC::simil(sm1k, margin = 2, method = "cosine", min_simil = 0.9),
     times = 10
 )
 autoplot(bm2)
@@ -74,6 +76,19 @@ autoplot(bm2)
 ```
 
 ![](man/images/unnamed-chunk-5-1.png)<!-- -->
+
+Flooring by `min_simil` makes the resulting object much smaller.
+
+``` r
+proxyC::simil(sm10k, margin = 2, method = "cosine") %>% 
+  object.size() %>% 
+  print(units = "MB")
+## 762.9 Mb
+proxyC::simil(sm10k, margin = 2, method = "cosine", min_simil = 0.9) %>% 
+  object.size() %>% 
+  print(units = "MB")
+## 0.2 Mb
+```
 
 ## Top-10 correlation
 
@@ -89,4 +104,4 @@ autoplot(bm3)
 ## Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
-![](man/images/unnamed-chunk-6-1.png)<!-- -->
+![](man/images/unnamed-chunk-7-1.png)<!-- -->
