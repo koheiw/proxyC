@@ -79,3 +79,15 @@ test_that("digits is working", {
     sim3 <- simil(mat, method = "cosine", digits = 1)
     expect_identical(as.numeric(as.matrix(sim3)), c(1.0, 0.9, 0.9, 1.0))
 })
+
+test_that("colSds and rowSds are working", {
+    mt <- Matrix::rsparsematrix(100, 100, 0.01)
+    expect_equal(rowSds(mt), apply(mt, 1, sd))
+    expect_equal(colSds(mt), apply(mt, 2, sd))
+})
+
+test_that("colZeros and rowZeros are working", {
+    mt <- Matrix::rsparsematrix(100, 100, 0.01)
+    expect_equal(rowZeros(mt), apply(mt, 1, function(x) sum(x == 0)))
+    expect_equal(colZeros(mt), apply(mt, 2, function(x) sum(x == 0)))
+})

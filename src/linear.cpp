@@ -4,6 +4,15 @@
 using namespace proxyc;
 using namespace arma;
 
+rowvec nnz(const sp_mat& mt) {
+    rowvec v(mt.n_cols, fill::zeros);
+    if (mt.is_empty()) return(v);
+    for (uword i = 0; i < mt.n_cols; i++) {
+        v[i] = sum(colvec(mt.col(i)) != 0);
+    }
+    return(v);
+}
+
 rowvec stddev(const sp_mat& mt, const int norm_type) {
     rowvec v(mt.n_cols, fill::zeros);
     if (mt.is_empty()) return(v);
@@ -124,6 +133,18 @@ S4 cpp_linear(arma::sp_mat& mt1,
     //dev::stop_timer("Compute similarity", timer);
 
     return to_matrix(simil_tri, ncol1, ncol2, symm);
+}
+
+// [[Rcpp::export]]
+NumericVector cpp_sd(arma::sp_mat& mt) {
+    std::vector<double> sds = to_vector(stddev(mt, 0));
+    return wrap(sds);
+}
+
+// [[Rcpp::export]]
+NumericVector cpp_nz(arma::sp_mat& mt) {
+    std::vector<double> nzs = to_vector(nnz(mt));
+    return wrap(nzs);
 }
 
 /***R

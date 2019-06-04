@@ -22,6 +22,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_sd
+NumericVector cpp_sd(arma::sp_mat& mt);
+RcppExport SEXP _proxyC_cpp_sd(SEXP mtSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type mt(mtSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_sd(mt));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_nz
+NumericVector cpp_nz(arma::sp_mat& mt);
+RcppExport SEXP _proxyC_cpp_nz(SEXP mtSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type mt(mtSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_nz(mt));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_pair
 S4 cpp_pair(arma::sp_mat& mt1, arma::sp_mat& mt2, const int method, unsigned int rank, double limit, double weight, bool symm);
 RcppExport SEXP _proxyC_cpp_pair(SEXP mt1SEXP, SEXP mt2SEXP, SEXP methodSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP weightSEXP, SEXP symmSEXP) {
@@ -42,6 +64,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_proxyC_cpp_linear", (DL_FUNC) &_proxyC_cpp_linear, 6},
+    {"_proxyC_cpp_sd", (DL_FUNC) &_proxyC_cpp_sd, 1},
+    {"_proxyC_cpp_nz", (DL_FUNC) &_proxyC_cpp_nz, 1},
     {"_proxyC_cpp_pair", (DL_FUNC) &_proxyC_cpp_pair, 7},
     {NULL, NULL, 0}
 };
