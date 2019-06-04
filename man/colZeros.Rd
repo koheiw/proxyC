@@ -13,7 +13,7 @@ rowZeros(x)
 \item{x}{\link{Matrix} object}
 }
 \description{
-Produces the same result as applying \code{sum(x == 0)} to each rows or columns.
+Produces the same result as applying \code{sum(x == 0)} to each row or column.
 }
 \examples{
 mt <- Matrix::rsparsematrix(100, 100, 0.01)
