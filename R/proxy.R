@@ -6,7 +6,7 @@
 #' Please increase the numbner of threads for better perfromance using
 #' \code{\link[RcppParallel]{setThreadOptions}}.
 #'
-#' @param x a \link{matrix} or \link{Matrix} object
+#' @param x \link{Matrix} object
 #' @param y if a \link{matrix} or \link{Matrix} object is provided, proximity
 #'   between documents or features in \code{x} and \code{y} is computed.
 #' @param margin integer indicating margin of similarity/distance computation. 1
@@ -147,4 +147,64 @@ proxy <- function(x, y = NULL, margin = 1,
     result@x <- zapsmall(result@x, digits)
     dimnames(result) <- list(colnames(x), colnames(y))
     return(result)
+}
+
+#' Standard deviasion of columns and rows in sparse matrix
+#'
+#' Produces the same result as \code{apply(x, 1, sd)} or \code{apply(x, 2, sd)}
+#' as without coecirng matrix to dense matrix. Values are not identical to
+#' \code{sd} because of the floating point precision issue in C++.
+#' @param x \link{Matrix} object
+#' @examples
+#' mt <- Matrix::rsparsematrix(100, 100, 0.01)
+#' colSds(mt)
+#' apply(mt, 2, sd) # the same
+#' @export
+colSds <- function(x) {
+    if(is(x, 'sparseMatrix')) {
+        x <- as(x, "dgCMatrix")
+    } else {
+        stop("x must be a sparseMatrix")
+    }
+    cpp_sd(x)
+}
+
+#' @rdname colSds
+#' @export
+rowSds <- function(x) {
+    if(is(x, 'sparseMatrix')) {
+        x <- as(x, "dgCMatrix")
+    } else {
+        stop("x must be a sparseMatrix")
+    }
+    cpp_sd(t(x))
+}
+
+#' Count number of zeros in columns and rows in sparse matrix
+#'
+#' Produces the same result as applying \code{sum(x == 0)} to each row or column.
+#' @param x \link{Matrix} object
+#' @examples
+#' mt <- Matrix::rsparsematrix(100, 100, 0.01)
+#' colZeros(mt)
+#' apply(mt, 2, function(x) sum(x == 0)) # the same
+#' @export
+colZeros <- function(x) {
+    if(is(x, 'sparseMatrix')) {
+        x <- as(x, "dgCMatrix")
+    } else {
+        stop("x must be a sparseMatrix")
+    }
+    nrow(x) - cpp_nz(x)
+}
+
+#' @rdname colZeros
+#' @export
+rowZeros <- function(x) {
+    if(is(x, 'sparseMatrix')) {
+        x <- as(x, "dgCMatrix")
+    } else {
+        stop("x must be a sparseMatrix")
+    }
+    ncol(x) - cpp_nz(t(x))
 }

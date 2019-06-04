@@ -5,6 +5,14 @@ cpp_linear <- function(mt1, mt2, method, rank, limit = -1.0, symm = FALSE) {
     .Call('_proxyC_cpp_linear', PACKAGE = 'proxyC', mt1, mt2, method, rank, limit, symm)
 }
 
+cpp_sd <- function(mt) {
+    .Call('_proxyC_cpp_sd', PACKAGE = 'proxyC', mt)
+}
+
+cpp_nz <- function(mt) {
+    .Call('_proxyC_cpp_nz', PACKAGE = 'proxyC', mt)
+}
+
 cpp_pair <- function(mt1, mt2, method, rank, limit = -1.0, weight = 1.0, symm = FALSE) {
     .Call('_proxyC_cpp_pair', PACKAGE = 'proxyC', mt1, mt2, method, rank, limit, weight, symm)
 }

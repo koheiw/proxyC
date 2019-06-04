@@ -2,6 +2,11 @@ context("test proxy")
 
 dfmt_test <- Matrix::rsparsematrix(100, 100, 0.5)
 
+test_that("porxy takes only sparse matrix",{
+    expect_error(simil(matrix(dfmt_test)), "x must be a sparseMatrix")
+    expect_error(dist(matrix(dfmt_test)), "x must be a sparseMatrix")
+})
+
 test_that("porxy stops as expected for methods not supported",{
     expect_error(simil(dfmt_test, method = "Yule"))
     expect_error(dist(dfmt_test, method = "Yule"))
@@ -78,4 +83,20 @@ test_that("digits is working", {
     expect_identical(as.numeric(as.matrix(sim2)), c(1.0, 0.925, 0.925, 1.0))
     sim3 <- simil(mat, method = "cosine", digits = 1)
     expect_identical(as.numeric(as.matrix(sim3)), c(1.0, 0.9, 0.9, 1.0))
+})
+
+test_that("colSds and rowSds are working", {
+    mt <- Matrix::rsparsematrix(100, 100, 0.01)
+    expect_equal(rowSds(mt), apply(mt, 1, sd))
+    expect_equal(colSds(mt), apply(mt, 2, sd))
+    expect_error(rowSds(matrix(mt)), "x must be a sparseMatrix")
+    expect_error(colSds(matrix(mt)), "x must be a sparseMatrix")
+})
+
+test_that("colZeros and rowZeros are working", {
+    mt <- Matrix::rsparsematrix(100, 100, 0.01)
+    expect_equal(rowZeros(mt), apply(mt, 1, function(x) sum(x == 0)))
+    expect_equal(colZeros(mt), apply(mt, 2, function(x) sum(x == 0)))
+    expect_error(rowZeros(matrix(mt)), "x must be a sparseMatrix")
+    expect_error(colZeros(matrix(mt)), "x must be a sparseMatrix")
 })

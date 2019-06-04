@@ -14,7 +14,7 @@ dist(x, y = NULL, margin = 1, method = c("euclidean", "chisquared",
   p = 2, digits = 14)
 }
 \arguments{
-\item{x}{a \link{matrix} or \link{Matrix} object}
+\item{x}{\link{Matrix} object}
 
 \item{y}{if a \link{matrix} or \link{Matrix} object is provided, proximity
 between documents or features in \code{x} and \code{y} is computed.}

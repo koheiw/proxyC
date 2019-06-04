@@ -1,4 +1,10 @@
-# v0.1.2
+# v0.1.4
+
+## New feature
+
+- Add rowSds(), colSds(), rowZeros() and colZeros()
+
+# v0.1.3
 
 ## Bug fix
 

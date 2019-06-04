@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Fix bugs, update documentation and add a new feature
+Update documentation and add a new feature
 
 ## Test environments
 
@@ -20,4 +20,4 @@ Fix bugs, update documentation and add a new feature
 
 ## Downstream dependencies
 
-There is no downstream dependency on CRAN
+There is no change in exisiting functions
