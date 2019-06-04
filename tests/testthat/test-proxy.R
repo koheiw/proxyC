@@ -98,5 +98,5 @@ test_that("colZeros and rowZeros are working", {
     expect_equal(rowZeros(mt), apply(mt, 1, function(x) sum(x == 0)))
     expect_equal(colZeros(mt), apply(mt, 2, function(x) sum(x == 0)))
     expect_error(rowZeros(matrix(mt)), "x must be a sparseMatrix")
-    expect_error(rowZeros(matrix(mt)), "x must be a sparseMatrix")
+    expect_error(colZeros(matrix(mt)), "x must be a sparseMatrix")
 })
