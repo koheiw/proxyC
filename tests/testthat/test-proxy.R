@@ -54,6 +54,16 @@ test_that("record zeros even in the sparse matrix", {
     expect_true(any(proxyC:::proxy(mt, method = "dice")@x == 0))
 })
 
+test_that("do not record zeros when drop0 is TRUE", {
+    mt <- Matrix::rsparsematrix(100, 100, 0.01)
+    expect_false(any(proxyC:::proxy(mt, drop0 = TRUE)@x == 0))
+    expect_false(any(proxyC:::proxy(mt, method = "cosine", drop0 = TRUE)@x == 0))
+    expect_false(any(proxyC:::proxy(mt, method = "cosine", drop0 = TRUE, min_proxy = -0.5)@x == 0))
+    expect_false(any(proxyC:::proxy(mt, method = "cosine", drop0 = TRUE, rank = 2)@x == 0))
+    expect_false(any(proxyC:::proxy(mt, method = "dice", drop0 = TRUE)@x == 0))
+})
+
+
 test_that("proxyC:::proxy raises error when the numnber of columns/rows are different", {
     expect_silent(
         proxyC:::proxy(dfmt_test[1:5,], dfmt_test[1:5,], margin = 2)

@@ -44,15 +44,17 @@ struct proxy_linear : public Worker {
     const unsigned int rank;
     const double limit;
     const bool symm;
+    const bool drop0;
 
     proxy_linear(const sp_mat& mt1t_, const sp_mat& mt2_, Triplets& simil_tri_,
                       const rowvec& square1_, const rowvec& center1_,
                       const rowvec& square2_, const rowvec& center2_,
                       const int method_,
-                      const unsigned int rank_, const double limit_, const bool symm_) :
+                      const unsigned int rank_, const double limit_,
+                      const bool symm_, const bool drop0_) :
         mt1t(mt1t_), mt2(mt2_), simil_tri(simil_tri_),
         square1(square1_), center1(center1_), square2(square2_), center2(center2_),
-        method(method_), rank(rank_), limit(limit_), symm(symm_) {}
+        method(method_), rank(rank_), limit(limit_), symm(symm_), drop0(drop0_) {}
 
     void operator()(std::size_t begin, std::size_t end) {
 
@@ -77,6 +79,7 @@ struct proxy_linear : public Worker {
             double l = get_limit(simils, rank, limit);
             for (std::size_t k = 0; k < simils.size(); k++) {
                 if (symm && k > i) continue;
+                if (drop0 && simils[k] == 0) continue;
                 if (simils[k] >= l) {
                     simil_tri.push_back(std::make_tuple(k, i, simils[k]));
                 }
@@ -91,7 +94,8 @@ S4 cpp_linear(arma::sp_mat& mt1,
               const int method,
               unsigned int rank,
               double limit = -1.0,
-              bool symm = false) {
+              bool symm = false,
+              bool drop0 = false) {
 
     if (mt1.n_rows != mt2.n_rows)
         throw std::range_error("Invalid matrix objects");
@@ -128,7 +132,7 @@ S4 cpp_linear(arma::sp_mat& mt1,
     mt1 = trans(mt1);
     proxy_linear proxy_linear(mt1, mt2, simil_tri,
                               square1, center1, square2, center2,
-                              method, rank, limit, symm);
+                              method, rank, limit, symm, drop0);
     parallelFor(0, ncol2, proxy_linear);
     //dev::stop_timer("Compute similarity", timer);
 
