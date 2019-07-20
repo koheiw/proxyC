@@ -16,6 +16,7 @@
 #' @param rank an integer value specifying top-n most similarity values to be
 #'   recorded.
 #' @param p weight for minkowski distance
+#' @param drop0 wheher or not to remove zero values from the output.
 #' @param digits determines rounding of small values towards zero. Use
 #'   primarily to correct rounding errors in C++. See \link{zapsmall}.
 #' @import methods Matrix
@@ -28,10 +29,10 @@
 simil <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
                              "dice", "edice", "hamman", "simple matching", "faith"),
-                  min_simil = NULL, rank = NULL, digits = 14) {
+                  min_simil = NULL, rank = NULL, drop0 = FALSE, digits = 14) {
 
     method <- match.arg(method)
-    proxy(x, y, margin, method, min_proxy = min_simil, rank = rank, digits = digits)
+    proxy(x, y, margin, method, min_proxy = min_simil, rank = rank, drop0 = drop0, digits = digits)
 
 }
 
@@ -43,10 +44,10 @@ simil <- function(x, y = NULL, margin = 1,
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "hamming", "kullback",
                             "manhattan", "maximum", "canberra", "minkowski"),
-                 p = 2, digits = 14) {
+                 p = 2, drop0 = FALSE, digits = 14) {
 
     method <- match.arg(method)
-    proxy(x, y, margin, method, p = p)
+    proxy(x, y, margin, method, drop0 = drop0, p = p)
 
 }
 
@@ -57,7 +58,7 @@ proxy <- function(x, y = NULL, margin = 1,
                              "dice", "edice", "hamman", "simple matching", "faith",
                              "euclidean", "chisquared", "hamming", "kullback",
                              "manhattan", "maximum", "canberra", "minkowski"),
-                  p = 2, min_proxy = NULL, rank = NULL, digits = 14) {
+                  p = 2, min_proxy = NULL, rank = NULL, drop0 = FALSE, digits = 14) {
 
     method <- match.arg(method)
     if(is(x, 'sparseMatrix')) {
@@ -129,7 +130,8 @@ proxy <- function(x, y = NULL, margin = 1,
             method = match(method, c("cosine", "correlation", "euclidean")),
             rank = rank,
             limit = min_proxy,
-            symm = symm
+            symm = symm,
+            drop0 = drop0
         )
     } else {
         result <- cpp_pair(
@@ -141,7 +143,8 @@ proxy <- function(x, y = NULL, margin = 1,
             rank = rank,
             limit = min_proxy,
             weight = weight,
-            symm = symm
+            symm = symm,
+            drop0 = drop0
         )
     }
     result@x <- zapsmall(result@x, digits)

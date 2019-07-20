@@ -94,12 +94,15 @@ struct proxy_pair : public Worker {
     const double limit;
     const bool symm;
     const double weight;
+    const bool drop0;
 
     proxy_pair(const sp_mat& mt1_, const sp_mat& mt2_, Triplets& simil_tri_,
                const int method_,
-               const unsigned int rank_, const double limit_, const bool symm_, const double weight_) :
+               const unsigned int rank_, const double limit_, const bool symm_,
+               const double weight_, const bool drop0_) :
                mt1(mt1_), mt2(mt2_), simil_tri(simil_tri_),
-               method(method_), rank(rank_), limit(limit_), symm(symm_), weight(weight_) {}
+               method(method_), rank(rank_), limit(limit_), symm(symm_),
+               weight(weight_), drop0(drop0_) {}
 
     void operator()(std::size_t begin, std::size_t end) {
 
@@ -153,7 +156,9 @@ struct proxy_pair : public Worker {
                     break;
                 }
                 //Rcout << "simil=" << simil << "\n";
-                simils.push_back(simil);
+                if (!drop0 || simil != 0) {
+                    simils.push_back(simil);
+                }
             }
             double l = get_limit(simils, rank, limit);
             for (std::size_t k = 0; k < simils.size(); k++) {
@@ -173,7 +178,8 @@ S4 cpp_pair(arma::sp_mat& mt1,
             unsigned int rank,
             double limit = -1.0,
             double weight = 1.0,
-            bool symm = false) {
+            bool symm = false,
+            bool drop0 = false) {
 
     if (mt1.n_rows != mt2.n_rows)
         throw std::range_error("Invalid matrix objects");
@@ -186,7 +192,7 @@ S4 cpp_pair(arma::sp_mat& mt1,
     //dev::Timer timer;
     //dev::start_timer("Compute similarity", timer);
     Triplets simil_tri;
-    proxy_pair proxy_pair(mt1, mt2, simil_tri, method, rank, limit, symm, weight);
+    proxy_pair proxy_pair(mt1, mt2, simil_tri, method, rank, limit, symm, weight, drop0);
     parallelFor(0, ncol2, proxy_pair);
     //dev::stop_timer("Compute similarity", timer);
 
