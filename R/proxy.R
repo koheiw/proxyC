@@ -46,7 +46,7 @@ dist <- function(x, y = NULL, margin = 1,
                  p = 2, digits = 14) {
 
     method <- match.arg(method)
-    proxy(x, y, margin, method, p = p)
+    proxy(x, y, margin, method, p = p, digits = digits)
 
 }
 
