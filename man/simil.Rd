@@ -30,10 +30,11 @@ indicates rows or 2 indicates columns.}
 \item{rank}{an integer value specifying top-n most similarity values to be
 recorded.}
 
-\item{drop0}{wheher or not to remove zero values from the output.}
+\item{drop0}{if \code{TRUE}, zero values are removed regardless of
+\code{min_simil} or \code{rank}.}
 
-\item{digits}{determines rounding of small values towards zero. Use
-primarily to correct rounding errors in C++. See \link{zapsmall}.}
+\item{digits}{determines rounding of small values towards zero. Use primarily
+to correct rounding errors in C++. See \link{zapsmall}.}
 
 \item{p}{weight for minkowski distance}
 }

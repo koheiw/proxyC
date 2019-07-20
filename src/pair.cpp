@@ -156,9 +156,8 @@ struct proxy_pair : public Worker {
                     break;
                 }
                 //Rcout << "simil=" << simil << "\n";
-                if (!drop0 || simil != 0) {
-                    simils.push_back(simil);
-                }
+                if (drop0 && simil == 0) continue;
+                simils.push_back(simil);
             }
             double l = get_limit(simils, rank, limit);
             for (std::size_t k = 0; k < simils.size(); k++) {
