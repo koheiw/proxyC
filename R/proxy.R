@@ -16,9 +16,10 @@
 #' @param rank an integer value specifying top-n most similarity values to be
 #'   recorded.
 #' @param p weight for minkowski distance
-#' @param drop0 wheher or not to remove zero values from the output.
-#' @param digits determines rounding of small values towards zero. Use
-#'   primarily to correct rounding errors in C++. See \link{zapsmall}.
+#' @param drop0 if \code{TRUE}, zero values are removed regardless of
+#'   \code{min_simil} or \code{rank}.
+#' @param digits determines rounding of small values towards zero. Use primarily
+#'   to correct rounding errors in C++. See \link{zapsmall}.
 #' @import methods Matrix
 #' @importFrom RcppParallel RcppParallelLibs
 #' @seealso zapsmall

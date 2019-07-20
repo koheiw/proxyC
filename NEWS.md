@@ -1,5 +1,9 @@
 # v0.1.5
 
+## New feature
+
+- Add the dorp0 argument
+
 ## Bug fix
 
 - The digit argument is now passed to dist()
