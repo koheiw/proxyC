@@ -1,3 +1,9 @@
+# v0.1.5
+
+## Bug fix
+
+- The digit argument is now passed to dist()
+
 # v0.1.4
 
 ## New feature
