@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Update documentation and add a new feature
+Update documentation, add a new feature and fix a bug
 
 ## Test environments
 
@@ -20,4 +20,4 @@ Update documentation and add a new feature
 
 ## Downstream dependencies
 
-There is no change in exisiting functions
+Changes do not affect in exisiting users
