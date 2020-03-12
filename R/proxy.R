@@ -16,6 +16,8 @@
 #' @param rank an integer value specifying top-n most similarity values to be
 #'   recorded.
 #' @param p weight for minkowski distance
+#' @param smooth value added to column or row vectors before computing
+#'   similarity/distance.
 #' @param drop0 if \code{TRUE}, zero values are removed regardless of
 #'   \code{min_simil} or \code{rank}.
 #' @param digits determines rounding of small values towards zero. Use primarily
@@ -30,10 +32,11 @@
 simil <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
                              "dice", "edice", "hamman", "simple matching", "faith"),
-                  min_simil = NULL, rank = NULL, drop0 = FALSE, digits = 14) {
+                  min_simil = NULL, rank = NULL, smooth = 0, drop0 = FALSE, digits = 14) {
 
     method <- match.arg(method)
-    proxy(x, y, margin, method, min_proxy = min_simil, rank = rank, drop0 = drop0, digits = digits)
+    proxy(x, y, margin, method, min_proxy = min_simil, rank = rank, smooth = smooth,
+          drop0 = drop0, digits = digits)
 
 }
 
@@ -45,10 +48,10 @@ simil <- function(x, y = NULL, margin = 1,
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "hamming", "kullback",
                             "manhattan", "maximum", "canberra", "minkowski"),
-                 p = 2, drop0 = FALSE, digits = 14) {
+                 p = 2, smooth = 0, drop0 = FALSE, digits = 14) {
 
     method <- match.arg(method)
-    proxy(x, y, margin, method, p = p, drop0 = drop0, digits = digits)
+    proxy(x, y, margin, method, p = p, smooth = smooth, drop0 = drop0, digits = digits)
 }
 
 #' @import Rcpp
@@ -58,7 +61,7 @@ proxy <- function(x, y = NULL, margin = 1,
                              "dice", "edice", "hamman", "simple matching", "faith",
                              "euclidean", "chisquared", "hamming", "kullback",
                              "manhattan", "maximum", "canberra", "minkowski"),
-                  p = 2, min_proxy = NULL, rank = NULL, drop0 = FALSE, digits = 14) {
+                  p = 2, min_proxy = NULL, rank = NULL, smooth = smooth, drop0 = FALSE, digits = 14) {
 
     method <- match.arg(method)
     if(is(x, 'sparseMatrix')) {
@@ -130,6 +133,7 @@ proxy <- function(x, y = NULL, margin = 1,
             method = match(method, c("cosine", "correlation", "euclidean")),
             rank = rank,
             limit = min_proxy,
+            smooth = smooth,
             symm = symm,
             drop0 = drop0
         )
@@ -143,6 +147,7 @@ proxy <- function(x, y = NULL, margin = 1,
             rank = rank,
             limit = min_proxy,
             weight = weight,
+            smooth = smooth,
             symm = symm,
             drop0 = drop0
         )

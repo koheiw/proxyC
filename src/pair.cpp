@@ -177,6 +177,7 @@ S4 cpp_pair(arma::sp_mat& mt1,
             unsigned int rank,
             double limit = -1.0,
             double weight = 1.0,
+            double smooth = 0,
             bool symm = false,
             bool drop0 = false) {
 

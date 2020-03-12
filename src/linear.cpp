@@ -94,6 +94,7 @@ S4 cpp_linear(arma::sp_mat& mt1,
               const int method,
               unsigned int rank,
               double limit = -1.0,
+              double smooth = 0,
               bool symm = false,
               bool drop0 = false) {
 
