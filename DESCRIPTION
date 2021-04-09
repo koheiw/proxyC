@@ -1,7 +1,7 @@
 Package: proxyC
 Type: Package
 Title: Computes Proximity in Large Sparse Matrices
-Version: 0.1.5
+Version: 0.2.0
 Authors@R: c(
     person("Kohei", "Watanabe", email = "watanabe.kohei@gmail.com", role = c("cre", "aut", "cph"), 
            comment = c(ORCID = "0000-0001-6519-5265")),
@@ -29,4 +29,4 @@ Imports:
 Suggests:
     testthat,
     proxy
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1

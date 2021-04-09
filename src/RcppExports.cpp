@@ -46,8 +46,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_pair
-S4 cpp_pair(arma::sp_mat& mt1, arma::sp_mat& mt2, const int method, unsigned int rank, double limit, double weight, bool symm, bool drop0);
-RcppExport SEXP _proxyC_cpp_pair(SEXP mt1SEXP, SEXP mt2SEXP, SEXP methodSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP weightSEXP, SEXP symmSEXP, SEXP drop0SEXP) {
+S4 cpp_pair(arma::sp_mat& mt1, arma::sp_mat& mt2, const int method, unsigned int rank, double limit, double weight, bool symm, bool diag, bool drop0);
+RcppExport SEXP _proxyC_cpp_pair(SEXP mt1SEXP, SEXP mt2SEXP, SEXP methodSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP weightSEXP, SEXP symmSEXP, SEXP diagSEXP, SEXP drop0SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -58,8 +58,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type limit(limitSEXP);
     Rcpp::traits::input_parameter< double >::type weight(weightSEXP);
     Rcpp::traits::input_parameter< bool >::type symm(symmSEXP);
+    Rcpp::traits::input_parameter< bool >::type diag(diagSEXP);
     Rcpp::traits::input_parameter< bool >::type drop0(drop0SEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_pair(mt1, mt2, method, rank, limit, weight, symm, drop0));
+    rcpp_result_gen = Rcpp::wrap(cpp_pair(mt1, mt2, method, rank, limit, weight, symm, diag, drop0));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -68,7 +69,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_proxyC_cpp_linear", (DL_FUNC) &_proxyC_cpp_linear, 7},
     {"_proxyC_cpp_sd", (DL_FUNC) &_proxyC_cpp_sd, 1},
     {"_proxyC_cpp_nz", (DL_FUNC) &_proxyC_cpp_nz, 1},
-    {"_proxyC_cpp_pair", (DL_FUNC) &_proxyC_cpp_pair, 8},
+    {"_proxyC_cpp_pair", (DL_FUNC) &_proxyC_cpp_pair, 9},
     {NULL, NULL, 0}
 };
 

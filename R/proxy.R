@@ -18,7 +18,7 @@
 #' @param p weight for minkowski distance
 #' @param drop0 if \code{TRUE}, zero values are removed regardless of
 #'   \code{min_simil} or \code{rank}.
-#' @param diag if \code{TRUE}, only compute the diagonal elements of the
+#' @param diag if \code{TRUE}, only compute diagonal elements of the
 #' similarity/distance matrix; useful when comparing corresponding rows or columns
 #' of `x` and `y`.
 #' @param digits determines rounding of small values towards zero. Use primarily
