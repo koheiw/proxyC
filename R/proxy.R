@@ -153,6 +153,8 @@ proxy <- function(x, y = NULL, margin = 1,
             drop0 = drop0
         )
     }
+    if (diag)
+        result <- as(as(result, "diagonalMatrix"), "ddiMatrix")
     result@x <- zapsmall(result@x, digits)
     dimnames(result) <- list(colnames(x), colnames(y))
     return(result)
