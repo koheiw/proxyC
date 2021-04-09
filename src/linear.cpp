@@ -136,7 +136,7 @@ S4 cpp_linear(arma::sp_mat& mt1,
     parallelFor(0, ncol2, proxy_linear);
     //dev::stop_timer("Compute similarity", timer);
 
-    return to_matrix(simil_tri, ncol1, ncol2, symm);
+    return to_matrix(simil_tri, ncol1, ncol2, symm, false);
 }
 
 // [[Rcpp::export]]
