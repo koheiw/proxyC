@@ -33,7 +33,7 @@ namespace proxyc{
     typedef std::vector<Triplet> Triplets;
 #endif
 
-    inline S4 to_matrix(Triplets& tri, int nrow, int ncol, bool symmetric) {
+    inline S4 to_matrix(Triplets& tri, int nrow, int ncol, bool symmetric, bool diag) {
 
         std::size_t l = tri.size();
         IntegerVector dim_ = IntegerVector::create(nrow, ncol);
@@ -44,6 +44,13 @@ namespace proxyc{
             i_[k] = std::get<0>(tri[k]);
             j_[k] = std::get<1>(tri[k]);
             x_[k] = std::get<2>(tri[k]);
+        }
+        if (diag) {
+            S4 simil_("ddiMatrix");
+            simil_.slot("x") = x_;
+            simil_.slot("Dim") = dim_;
+            simil_.slot("diag") = "N";
+            return simil_;
         }
         if (symmetric) {
             S4 simil_("dsTMatrix");
