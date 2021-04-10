@@ -1,6 +1,7 @@
 # v0.2.0
 
-- Add the diag argument to compute similarity/distance for only corresponding rows or columns
+- Add the `diag` argument to compute similarity/distance only for corresponding rows or columns.
+- Correct the chi-squared distance to match `stats::chisq.test()`.
 
 # v0.1.5
 
@@ -10,20 +11,20 @@
 
 ## Bug fix
 
-- The digit argument is now passed to dist()
+- The digit argument is now passed to `dist()`.
 
 # v0.1.4
 
 ## New feature
 
-- Add rowSds(), colSds(), rowZeros() and colZeros()
+- Add `rowSds()`, `colSds()`, `rowZeros()` and `colZeros()`.
 
 # v0.1.3
 
 ## Bug fix
 
-- No longer assumes symmetry of resulting matrix when x != y (#3)
+- No longer assumes symmetry of resulting matrix when `x != y`.
 
 ## New feature
 
-- Add the digits argument to correct rounding errors in C++ (#5)
+- Add the digits argument to correct rounding errors in C++ (#5).
