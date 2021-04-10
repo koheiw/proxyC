@@ -49,9 +49,10 @@ double dist_euclidean(colvec& col_i, colvec& col_j) {
 }
 
 double dist_chisquare(colvec& col_i, colvec& col_j) {
-    double s1 = accu(square(col_i));
-    double s2 = accu(square(col_j));
-    return (s1 + s2) - accu(2 * trans(col_i) * col_j);
+    mat m = join_rows(col_i, col_j);
+    double s = accu(m);
+    mat e = (sum(m, 1) / s) * (sum(m, 0) / s) * s;
+    return accu(pow(m - e, 2) / e);
 }
 
 double dist_kullback(colvec& col_i, colvec& col_j) {

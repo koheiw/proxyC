@@ -40,7 +40,7 @@ test_dist <- function(x, method, margin, ignore_upper = FALSE, ...) {
     expect_equal(as.numeric(s3), as.numeric(s4), tolerance = 0.001)
 }
 
-test_that("test dist euclidean distance", {
+test_that("test euclidean distance", {
     skip_if_not_installed("proxy")
     test_dist(mat_test, "euclidean", margin = 1)
     test_dist(mat_test, "euclidean", margin = 2)
@@ -55,25 +55,25 @@ test_that("test dist euclidean distance", {
 #     test_dist(mat_test_dense, "kullback", margin = 2, ignore_upper = TRUE)
 # })
 
-test_that("test dist manhattan distance", {
+test_that("test manhattan distance", {
     skip_if_not_installed("proxy")
     test_dist(mat_test, "manhattan", margin = 1)
     test_dist(mat_test, "manhattan", margin = 2)
 })
 
-test_that("test dist maximum distance", {
+test_that("test maximum distance", {
     skip_if_not_installed("proxy")
     test_dist(mat_test, "maximum", margin = 1)
     test_dist(mat_test, "maximum", margin = 2)
 })
 
-# test_that("test dist canberra distance", {
+# test_that("test canberra distance", {
 #     skip_if_not_installed("proxy")
 #     test_dist(mat_test, "canberra", margin = 1)
 #     test_dist(mat_test, "canberra", margin = 2)
 # })
 
-test_that("test dist minkowski distance", {
+test_that("test minkowski distance", {
     skip_if_not_installed("proxy")
     test_dist(mat_test, "minkowski", margin = 1, p = 0.1)
     test_dist(mat_test, "minkowski", margin = 2, p = 0.1)
@@ -82,3 +82,22 @@ test_that("test dist minkowski distance", {
     test_dist(mat_test, "minkowski", margin = 1, p = 10)
     test_dist(mat_test, "minkowski", margin = 2, p = 10)
 })
+
+test_that("test canberra distance", {
+    skip_if_not_installed("proxy")
+    # proxyC and proxy disagree sparse matrix
+    smat <- rsparsematrix(100, 100, 1, rand.x = sample.int)
+    test_dist(smat, "canberra", margin = 1)
+    test_dist(smat, "canberra", margin = 2)
+})
+
+test_that("test chisquared distance", {
+    # does not work with sparse matrix without smoothing
+    smat <- rsparsematrix(100, 2, 1, rand.x = sample.int)
+    dmat <- as.matrix(smat)
+    expect_equal(
+        proxyC::dist(smat, method = "chisquared", margin = 2)[1,2],
+        unname(chisq.test(as.matrix(dmat))$stat)
+    )
+})
+
