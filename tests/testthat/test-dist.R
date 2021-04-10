@@ -83,3 +83,14 @@ test_that("test dist minkowski distance", {
     test_dist(mat_test, "minkowski", margin = 1, p = 10)
     test_dist(mat_test, "minkowski", margin = 2, p = 10)
 })
+
+
+test_that("test dist minkowski distance", {
+
+    smat <- rsparsematrix(100, 2, 1, rand.x = sample.int)
+    dmat <- as.matrix(smat)
+    expect_equal(
+        proxyC::dist(smat, method = "chisquared", margin = 2)[1,2],
+        unname(chisq.test(as.matrix(dmat))$stat)
+    )
+})
