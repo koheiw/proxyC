@@ -84,9 +84,16 @@ test_that("test minkowski distance", {
     test_dist(mat_test, "minkowski", margin = 2, p = 10)
 })
 
+test_that("test canberra distance", {
+    skip_if_not_installed("proxy")
+    # proxyC and proxy disagree sparse matrix
+    smat <- rsparsematrix(100, 100, 1, rand.x = sample.int)
+    test_dist(smat, "canberra", margin = 1)
+    test_dist(smat, "canberra", margin = 2)
+})
 
 test_that("test chisquared distance", {
-
+    # does not work with sparse matrix without smoothing
     smat <- rsparsematrix(100, 2, 1, rand.x = sample.int)
     dmat <- as.matrix(smat)
     expect_equal(
@@ -94,3 +101,4 @@ test_that("test chisquared distance", {
         unname(chisq.test(as.matrix(dmat))$stat)
     )
 })
+
