@@ -45,10 +45,10 @@ simil <- function(x, y = NULL, margin = 1,
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "hamming", "kullback",
                             "manhattan", "maximum", "canberra", "minkowski"),
-                 p = 2, drop0 = FALSE, digits = 14) {
+                 p = 2, smooth = 0, drop0 = FALSE, digits = 14) {
 
     method <- match.arg(method)
-    proxy(x, y, margin, method, p = p, drop0 = drop0, digits = digits)
+    proxy(x, y, margin, method, p = p, smooth = smooth, drop0 = drop0, digits = digits)
 }
 
 #' @import Rcpp
@@ -58,7 +58,7 @@ proxy <- function(x, y = NULL, margin = 1,
                              "dice", "edice", "hamman", "simple matching", "faith",
                              "euclidean", "chisquared", "hamming", "kullback",
                              "manhattan", "maximum", "canberra", "minkowski"),
-                  p = 2, min_proxy = NULL, rank = NULL, drop0 = FALSE, digits = 14) {
+                  p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE, digits = 14) {
 
     method <- match.arg(method)
     if(is(x, 'sparseMatrix')) {
@@ -143,6 +143,7 @@ proxy <- function(x, y = NULL, margin = 1,
             rank = rank,
             limit = min_proxy,
             weight = weight,
+            smooth = smooth,
             symm = symm,
             drop0 = drop0
         )
