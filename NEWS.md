@@ -7,7 +7,7 @@
 
 ## New feature
 
-- Add the dorp0 argument to address the floating point precision issue
+- Add the drop0 argument to address the floating point precision issue.
 
 ## Bug fix
 
