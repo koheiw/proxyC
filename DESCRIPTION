@@ -12,12 +12,9 @@ Description:
     Computes proximity between rows or columns of large matrices efficiently in C++.
     Functions are optimised for large sparse matrices using the Armadillo and Intel TBB libraries.
     Among several built-in similarity/distance measures, computation of correlation,
-    cosine similarity and Euclidean distance is particularly fast. 
-Encoding: UTF-8
-LazyData: true
-LinkingTo: Rcpp, RcppParallel, RcppArmadillo (>= 0.7.600.1.0)
+    cosine similarity and Euclidean distance is particularly fast.
+URL: https://github.com/koheiw/proxyC
 BugReports: https://github.com/koheiw/proxyC/issues
-SystemRequirements: C++11
 License: GPL-3
 Depends:
     R (>= 3.1.0),
@@ -29,4 +26,10 @@ Imports:
 Suggests:
     testthat,
     proxy
+LinkingTo: 
+    Rcpp, 
+    RcppParallel, 
+    RcppArmadillo (>= 0.7.600.1.0)
+SystemRequirements: C++11
+Encoding: UTF-8
 RoxygenNote: 7.1.1
