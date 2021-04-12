@@ -56,7 +56,7 @@ of `x` and `y`.}
 \item{digits}{determines rounding of small values towards zero. Use primarily
 to correct rounding errors in C++. See \link{zapsmall}.}
 
-\item{p}{weight for minkowski distance}
+\item{p}{weight for Minkowski distance}
 }
 \description{
 Fast similarity/distance computation function for large sparse matrices. You

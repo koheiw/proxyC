@@ -15,7 +15,7 @@
 #' @param min_simil the minimum similarity value to be recorded.
 #' @param rank an integer value specifying top-n most similarity values to be
 #'   recorded.
-#' @param p weight for minkowski distance
+#' @param p weight for Minkowski distance
 #' @param drop0 if \code{TRUE}, zero values are removed regardless of
 #'   \code{min_simil} or \code{rank}.
 #' @param diag if \code{TRUE}, only compute diagonal elements of the
@@ -160,10 +160,10 @@ proxy <- function(x, y = NULL, margin = 1,
     return(result)
 }
 
-#' Standard deviasion of columns and rows in sparse matrix
+#' Standard deviation of columns and rows in sparse matrix
 #'
 #' Produces the same result as \code{apply(x, 1, sd)} or \code{apply(x, 2, sd)}
-#' as without coecirng matrix to dense matrix. Values are not identical to
+#' as without coercing matrix to dense matrix. Values are not identical to
 #' \code{sd} because of the floating point precision issue in C++.
 #' @param x \link{Matrix} object
 #' @examples
