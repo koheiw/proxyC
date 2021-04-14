@@ -1,13 +1,13 @@
 # v0.2.0
 
 - Add the `diag` argument to compute similarity/distance only for corresponding rows or columns.
-- Correct the chi-squared distance to match `stats::chisq.test`.
+- Correct the chi-squared distance to match `stats::chisq.test()`.
 
 # v0.1.5
 
 ## New feature
 
-- Add the dorp0 argument to address the floating point precision issue
+- Add the drop0 argument to address the floating point precision issue.
 
 ## Bug fix
 

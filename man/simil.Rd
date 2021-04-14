@@ -5,14 +5,30 @@
 \alias{dist}
 \title{Compute similarity/distance between rows or columns of large matrices}
 \usage{
-simil(x, y = NULL, margin = 1, method = c("cosine", "correlation",
-  "jaccard", "ejaccard", "dice", "edice", "hamman", "simple matching",
-  "faith"), min_simil = NULL, rank = NULL, drop0 = FALSE,
-  digits = 14)
+simil(
+  x,
+  y = NULL,
+  margin = 1,
+  method = c("cosine", "correlation", "jaccard", "ejaccard", "dice", "edice", "hamman",
+    "simple matching", "faith"),
+  min_simil = NULL,
+  rank = NULL,
+  drop0 = FALSE,
+  diag = FALSE,
+  digits = 14
+)
 
-dist(x, y = NULL, margin = 1, method = c("euclidean", "chisquared",
-  "hamming", "kullback", "manhattan", "maximum", "canberra", "minkowski"),
-  p = 2, drop0 = FALSE, digits = 14)
+dist(
+  x,
+  y = NULL,
+  margin = 1,
+  method = c("euclidean", "chisquared", "hamming", "kullback", "manhattan", "maximum",
+    "canberra", "minkowski"),
+  p = 2,
+  drop0 = FALSE,
+  diag = FALSE,
+  digits = 14
+)
 }
 \arguments{
 \item{x}{\link{Matrix} object}
@@ -25,7 +41,7 @@ indicates rows or 2 indicates columns.}
 
 \item{method}{method to compute similarity or distance}
 
-\item{min_simil}{the minimum similarity value to be recoded.}
+\item{min_simil}{the minimum similarity value to be recorded.}
 
 \item{rank}{an integer value specifying top-n most similarity values to be
 recorded.}
@@ -33,16 +49,20 @@ recorded.}
 \item{drop0}{if \code{TRUE}, zero values are removed regardless of
 \code{min_simil} or \code{rank}.}
 
+\item{diag}{if \code{TRUE}, only compute diagonal elements of the
+similarity/distance matrix; useful when comparing corresponding rows or columns
+of `x` and `y`.}
+
 \item{digits}{determines rounding of small values towards zero. Use primarily
 to correct rounding errors in C++. See \link{zapsmall}.}
 
-\item{p}{weight for minkowski distance}
+\item{p}{weight for Minkowski distance}
 }
 \description{
 Fast similarity/distance computation function for large sparse matrices. You
 can floor small similarity value to to save computation time and storage
-space by an arbitrary threashold (\code{min_simil}) or rank (\code{rank}).
-Please increase the numbner of threads for better perfromance using
+space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}).
+Please increase the number of threads for better performance using
 \code{\link[RcppParallel]{setThreadOptions}}.
 }
 \examples{

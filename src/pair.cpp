@@ -1,8 +1,19 @@
+//#define ARMA_NO_DEBUG
 #include "armadillo.h"
 #include "proxyc.h"
 #include "dev.h"
 using namespace proxyc;
 using namespace arma;
+
+double simil_cosine(colvec& col_i, colvec& col_j) {
+    return accu(sum(col_i % col_j) / sqrt(sum(square(col_i)) * sum(square(col_j))));
+}
+
+double simil_correlation(colvec& col_i, colvec& col_j) {
+    double v1 = accu(col_i.t() * col_j);
+    double v2 = mean(col_i) * mean(col_j) * col_i.n_rows;
+    return ((v1 - v2) / col_i.n_rows) / (stddev(col_i, 1) * stddev(col_j, 1));
+}
 
 double simil_ejaccard(colvec& col_i, colvec& col_j, double weight = 1) {
     double e = accu(col_i % col_j);
@@ -33,9 +44,9 @@ double simil_matching(colvec& col_i, colvec& col_j) {
     return accu(m) / n;
 }
 
-// double dist_euclidean(colvec& col_i, colvec& col_j) {
-//     return sqrt(accu(square(col_i - col_j)));
-// }
+double dist_euclidean(colvec& col_i, colvec& col_j) {
+    return sqrt(accu(square(col_i - col_j)));
+}
 
 double dist_chisquare(colvec& col_i, colvec& col_j) {
     mat m = join_rows(col_i, col_j);
@@ -84,7 +95,6 @@ double dist_minkowski(colvec& col_i, colvec& col_j, double p = 1) {
     return pow(accu(pow(abs(col_i - col_j), p)), 1 / p);
 }
 
-
 struct proxy_pair : public Worker {
 
     const sp_mat& mt1; // input
@@ -94,15 +104,17 @@ struct proxy_pair : public Worker {
     const unsigned int rank;
     const double limit;
     const bool symm;
+    const bool diag;
     const double weight;
     const bool drop0;
 
     proxy_pair(const sp_mat& mt1_, const sp_mat& mt2_, Triplets& simil_tri_,
                const int method_,
                const unsigned int rank_, const double limit_, const bool symm_,
-               const double weight_, const bool drop0_) :
+               const bool diag_, const double weight_, const bool drop0_) :
                mt1(mt1_), mt2(mt2_), simil_tri(simil_tri_),
-               method(method_), rank(rank_), limit(limit_), symm(symm_),
+               method(method_), rank(rank_), limit(limit_),
+               symm(symm_), diag(diag_),
                weight(weight_), drop0(drop0_) {}
 
     void operator()(std::size_t begin, std::size_t end) {
@@ -116,43 +128,56 @@ struct proxy_pair : public Worker {
         colvec col_j(nrow);
         for (uword i = begin; i < end; i++) {
             col_i = mt2.col(i);
-            simils.reserve(ncol);
-
+            if (diag) {
+                simils.reserve(1);
+            } else {
+                simils.reserve(ncol);
+            }
             for (uword j = 0; j < ncol; j++) {
+                if (diag && j != i) continue;
                 if (symm && j > i) continue;
                 col_j = mt1.col(j);
                 switch (method) {
                 case 1:
-                    simil = simil_ejaccard(col_i, col_j, weight);
+                    simil = simil_cosine(col_i, col_j);
                     break;
                 case 2:
-                    simil = simil_edice(col_i, col_j, weight);
+                    simil = simil_correlation(col_i, col_j);
                     break;
                 case 3:
-                    simil = simil_hamman(col_i, col_j, weight);
+                    simil = simil_ejaccard(col_i, col_j, weight);
                     break;
                 case 4:
-                    simil = simil_matching(col_i, col_j);
+                    simil = simil_edice(col_i, col_j, weight);
                     break;
                 case 5:
-                    simil = simil_faith(col_i, col_j);
+                    simil = simil_hamman(col_i, col_j, weight);
                     break;
                 case 6:
-                    simil = dist_chisquare(col_i, col_j);
+                    simil = simil_matching(col_i, col_j);
                     break;
                 case 7:
-                    simil = dist_kullback(col_i, col_j);
+                    simil = simil_faith(col_i, col_j);
                     break;
                 case 8:
-                    simil = dist_manhattan(col_i, col_j);
+                    simil = dist_euclidean(col_i, col_j);
                     break;
                 case 9:
-                    simil = dist_maximum(col_i, col_j);
+                    simil = dist_chisquare(col_i, col_j);
                     break;
                 case 10:
-                    simil = dist_canberra(col_i, col_j);
+                    simil = dist_kullback(col_i, col_j);
                     break;
                 case 11:
+                    simil = dist_manhattan(col_i, col_j);
+                    break;
+                case 12:
+                    simil = dist_maximum(col_i, col_j);
+                    break;
+                case 13:
+                    simil = dist_canberra(col_i, col_j);
+                    break;
+                case 14:
                     simil = dist_minkowski(col_i, col_j, weight);
                     break;
                 }
@@ -163,7 +188,11 @@ struct proxy_pair : public Worker {
             double l = get_limit(simils, rank, limit);
             for (std::size_t k = 0; k < simils.size(); k++) {
                 if (simils[k] >= l) {
-                    simil_tri.push_back(std::make_tuple(k, i, simils[k]));
+                    if (diag) {
+                        simil_tri.push_back(std::make_tuple(i, i, simils[k]));
+                    } else {
+                        simil_tri.push_back(std::make_tuple(k, i, simils[k]));
+                    }
                 }
             }
             simils.clear();
@@ -179,6 +208,7 @@ S4 cpp_pair(arma::sp_mat& mt1,
             double limit = -1.0,
             double weight = 1.0,
             bool symm = false,
+            bool diag = false,
             bool drop0 = false) {
 
     if (mt1.n_rows != mt2.n_rows)
@@ -187,12 +217,12 @@ S4 cpp_pair(arma::sp_mat& mt1,
     uword ncol1 = mt1.n_cols;
     uword ncol2 = mt2.n_cols;
     if (rank < 1) rank = 1;
-    symm = symm && method != 7 && rank == ncol2;
+    symm = symm && method != 10 && rank == ncol2; // exception for kullback
 
     //dev::Timer timer;
     //dev::start_timer("Compute similarity", timer);
     Triplets simil_tri;
-    proxy_pair proxy_pair(mt1, mt2, simil_tri, method, rank, limit, symm, weight, drop0);
+    proxy_pair proxy_pair(mt1, mt2, simil_tri, method, rank, limit, symm, diag, weight, drop0);
     parallelFor(0, ncol2, proxy_pair);
     //dev::stop_timer("Compute similarity", timer);
 
