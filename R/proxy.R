@@ -2,8 +2,8 @@
 #'
 #' Fast similarity/distance computation function for large sparse matrices. You
 #' can floor small similarity value to to save computation time and storage
-#' space by an arbitrary threashold (\code{min_simil}) or rank (\code{rank}).
-#' Please increase the numbner of threads for better perfromance using
+#' space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}).
+#' Please increase the number of threads for better performance using
 #' \code{\link[RcppParallel]{setThreadOptions}}.
 #'
 #' @param x \link{Matrix} object
@@ -38,6 +38,8 @@ simil <- function(x, y = NULL, margin = 1,
 }
 
 #' @rdname simil
+#' @param smooth adds a  fixed value to all the cells to avoid division by zero.
+#'   Only used when `method` is "chisquared" or "kullback".
 #' @export
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)

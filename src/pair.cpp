@@ -37,16 +37,17 @@ double simil_matching(colvec& col_i, colvec& col_j) {
 //     return sqrt(accu(square(col_i - col_j)));
 // }
 
-double dist_chisquare(colvec& col_i, colvec& col_j) {
-    mat m = join_rows(col_i, col_j);
-    double s = accu(m);
-    mat e = (sum(m, 1) / s) * (sum(m, 0) / s) * s;
+double dist_chisquare(colvec& col_i, colvec& col_j, double smooth) {
+    if (smooth == 0 && (any(col_i == 0) || any(col_j == 0)))
+        return 0;
+    mat m = join_rows(col_i, col_j) + smooth;
+    m = m / accu(m);
+    mat e = sum(m, 1) * sum(m, 0);
     mat d = pow(m - e, 2) / e;
-    uvec nz = find(e > 0);
-    return accu(d(nz));
+    return accu(d);
 }
 
-double dist_kullback(colvec& col_i, colvec& col_j, bool smooth) {
+double dist_kullback(colvec& col_i, colvec& col_j, double smooth) {
     if (smooth == 0 && (any(col_i == 0) || any(col_j == 0)))
         return 0;
     double s1 = accu(col_i) + smooth * col_i.n_rows;
@@ -130,7 +131,7 @@ struct proxy_pair : public Worker {
                     simil = simil_faith(col_i, col_j);
                     break;
                 case 6:
-                    simil = dist_chisquare(col_i, col_j);
+                    simil = dist_chisquare(col_i, col_j, smooth);
                     break;
                 case 7:
                     simil = dist_kullback(col_i, col_j, smooth);

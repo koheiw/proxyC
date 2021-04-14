@@ -1,6 +1,5 @@
-context("test dist")
-
-mat_test <- Matrix::rsparsematrix(100, 100, 0.5)
+require(Matrix)
+mat_test <- rsparsematrix(100, 100, 0.5)
 
 test_dist <- function(x, method, margin, ignore_upper = FALSE, ...) {
     # test with only x
@@ -78,35 +77,30 @@ test_that("test canberra distance", {
 })
 
 test_that("test chisquared distance", {
-    # proxyC and proxy disagree when sparsity is high
-    smat <- rsparsematrix(100, 2, 0.99, rand.x = sample.int)
-    dmat <- as.matrix(smat)
+    skip_if_not_installed("entropy")
+
+    smat <- rsparsematrix(10, 2, 0.5, rand.x = sample.int)
     expect_equal(
         proxyC::dist(smat, method = "chisquared", margin = 2)[1,2],
-        unname(chisq.test(as.matrix(dmat))$stat)
+        0.0
+    )
+    dmat <- as.matrix(smat)
+    expect_equal(
+        proxyC::dist(smat, method = "chisquared", margin = 2, smooth = 1)[1,2],
+        entropy::chi2indep.empirical(dmat[,c(1, 2)] + 1)
     )
 })
 
 test_that("test kullback kullback distance", {
-    skip_if_not_installed("proxy")
-    # proxyC and proxy disagree when sparsity is high
-    # proxy::dist() also incorrectly produces symmetric matrix
+    skip_if_not_installed("entropy")
     smat <- rsparsematrix(10, 2, 0.5, rand.x = sample.int)
-    dmat <- as.matrix(smat)
     expect_equal(
         proxyC::dist(smat, method = "kullback", margin = 2)[1,2],
         0.0
     )
+    dmat <- as.matrix(smat)
     expect_equal(
-        as.matrix(proxyC::dist(smat, method = "kullback", margin = 2, smooth = 1))
-
+        as.matrix(proxyC::dist(smat, method = "kullback", margin = 2, smooth = 1))[1,2],
+        entropy::KL.empirical(dmat[,1] + 1, dmat[,2] + 1)
     )
-    as.matrix(tril(proxyC::dist(smat, method = "kullback", margin = 2, smooth = 1)))
-    proxy::dist(dmat + 1e-5, method = "kullback", by_rows = FALSE)
-
-    test_dist(mat_test_dense, "kullback", margin = 1, ignore_upper = TRUE)
-    test_dist(mat_test_dense, "kullback", margin = 2, ignore_upper = TRUE)
-
-    entropy::KL.empirical(dmat[,1], dmat[,2])
-
 })
