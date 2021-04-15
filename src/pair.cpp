@@ -1,4 +1,4 @@
-//#define ARMA_NO_DEBUG
+#define ARMA_NO_DEBUG
 #include "armadillo.h"
 #include "proxyc.h"
 #include "dev.h"
