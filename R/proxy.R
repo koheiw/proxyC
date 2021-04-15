@@ -12,12 +12,15 @@
 #' @param margin integer indicating margin of similarity/distance computation. 1
 #'   indicates rows or 2 indicates columns.
 #' @param method method to compute similarity or distance
-#' @param min_simil the minimum similarity value to be recoded.
+#' @param min_simil the minimum similarity value to be recorded.
 #' @param rank an integer value specifying top-n most similarity values to be
 #'   recorded.
-#' @param p weight for minkowski distance
+#' @param p weight for Minkowski distance
 #' @param drop0 if \code{TRUE}, zero values are removed regardless of
 #'   \code{min_simil} or \code{rank}.
+#' @param diag if \code{TRUE}, only compute diagonal elements of the
+#' similarity/distance matrix; useful when comparing corresponding rows or columns
+#' of `x` and `y`.
 #' @param digits determines rounding of small values towards zero. Use primarily
 #'   to correct rounding errors in C++. See \link{zapsmall}.
 #' @import methods Matrix
@@ -30,10 +33,11 @@
 simil <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
                              "dice", "edice", "hamman", "simple matching", "faith"),
-                  min_simil = NULL, rank = NULL, drop0 = FALSE, digits = 14) {
+                  min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE, digits = 14) {
 
     method <- match.arg(method)
-    proxy(x, y, margin, method, min_proxy = min_simil, rank = rank, drop0 = drop0, digits = digits)
+    proxy(x, y, margin, method, min_proxy = min_simil, rank = rank, drop0 = drop0,
+          diag = diag, digits = digits)
 
 }
 
@@ -47,10 +51,11 @@ simil <- function(x, y = NULL, margin = 1,
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "hamming", "kullback",
                             "manhattan", "maximum", "canberra", "minkowski"),
-                 p = 2, smooth = 0, drop0 = FALSE, digits = 14) {
+                 p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, digits = 14) {
 
     method <- match.arg(method)
-    proxy(x, y, margin, method, p = p, smooth = smooth, drop0 = drop0, digits = digits)
+    proxy(x, y, margin, method, p = p, smooth = smooth, drop0 = drop0,
+          diag = diag, digits = digits)
 }
 
 #' @import Rcpp
@@ -60,7 +65,7 @@ proxy <- function(x, y = NULL, margin = 1,
                              "dice", "edice", "hamman", "simple matching", "faith",
                              "euclidean", "chisquared", "hamming", "kullback",
                              "manhattan", "maximum", "canberra", "minkowski"),
-                  p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE, digits = 14) {
+                  p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE, diag = FALSE, digits = 14) {
 
     method <- match.arg(method)
     if(is(x, 'sparseMatrix')) {
@@ -125,7 +130,7 @@ proxy <- function(x, y = NULL, margin = 1,
         x <- as(as(x, "lgCMatrix"), "dgCMatrix")
         y <- as(as(y, "lgCMatrix"), "dgCMatrix")
     }
-    if (method %in% c("cosine", "correlation", "euclidean")) {
+    if (method %in% c("cosine", "correlation", "euclidean") && !diag) {
         result <- cpp_linear(
             mt1 = x,
             mt2 = y,
@@ -139,26 +144,30 @@ proxy <- function(x, y = NULL, margin = 1,
         result <- cpp_pair(
             mt1 = x,
             mt2 = y,
-            method = match(method, c("ejaccard", "edice", "hamman", "simple matching",
-                                     "faith", "chisquared", "kullback", "manhattan",
+            method = match(method, c("cosine", "correlation", "ejaccard", "edice",
+                                     "hamman", "simple matching", "faith",
+                                     "euclidean", "chisquared", "kullback", "manhattan",
                                      "maximum", "canberra", "minkowski")),
             rank = rank,
             limit = min_proxy,
             weight = weight,
             smooth = smooth,
             symm = symm,
+            diag = diag,
             drop0 = drop0
         )
     }
+    if (diag)
+        result <- as(as(result, "diagonalMatrix"), "ddiMatrix")
     result@x <- zapsmall(result@x, digits)
     dimnames(result) <- list(colnames(x), colnames(y))
     return(result)
 }
 
-#' Standard deviasion of columns and rows in sparse matrix
+#' Standard deviation of columns and rows in sparse matrix
 #'
 #' Produces the same result as \code{apply(x, 1, sd)} or \code{apply(x, 2, sd)}
-#' as without coecirng matrix to dense matrix. Values are not identical to
+#' as without coercing matrix to dense matrix. Values are not identical to
 #' \code{sd} because of the floating point precision issue in C++.
 #' @param x \link{Matrix} object
 #' @examples

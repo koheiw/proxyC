@@ -14,6 +14,7 @@ simil(
   min_simil = NULL,
   rank = NULL,
   drop0 = FALSE,
+  diag = FALSE,
   digits = 14
 )
 
@@ -26,6 +27,7 @@ dist(
   p = 2,
   smooth = 0,
   drop0 = FALSE,
+  diag = FALSE,
   digits = 14
 )
 }
@@ -40,7 +42,7 @@ indicates rows or 2 indicates columns.}
 
 \item{method}{method to compute similarity or distance}
 
-\item{min_simil}{the minimum similarity value to be recoded.}
+\item{min_simil}{the minimum similarity value to be recorded.}
 
 \item{rank}{an integer value specifying top-n most similarity values to be
 recorded.}
@@ -48,10 +50,14 @@ recorded.}
 \item{drop0}{if \code{TRUE}, zero values are removed regardless of
 \code{min_simil} or \code{rank}.}
 
+\item{diag}{if \code{TRUE}, only compute diagonal elements of the
+similarity/distance matrix; useful when comparing corresponding rows or columns
+of `x` and `y`.}
+
 \item{digits}{determines rounding of small values towards zero. Use primarily
 to correct rounding errors in C++. See \link{zapsmall}.}
 
-\item{p}{weight for minkowski distance}
+\item{p}{weight for Minkowski distance}
 
 \item{smooth}{adds a  fixed value to all the cells to avoid division by zero.
 Only used when `method` is "chisquared" or "kullback".}

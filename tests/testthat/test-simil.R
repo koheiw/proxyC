@@ -1,6 +1,5 @@
-context("test simil")
-
-mat_test <- Matrix::rsparsematrix(100, 100, 0.5)
+require(Matrix)
+mat_test <- rsparsematrix(100, 100, 0.5)
 
 test_simil <- function(x, method, margin, ignore_upper = FALSE, ignore_diag = TRUE, ...) {
     # test with only x
