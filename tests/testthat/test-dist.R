@@ -103,4 +103,8 @@ test_that("test kullback kullback distance", {
         as.matrix(proxyC::dist(smat, method = "kullback", margin = 2, smooth = 1))[1,2],
         entropy::KL.empirical(dmat[,1] + 1, dmat[,2] + 1)
     )
+    expect_equal(
+        as.matrix(proxyC::dist(smat, method = "kullback", margin = 2, smooth = 1))[2,1],
+        entropy::KL.empirical(dmat[,2] + 1, dmat[,1] + 1)
+    )
 })
