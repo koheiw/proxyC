@@ -174,12 +174,12 @@ struct pairWorker : public Worker {
                     break;
                 }
                 //Rcout << "simil=" << simil << "\n";
-                if (drop0 && simil == 0) continue;
                 simils.push_back(simil);
             }
             double l = get_limit(simils, rank, limit);
             for (std::size_t k = 0; k < simils.size(); k++) {
                 if (simils[k] >= l) {
+                    if (drop0 && simils[k] == 0) continue;
                     if (diag) {
                         simil_tri.push_back(std::make_tuple(i, i, simils[k]));
                     } else {
