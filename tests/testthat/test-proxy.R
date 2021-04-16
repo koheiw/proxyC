@@ -59,7 +59,16 @@ test_that("do not record zeros when drop0 is TRUE", {
     expect_false(any(proxyC:::proxy(mt, method = "cosine", drop0 = TRUE)@x == 0))
     expect_false(any(proxyC:::proxy(mt, method = "cosine", drop0 = TRUE, min_proxy = -0.5)@x == 0))
     expect_false(any(proxyC:::proxy(mt, method = "cosine", drop0 = TRUE, rank = 2)@x == 0))
-    expect_false(any(proxyC:::proxy(mt, method = "dice", drop0 = TRUE)@x == 0))
+    expect_false(any(proxyC:::proxy(mt, method = "jaccard", drop0 = TRUE)@x == 0))
+
+    expect_equal(
+        as.matrix(proxyC:::proxy(mt, method = "cosine", drop0 = TRUE)),
+        as.matrix(proxyC:::proxy(mt, method = "cosine", drop0 = FALSE))
+    )
+    expect_equal(
+        as.matrix(proxyC:::proxy(mt, method = "jaccard", drop0 = TRUE)),
+        as.matrix(proxyC:::proxy(mt, method = "jaccard", drop0 = FALSE))
+    )
 })
 
 
