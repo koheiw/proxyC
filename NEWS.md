@@ -2,6 +2,7 @@
 
 - Add the `diag` argument to compute similarity/distance only for corresponding rows or columns.
 - Correct the chi-squared distance to match `stats::chisq.test()`.
+- Fix a bug in pairwise similarity/distance computation when `drop0 = TRUE`.
 
 # v0.1.5
 
