@@ -49,7 +49,7 @@ simil <- function(x, y = NULL, margin = 1,
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' dist(mt, method = "euclidean")[1:5, 1:5]
 dist <- function(x, y = NULL, margin = 1,
-                 method = c("euclidean", "chisquared", "hamming", "kullback",
+                 method = c("euclidean", "chisquared", "kullback",
                             "manhattan", "maximum", "canberra", "minkowski"),
                  p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, digits = 14) {
 
@@ -63,7 +63,7 @@ dist <- function(x, y = NULL, margin = 1,
 proxy <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
                              "dice", "edice", "hamman", "simple matching", "faith",
-                             "euclidean", "chisquared", "hamming", "kullback",
+                             "euclidean", "chisquared", "kullback",
                              "manhattan", "maximum", "canberra", "minkowski"),
                   p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE, diag = FALSE, digits = 14) {
 
