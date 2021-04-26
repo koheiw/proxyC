@@ -1,31 +1,39 @@
-# v0.2.0
+# proxyC 0.2.0
 
-- Add the `diag` argument to compute similarity/distance only for corresponding rows or columns.
-- Correct the chi-squared distance to match `stats::chisq.test()`.
-- Fix a bug in pairwise similarity/distance computation when `drop0 = TRUE`.
+## New features
+- Added a `diag` argument to compute similarity/distance only for corresponding rows or columns (#13).
+- Added a `smooth` parameter to chisquared and kullback leibler distances to solve negative values in sparse matrices (#15).
+- Added the hamming distance (#18)
 
-# v0.1.5
+## Bug fixes
+- Fixed the chi-squared distance to match `stats::chisq.test()` (#14).
+- Fixed a bug in pairwise similarity/distance computation when `drop0 = TRUE` (#17).
 
-## New feature
 
-- Add the drop0 argument to address the floating point precision issue.
+# proxyC 0.1.5
 
-## Bug fix
+## New features
 
-- The digit argument is now passed to `dist()`.
+- Add the `drop0` argument to address the floating point precision issue (#10).
 
-# v0.1.4
+## Bug fixes
 
-## New feature
+- The digit argument is now passed to `dist()` (#11).
 
-- Add `rowSds()`, `colSds()`, `rowZeros()` and `colZeros()`.
 
-# v0.1.3
+# proxyC 0.1.4
 
-## Bug fix
+## New features
 
-- No longer assumes symmetry of resulting matrix when `x != y`.
+- Added `rowSds()`, `colSds()`, `rowZeros()` and `colZeros()` (#9).
 
-## New feature
 
-- Add the digits argument to correct rounding errors in C++ (#5).
+# proxyC 0.1.3
+
+## Bug fixes
+
+- No longer assumes symmetry of resulting matrix when `x != y` (#4).
+
+## New features
+
+- Added the `digits` argument to correct rounding errors in C++ (#5).

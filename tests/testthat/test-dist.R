@@ -91,7 +91,7 @@ test_that("test chisquared distance", {
     )
 })
 
-test_that("test kullback kullback distance", {
+test_that("test kullback leibler distance", {
     skip_if_not_installed("entropy")
     smat <- rsparsematrix(10, 2, 0.5, rand.x = sample.int)
     expect_equal(
