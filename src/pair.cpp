@@ -1,4 +1,4 @@
-//#define ARMA_NO_DEBUG
+#define ARMA_NO_DEBUG
 #include "armadillo.h"
 #include "proxyc.h"
 #include "dev.h"
@@ -48,30 +48,24 @@ double dist_euclidean(colvec& col_i, colvec& col_j) {
     return sqrt(accu(square(col_i - col_j)));
 }
 
-double dist_chisquare(colvec& col_i, colvec& col_j) {
-    mat m = join_rows(col_i, col_j);
-    double s = accu(m);
-    mat e = (sum(m, 1) / s) * (sum(m, 0) / s) * s;
-    return accu(pow(m - e, 2) / e);
+double dist_chisquare(colvec& col_i, colvec& col_j, double smooth) {
+    if (smooth == 0 && (any(col_i == 0) || any(col_j == 0)))
+        return 0;
+    mat m = join_rows(col_i, col_j) + smooth;
+    m = m / accu(m);
+    mat e = sum(m, 1) * sum(m, 0);
+    mat d = pow(m - e, 2) / e;
+    return accu(d);
 }
 
-double dist_kullback(colvec& col_i, colvec& col_j) {
-
-    double s1 = accu(col_i);
-    double s2 = accu(col_j);
-    uvec nz = intersect(find(col_i != 0), find(col_j != 0));
-    if (nz.n_rows == 0)
+double dist_kullback(colvec& col_i, colvec& col_j, double smooth) {
+    if (smooth == 0 && (any(col_i == 0) || any(col_j == 0)))
         return 0;
-    colvec p1 = col_i(nz) / s1;
-    colvec p2 = col_j(nz) / s2;
-
-    //Rcout << "log(p1):\n" << log(trans(p1)) << "\n";
-    //Rcout << "log(p2):\n" << log(trans(p2)) << "\n";
-    //Rcout << "trans(p1) * log(p1):\n" << trans(p1) * log(p1);
-    //Rcout << "trans(p1) * log(p2):\n" << trans(p1) * log(p2);
-    //Rcout << "simil\n" << as_scalar((trans(p1) * log(p1)) - (trans(p1) * log(p2))) << "\n";
-    //return as_scalar((trans(p1) * log(p1)) - (trans(p1) * log(p2)));
-    return as_scalar(trans(p2) * log(p2 / p1));
+    double s1 = accu(col_i) + smooth * col_i.n_rows;
+    double s2 = accu(col_j) + smooth * col_j.n_rows;
+    colvec p1 = (col_i + smooth) / s1;
+    colvec p2 = (col_j + smooth) / s2;
+    return accu(trans(p2) * log(p2 / p1));
 }
 
 double dist_manhattan(colvec& col_i, colvec& col_j) {
@@ -83,19 +77,17 @@ double dist_maximum(colvec& col_i, colvec& col_j) {
 }
 
 double dist_canberra(colvec& col_i, colvec& col_j) {
-    double n = col_i.n_rows;
-    colvec m = abs(col_i) + abs(col_j);
     colvec b = abs(col_i - col_j);
-    colvec d = b / m;
-    d.replace(datum::nan, 0);
-    return accu(d) / (accu(m != 0) / n);
+    colvec m = abs(col_i) + abs(col_j);
+    uvec nz = find(m > 0);
+    return accu(b(nz) / m(nz));
 }
 
 double dist_minkowski(colvec& col_i, colvec& col_j, double p = 1) {
     return pow(accu(pow(abs(col_i - col_j), p)), 1 / p);
 }
 
-struct proxy_pair : public Worker {
+struct pairWorker : public Worker {
 
     const sp_mat& mt1; // input
     const sp_mat& mt2; // input
@@ -106,16 +98,16 @@ struct proxy_pair : public Worker {
     const bool symm;
     const bool diag;
     const double weight;
+    const double smooth;
     const bool drop0;
 
-    proxy_pair(const sp_mat& mt1_, const sp_mat& mt2_, Triplets& simil_tri_,
+    pairWorker(const sp_mat& mt1_, const sp_mat& mt2_, Triplets& simil_tri_,
                const int method_,
                const unsigned int rank_, const double limit_, const bool symm_,
-               const bool diag_, const double weight_, const bool drop0_) :
+               const bool diag_, const double weight_, const double smooth_, const bool drop0_) :
                mt1(mt1_), mt2(mt2_), simil_tri(simil_tri_),
-               method(method_), rank(rank_), limit(limit_),
-               symm(symm_), diag(diag_),
-               weight(weight_), drop0(drop0_) {}
+               method(method_), rank(rank_), limit(limit_), symm(symm_), diag(diag_),
+               weight(weight_), smooth(smooth_), drop0(drop0_) {}
 
     void operator()(std::size_t begin, std::size_t end) {
 
@@ -163,10 +155,10 @@ struct proxy_pair : public Worker {
                     simil = dist_euclidean(col_i, col_j);
                     break;
                 case 9:
-                    simil = dist_chisquare(col_i, col_j);
+                    simil = dist_chisquare(col_i, col_j, smooth);
                     break;
                 case 10:
-                    simil = dist_kullback(col_i, col_j);
+                    simil = dist_kullback(col_i, col_j, smooth);
                     break;
                 case 11:
                     simil = dist_manhattan(col_i, col_j);
@@ -207,6 +199,7 @@ S4 cpp_pair(arma::sp_mat& mt1,
             unsigned int rank,
             double limit = -1.0,
             double weight = 1.0,
+            double smooth = 0,
             bool symm = false,
             bool diag = false,
             bool drop0 = false) {
@@ -222,7 +215,8 @@ S4 cpp_pair(arma::sp_mat& mt1,
     //dev::Timer timer;
     //dev::start_timer("Compute similarity", timer);
     Triplets simil_tri;
-    proxy_pair proxy_pair(mt1, mt2, simil_tri, method, rank, limit, symm, diag, weight, drop0);
+    pairWorker proxy_pair(mt1, mt2, simil_tri, method, rank, limit, symm, diag,
+                          weight, smooth, drop0);
     parallelFor(0, ncol2, proxy_pair);
     //dev::stop_timer("Compute similarity", timer);
 
@@ -231,8 +225,8 @@ S4 cpp_pair(arma::sp_mat& mt1,
 }
 
 /***R
-mt <- Matrix::rsparsematrix(100, 100, 0.01)
-system.time(
-out <- cpp_pair(mt, mt, 1, 100, symm = TRUE)
+mt <- Matrix::rsparsematrix(1000, 500, 0.01)
+microbenchmark::microbenchmark(
+out <- cpp_pair(mt, mt, 6, 100, symm = TRUE, smooth = 0.0)
 )
 */

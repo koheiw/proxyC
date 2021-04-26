@@ -25,6 +25,7 @@ Imports:
     RcppParallel
 Suggests:
     testthat,
+    entropy,
     proxy
 LinkingTo: 
     Rcpp, 

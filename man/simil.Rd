@@ -22,9 +22,10 @@ dist(
   x,
   y = NULL,
   margin = 1,
-  method = c("euclidean", "chisquared", "hamming", "kullback", "manhattan", "maximum",
-    "canberra", "minkowski"),
+  method = c("euclidean", "chisquared", "kullback", "manhattan", "maximum", "canberra",
+    "minkowski"),
   p = 2,
+  smooth = 0,
   drop0 = FALSE,
   diag = FALSE,
   digits = 14
@@ -57,6 +58,9 @@ of `x` and `y`.}
 to correct rounding errors in C++. See \link{zapsmall}.}
 
 \item{p}{weight for Minkowski distance}
+
+\item{smooth}{adds a  fixed value to all the cells to avoid division by zero.
+Only used when `method` is "chisquared" or "kullback".}
 }
 \description{
 Fast similarity/distance computation function for large sparse matrices. You

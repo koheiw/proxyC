@@ -1,3 +1,4 @@
+#define ARMA_NO_DEBUG
 #include "armadillo.h"
 #include "proxyc.h"
 #include "dev.h"
@@ -31,7 +32,7 @@ rowvec mean(const sp_mat& mt) {
     return(v);
 }
 
-struct proxy_linear : public Worker {
+struct linearWorker : public Worker {
 
     const arma::sp_mat& mt1t; // input
     const arma::sp_mat& mt2; // input
@@ -46,7 +47,7 @@ struct proxy_linear : public Worker {
     const bool symm;
     const bool drop0;
 
-    proxy_linear(const sp_mat& mt1t_, const sp_mat& mt2_, Triplets& simil_tri_,
+    linearWorker(const sp_mat& mt1t_, const sp_mat& mt2_, Triplets& simil_tri_,
                       const rowvec& square1_, const rowvec& center1_,
                       const rowvec& square2_, const rowvec& center2_,
                       const int method_,
@@ -130,7 +131,7 @@ S4 cpp_linear(arma::sp_mat& mt1,
 
     Triplets simil_tri;
     mt1 = trans(mt1);
-    proxy_linear proxy_linear(mt1, mt2, simil_tri,
+    linearWorker proxy_linear(mt1, mt2, simil_tri,
                               square1, center1, square2, center2,
                               method, rank, limit, symm, drop0);
     parallelFor(0, ncol2, proxy_linear);
