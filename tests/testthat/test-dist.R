@@ -110,7 +110,7 @@ test_that("test kullback leibler distance", {
 })
 
 test_that("test hamming distance", {
-    new_mat_test <- rsparsematrix(100, 80, 1, rand.x = function(x) sample.int(10, x, replace = TRUE))
+    new_mat_test <- rsparsematrix(100, 90, 1, rand.x = function(x) sample.int(10, x, replace = TRUE))
     dmat <- as.matrix(proxyC::dist(new_mat_test, method = "hamming"))
     dmat_manual <-
         sapply(seq_len(nrow(new_mat_test)), function(i) {
