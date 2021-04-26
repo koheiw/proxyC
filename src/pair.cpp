@@ -72,6 +72,10 @@ double dist_manhattan(colvec& col_i, colvec& col_j) {
     return accu(abs(col_i - col_j));
 }
 
+double dist_hamming(colvec& col_i, colvec& col_j) {
+    return accu(col_i != col_j);
+}
+
 double dist_maximum(colvec& col_i, colvec& col_j) {
     return accu(max(abs(col_i - col_j)));
 }
@@ -171,6 +175,9 @@ struct pairWorker : public Worker {
                     break;
                 case 14:
                     simil = dist_minkowski(col_i, col_j, weight);
+                    break;
+                case 15:
+                    simil = dist_hamming(col_i, col_j);
                     break;
                 }
                 //Rcout << "simil=" << simil << "\n";

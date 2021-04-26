@@ -108,3 +108,22 @@ test_that("test kullback kullback distance", {
         entropy::KL.empirical(dmat[,2] + 1, dmat[,1] + 1)
     )
 })
+
+test_that("test hamming distance", {
+    new_mat_test <- rsparsematrix(100, 80, 1, rand.x = function(x) sample.int(10, x, replace = TRUE))
+    dmat <- as.matrix(proxyC::dist(new_mat_test, method = "hamming"))
+    dmat_manual <-
+        sapply(seq_len(nrow(new_mat_test)), function(i) {
+            rowSums(sweep(new_mat_test, 2, new_mat_test[i, ], "!="))
+        })
+    expect_equal(
+        dmat,
+        dmat_manual,
+        check.attributes = FALSE
+    )
+    expect_equal(
+        mean(dmat[!diag(nrow(dmat))]),
+        .9 * nrow(new_mat_test), # thanks to rand.x function, there's a 10% chance that values from different rows will match
+        tolerance = 1
+    )
+})

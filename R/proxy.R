@@ -50,7 +50,7 @@ simil <- function(x, y = NULL, margin = 1,
 #' dist(mt, method = "euclidean")[1:5, 1:5]
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "kullback",
-                            "manhattan", "maximum", "canberra", "minkowski"),
+                            "manhattan", "maximum", "canberra", "minkowski", "hamming"),
                  p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, digits = 14) {
 
     method <- match.arg(method)
@@ -64,7 +64,7 @@ proxy <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
                              "dice", "edice", "hamman", "simple matching", "faith",
                              "euclidean", "chisquared", "kullback",
-                             "manhattan", "maximum", "canberra", "minkowski"),
+                             "manhattan", "maximum", "canberra", "minkowski", "hamming"),
                   p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE, diag = FALSE, digits = 14) {
 
     method <- match.arg(method)
@@ -147,7 +147,7 @@ proxy <- function(x, y = NULL, margin = 1,
             method = match(method, c("cosine", "correlation", "ejaccard", "edice",
                                      "hamman", "simple matching", "faith",
                                      "euclidean", "chisquared", "kullback", "manhattan",
-                                     "maximum", "canberra", "minkowski")),
+                                     "maximum", "canberra", "minkowski", "hamming")),
             rank = rank,
             limit = min_proxy,
             weight = weight,
