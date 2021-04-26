@@ -1,5 +1,5 @@
 require(Matrix)
-mat_test <- rsparsematrix(100, 100, 0.5)
+mat_test <- rsparsematrix(100, 90, 0.5)
 
 test_dist <- function(x, method, margin, ignore_upper = FALSE, ...) {
     # test with only x
@@ -91,7 +91,7 @@ test_that("test chisquared distance", {
     )
 })
 
-test_that("test kullback kullback distance", {
+test_that("test kullback leibler distance", {
     skip_if_not_installed("entropy")
     smat <- rsparsematrix(10, 2, 0.5, rand.x = sample.int)
     expect_equal(
@@ -106,5 +106,24 @@ test_that("test kullback kullback distance", {
     expect_equal(
         as.matrix(proxyC::dist(smat, method = "kullback", margin = 2, smooth = 1))[2,1],
         entropy::KL.empirical(dmat[,2] + 1, dmat[,1] + 1)
+    )
+})
+
+test_that("test hamming distance", {
+    new_mat_test <- rsparsematrix(100, 90, 1, rand.x = function(x) sample.int(10, x, replace = TRUE))
+    dmat <- as.matrix(proxyC::dist(new_mat_test, method = "hamming"))
+    dmat_manual <-
+        sapply(seq_len(nrow(new_mat_test)), function(i) {
+            rowSums(sweep(new_mat_test, 2, new_mat_test[i, ], "!="))
+        })
+    expect_equal(
+        dmat,
+        dmat_manual,
+        check.attributes = FALSE
+    )
+    expect_equal(
+        mean(dmat[!diag(nrow(dmat))]),
+        .9 * nrow(new_mat_test), # thanks to rand.x function, there's a 10% chance that values from different rows will match
+        tolerance = 1
     )
 })

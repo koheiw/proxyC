@@ -23,7 +23,7 @@ dist(
   y = NULL,
   margin = 1,
   method = c("euclidean", "chisquared", "kullback", "manhattan", "maximum", "canberra",
-    "minkowski"),
+    "minkowski", "hamming"),
   p = 2,
   smooth = 0,
   drop0 = FALSE,
