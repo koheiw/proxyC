@@ -1,5 +1,7 @@
 require(Matrix)
 mat_test <- rsparsematrix(100, 90, 0.5)
+mat_test[1, ] <- 10.123 # add one row with sd(x) == 0
+mat_test[, 1] <- 10.123 # add one col with sd(x) == 0
 
 test_simil <- function(x, method, margin, ignore_upper = FALSE, ignore_diag = TRUE, ...) {
     # test with only x
