@@ -3,7 +3,7 @@ mat_test <- rsparsematrix(100, 90, 0.5)
 mat_test[1, ] <- 10.123 # add one row with sd(x) == 0
 mat_test[, 1] <- 10.123 # add one col with sd(x) == 0
 
-test_simil <- function(x, method, margin, ignore_upper = FALSE, ignore_diag = TRUE, ...) {
+test_simil <- function(x, method, margin, ignore_upper = FALSE, ignore_diag = TRUE, nan_to_zero = FALSE, ...) {
     # test with only x
     s1 <- as.matrix(simil(x, method = method, margin = margin, ...))
     s2 <- proxy::as.matrix(proxy::simil(as.matrix(x),
@@ -12,6 +12,8 @@ test_simil <- function(x, method, margin, ignore_upper = FALSE, ignore_diag = TR
         diag(s1) <- diag(s2) <- 0
     if (ignore_upper)
         s1[upper.tri(s1, TRUE)] <- s2[upper.tri(s2, TRUE)] <- 0
+    if (nan_to_zero)
+        s2[!is.finite(s2)] <- 0
     expect_equal(as.numeric(s1), as.numeric(s2), tolerance = 0.001)
 
     # test with x and y, different size
@@ -28,6 +30,8 @@ test_simil <- function(x, method, margin, ignore_upper = FALSE, ignore_diag = TR
         diag(s3) <- diag(s4) <- 0
     if (ignore_upper)
         s3[upper.tri(s3, TRUE)] <- s4[upper.tri(s4, TRUE)] <- 0
+    if (nan_to_zero)
+        s4[!is.finite(s4)] <- 0
     expect_equal(as.numeric(s3), as.numeric(s4), tolerance = 0.001)
 
 
@@ -45,6 +49,8 @@ test_simil <- function(x, method, margin, ignore_upper = FALSE, ignore_diag = TR
         diag(s3) <- diag(s4) <- 0
     if (ignore_upper)
         s3[upper.tri(s3, TRUE)] <- s4[upper.tri(s4, TRUE)] <- 0
+    if (nan_to_zero)
+        s4[!is.finite(s4)] <- 0
     expect_equal(as.numeric(s3), as.numeric(s4), tolerance = 0.001)
 }
 
@@ -56,8 +62,8 @@ test_that("test cosine similarity", {
 
 test_that("test correlation similarity", {
     skip_if_not_installed("proxy")
-    test_simil(mat_test, "correlation", margin = 1)
-    test_simil(mat_test, "correlation", margin = 2)
+    test_simil(mat_test, "correlation", margin = 1, nan_to_zero = TRUE)
+    test_simil(mat_test, "correlation", margin = 2, nan_to_zero = TRUE)
 })
 
 test_that("test jaccard similarity", {

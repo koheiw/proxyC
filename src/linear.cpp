@@ -119,6 +119,17 @@ S4 cpp_linear(arma::sp_mat& mt1,
         center1 = mean(mt1);
         square2 = stddev(mt2, 1);
         center2 = mean(mt2);
+        // set stdev to inf when it is zero
+        for (std::size_t k = 0; k < square1.size(); k++) {
+            if (square1[k] == 0.0) {
+                square1[k] = std::numeric_limits<double>::infinity();
+            }
+        }
+        for (std::size_t k = 0; k < square2.size(); k++) {
+            if (square2[k] == 0.0) {
+                square2[k] = std::numeric_limits<double>::infinity();
+            }
+        }
         break;
     case 3: // euclidean distance
         square1 = rowvec(mat(sum(mt1 % mt1, 0)));
