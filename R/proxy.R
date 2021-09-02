@@ -147,7 +147,7 @@ proxy <- function(x, y = NULL, margin = 1,
             limit = min_proxy,
             symm = symm,
             drop0 = drop0,
-            nan = use_nan
+            use_nan = use_nan
         )
     } else {
         result <- cpp_pair(
@@ -164,7 +164,7 @@ proxy <- function(x, y = NULL, margin = 1,
             symm = symm,
             diag = diag,
             drop0 = drop0,
-            nan = use_nan
+            use_nan = use_nan
         )
     }
     if (diag)

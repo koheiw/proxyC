@@ -14,7 +14,7 @@ rowSds(x)
 }
 \description{
 Produces the same result as \code{apply(x, 1, sd)} or \code{apply(x, 2, sd)}
-as without coercing matrix to dense matrix. Values are not identical to
+without coercing matrix to dense matrix. Values are not identical to
 \code{sd} because of the floating point precision issue in C++.
 }
 \examples{
