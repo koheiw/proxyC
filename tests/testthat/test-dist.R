@@ -34,12 +34,12 @@ test_dist <- function(x, method, margin, ignore_upper = FALSE, ...) {
         y <- x[,sample(ncol(x))]
     }
 
-    s3 <- as.matrix(dist(x, y, method = method, margin = margin, ...))
-    s4 <- as.matrix(proxy::dist(as.matrix(x), as.matrix(y),
+    s5 <- as.matrix(dist(x, y, method = method, margin = margin, ...))
+    s6 <- as.matrix(proxy::dist(as.matrix(x), as.matrix(y),
                                 method = method, by_rows = margin == 1, diag = TRUE, ...))
     if (ignore_upper)
-        s3[upper.tri(s3, TRUE)] <- s4[upper.tri(s4, TRUE)] <- 0
-    expect_equal(as.numeric(s3), as.numeric(s4), tolerance = 0.001)
+        s5[upper.tri(s5, TRUE)] <- s6[upper.tri(s5, TRUE)] <- 0
+    expect_equal(as.numeric(s5), as.numeric(s6), tolerance = 0.001)
 }
 
 test_that("test euclidean distance", {
