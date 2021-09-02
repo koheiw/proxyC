@@ -19,8 +19,10 @@
 #' @param drop0 if \code{TRUE}, zero values are removed regardless of
 #'   \code{min_simil} or \code{rank}.
 #' @param diag if \code{TRUE}, only compute diagonal elements of the
-#' similarity/distance matrix; useful when comparing corresponding rows or columns
-#' of `x` and `y`.
+#'   similarity/distance matrix; useful when comparing corresponding rows or
+#'   columns of `x` and `y`.
+#' @param use_nan if \code{TRUE}, return `NaN` when the standard deviation in
+#'   correlation is zero.
 #' @param digits determines rounding of small values towards zero. Use primarily
 #'   to correct rounding errors in C++. See \link{zapsmall}.
 #' @import methods Matrix
@@ -33,11 +35,12 @@
 simil <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
                              "dice", "edice", "hamman", "simple matching", "faith"),
-                  min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE, digits = 14) {
+                  min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE,
+                  use_nan = FALSE, digits = 14) {
 
     method <- match.arg(method)
     proxy(x, y, margin, method, min_proxy = min_simil, rank = rank, drop0 = drop0,
-          diag = diag, digits = digits)
+          diag = diag, use_nan = use_nan, digits = digits)
 
 }
 
@@ -51,7 +54,7 @@ simil <- function(x, y = NULL, margin = 1,
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "kullback",
                             "manhattan", "maximum", "canberra", "minkowski", "hamming"),
-                 p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, digits = 14) {
+                 p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, use_nan = FALSE, digits = 14) {
 
     method <- match.arg(method)
     proxy(x, y, margin, method, p = p, smooth = smooth, drop0 = drop0,
@@ -65,7 +68,8 @@ proxy <- function(x, y = NULL, margin = 1,
                              "dice", "edice", "hamman", "simple matching", "faith",
                              "euclidean", "chisquared", "kullback",
                              "manhattan", "maximum", "canberra", "minkowski", "hamming"),
-                  p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE, diag = FALSE, digits = 14) {
+                  p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE,
+                  diag = FALSE, use_nan = FALSE, digits = 14) {
 
     method <- match.arg(method)
     if(is(x, 'sparseMatrix')) {
@@ -102,6 +106,10 @@ proxy <- function(x, y = NULL, margin = 1,
         rank <- ncol(x)
     if (rank < 1)
         stop("rank must be great than or equal to 1")
+    if (method == "correlation" && !use_nan) {
+        if (any(colSds(x) == 0) || any(colSds(y) == 0))
+            warning("x or y has vectors with zero standard deviation; consider setting use_nan = TRUE", call. = FALSE)
+    }
 
     boolean <- FALSE
     weight <- 1
@@ -138,7 +146,8 @@ proxy <- function(x, y = NULL, margin = 1,
             rank = rank,
             limit = min_proxy,
             symm = symm,
-            drop0 = drop0
+            drop0 = drop0,
+            use_nan = use_nan
         )
     } else {
         result <- cpp_pair(
@@ -154,7 +163,8 @@ proxy <- function(x, y = NULL, margin = 1,
             smooth = smooth,
             symm = symm,
             diag = diag,
-            drop0 = drop0
+            drop0 = drop0,
+            use_nan = use_nan
         )
     }
     if (diag)
@@ -167,7 +177,7 @@ proxy <- function(x, y = NULL, margin = 1,
 #' Standard deviation of columns and rows in sparse matrix
 #'
 #' Produces the same result as \code{apply(x, 1, sd)} or \code{apply(x, 2, sd)}
-#' as without coercing matrix to dense matrix. Values are not identical to
+#' without coercing matrix to dense matrix. Values are not identical to
 #' \code{sd} because of the floating point precision issue in C++.
 #' @param x \link{Matrix} object
 #' @examples

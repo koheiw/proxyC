@@ -9,10 +9,14 @@ double simil_cosine(colvec& col_i, colvec& col_j) {
     return accu(sum(col_i % col_j) / sqrt(sum(square(col_i)) * sum(square(col_j))));
 }
 
-double simil_correlation(colvec& col_i, colvec& col_j) {
+double simil_correlation(colvec& col_i, colvec& col_j, bool use_nan) {
+    double sd_i = stddev(col_i, 1);
+    double sd_j = stddev(col_j, 1);
+    if (sd_i == 0.0 || sd_j == 0.0)
+        return use_nan ? std::numeric_limits<double>::quiet_NaN() : 0.0;
     double v1 = accu(col_i.t() * col_j);
     double v2 = mean(col_i) * mean(col_j) * col_i.n_rows;
-    return ((v1 - v2) / col_i.n_rows) / (stddev(col_i, 1) * stddev(col_j, 1));
+    return ((v1 - v2) / col_i.n_rows) / (sd_i * sd_j);
 }
 
 double simil_ejaccard(colvec& col_i, colvec& col_j, double weight = 1) {
@@ -104,14 +108,16 @@ struct pairWorker : public Worker {
     const double weight;
     const double smooth;
     const bool drop0;
+    const bool use_nan;
 
     pairWorker(const sp_mat& mt1_, const sp_mat& mt2_, Triplets& simil_tri_,
                const int method_,
                const unsigned int rank_, const double limit_, const bool symm_,
-               const bool diag_, const double weight_, const double smooth_, const bool drop0_) :
+               const bool diag_, const double weight_, const double smooth_,
+               const bool drop0_, const bool use_nan_) :
                mt1(mt1_), mt2(mt2_), simil_tri(simil_tri_),
                method(method_), rank(rank_), limit(limit_), symm(symm_), diag(diag_),
-               weight(weight_), smooth(smooth_), drop0(drop0_) {}
+               weight(weight_), smooth(smooth_), drop0(drop0_), use_nan(use_nan_) {}
 
     void operator()(std::size_t begin, std::size_t end) {
 
@@ -138,7 +144,7 @@ struct pairWorker : public Worker {
                     simil = simil_cosine(col_i, col_j);
                     break;
                 case 2:
-                    simil = simil_correlation(col_i, col_j);
+                    simil = simil_correlation(col_i, col_j, use_nan);
                     break;
                 case 3:
                     simil = simil_ejaccard(col_i, col_j, weight);
@@ -185,7 +191,7 @@ struct pairWorker : public Worker {
             }
             double l = get_limit(simils, rank, limit);
             for (std::size_t k = 0; k < simils.size(); k++) {
-                if (simils[k] >= l) {
+                if (simils[k] >= l || (use_nan && std::isnan(simils[k]))) {
                     if (drop0 && simils[k] == 0) continue;
                     if (diag) {
                         simil_tri.push_back(std::make_tuple(i, i, simils[k]));
@@ -209,10 +215,13 @@ S4 cpp_pair(arma::sp_mat& mt1,
             double smooth = 0,
             bool symm = false,
             bool diag = false,
-            bool drop0 = false) {
+            bool drop0 = false,
+            bool use_nan = false) {
 
     if (mt1.n_rows != mt2.n_rows)
         throw std::range_error("Invalid matrix objects");
+    if (method != 2) // correlation only
+        use_nan = false;
 
     uword ncol1 = mt1.n_cols;
     uword ncol2 = mt2.n_cols;
@@ -223,7 +232,7 @@ S4 cpp_pair(arma::sp_mat& mt1,
     //dev::start_timer("Compute similarity", timer);
     Triplets simil_tri;
     pairWorker proxy_pair(mt1, mt2, simil_tri, method, rank, limit, symm, diag,
-                          weight, smooth, drop0);
+                          weight, smooth, drop0, use_nan);
     parallelFor(0, ncol2, proxy_pair);
     //dev::stop_timer("Compute similarity", timer);
 

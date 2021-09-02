@@ -46,16 +46,18 @@ struct linearWorker : public Worker {
     const double limit;
     const bool symm;
     const bool drop0;
+    const bool use_nan;
 
     linearWorker(const sp_mat& mt1t_, const sp_mat& mt2_, Triplets& simil_tri_,
                       const rowvec& square1_, const rowvec& center1_,
                       const rowvec& square2_, const rowvec& center2_,
                       const int method_,
                       const unsigned int rank_, const double limit_,
-                      const bool symm_, const bool drop0_) :
+                      const bool symm_, const bool drop0_, const bool use_nan_) :
         mt1t(mt1t_), mt2(mt2_), simil_tri(simil_tri_),
         square1(square1_), center1(center1_), square2(square2_), center2(center2_),
-        method(method_), rank(rank_), limit(limit_), symm(symm_), drop0(drop0_) {}
+        method(method_), rank(rank_), limit(limit_), symm(symm_), drop0(drop0_),
+        use_nan(use_nan_) {}
 
     void operator()(std::size_t begin, std::size_t end) {
 
@@ -72,6 +74,10 @@ struct linearWorker : public Worker {
                 v1 = rowvec(trans(mt1t * mt2.col(i)));
                 v2 = center1 * center2[i] * ncol;
                 simils = to_vector(((v1 - v2) / ncol) / (square1 * square2[i]));
+                for (std::size_t j = 0; j < square1.size(); j++) {
+                    if (square1[j] == 0.0 || square2[i] == 0.0)
+                        simils[j] = use_nan ? std::numeric_limits<double>::quiet_NaN() : 0.0;
+                }
                 break;
             case 3: // euclidean distance
                 simils = to_vector(sqrt(trans(mt1t * mt2.col(i)) * -2 + square1 + square2[i]));
@@ -81,7 +87,7 @@ struct linearWorker : public Worker {
             for (std::size_t k = 0; k < simils.size(); k++) {
                 if (symm && k > i) continue;
                 if (drop0 && simils[k] == 0) continue;
-                if (simils[k] >= l) {
+                if (simils[k] >= l || (use_nan && std::isnan(simils[k]))) {
                     simil_tri.push_back(std::make_tuple(k, i, simils[k]));
                 }
             }
@@ -96,10 +102,13 @@ S4 cpp_linear(arma::sp_mat& mt1,
               unsigned int rank,
               double limit = -1.0,
               bool symm = false,
-              bool drop0 = false) {
+              bool drop0 = false,
+              bool use_nan = false) {
 
     if (mt1.n_rows != mt2.n_rows)
         throw std::range_error("Invalid matrix objects");
+    if (method != 2) // correlation only
+        use_nan = false;
 
     uword ncol1 = mt1.n_cols;
     uword ncol2 = mt2.n_cols;
@@ -133,7 +142,7 @@ S4 cpp_linear(arma::sp_mat& mt1,
     mt1 = trans(mt1);
     linearWorker proxy_linear(mt1, mt2, simil_tri,
                               square1, center1, square2, center2,
-                              method, rank, limit, symm, drop0);
+                              method, rank, limit, symm, drop0, use_nan);
     parallelFor(0, ncol2, proxy_linear);
     //dev::stop_timer("Compute similarity", timer);
 
