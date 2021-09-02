@@ -20,4 +20,4 @@ Update documentation, add a new feature and fix a bug
 
 ## Downstream dependencies
 
-Changes do not affect in exisiting users
+Changes do not affect in existing users
