@@ -15,6 +15,7 @@ simil(
   rank = NULL,
   drop0 = FALSE,
   diag = FALSE,
+  use_nan = FALSE,
   digits = 14
 )
 
@@ -28,6 +29,7 @@ dist(
   smooth = 0,
   drop0 = FALSE,
   diag = FALSE,
+  use_nan = FALSE,
   digits = 14
 )
 }
@@ -51,8 +53,11 @@ recorded.}
 \code{min_simil} or \code{rank}.}
 
 \item{diag}{if \code{TRUE}, only compute diagonal elements of the
-similarity/distance matrix; useful when comparing corresponding rows or columns
-of `x` and `y`.}
+similarity/distance matrix; useful when comparing corresponding rows or
+columns of `x` and `y`.}
+
+\item{use_nan}{if \code{TRUE}, return `NaN` when the standard deviation in
+correlation is zero.}
 
 \item{digits}{determines rounding of small values towards zero. Use primarily
 to correct rounding errors in C++. See \link{zapsmall}.}
