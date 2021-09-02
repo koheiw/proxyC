@@ -113,6 +113,7 @@ test_that("use_na is working", {
     mat1 <- Matrix::Matrix(1:4, nrow = 1, sparse = TRUE)
     mat2 <- Matrix::Matrix(rep(0.001, 4), nrow = 1, sparse = TRUE)
     mat3 <- Matrix::Matrix(rep(1, 4), nrow = 1, sparse = TRUE)
+    mat4 <- Matrix::Matrix(rep(0, 4), nrow = 1, sparse = TRUE)
 
     expect_warning(proxyC::simil(mat1, mat2, method = "correlation", use_nan = FALSE),
                    "x or y has vectors with zero standard deviation; consider setting use_nan = TRUE")
@@ -127,6 +128,10 @@ test_that("use_na is working", {
     expect_equal(proxyC::simil(mat1, mat3, method = "correlation", use_nan = TRUE)[1,1], NaN)
     expect_equal(proxyC::simil(mat1, mat2, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1], NaN)
     expect_equal(proxyC::simil(mat1, mat3, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1], NaN)
+
+    expect_false(is.nan(proxyC::simil(mat1, mat2, method = "cosine", use_nan = TRUE)[1,1]))
+    expect_false(is.nan(proxyC::simil(mat1, mat3, method = "cosine", use_nan = TRUE)[1,1]))
+    expect_false(is.nan(proxyC::simil(mat1, mat4, method = "cosine", use_nan = TRUE)[1,1]))
 
 })
 
