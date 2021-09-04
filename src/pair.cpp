@@ -12,8 +12,8 @@ double simil_cosine(colvec& col_i, colvec& col_j) {
 double simil_correlation(colvec& col_i, colvec& col_j, bool use_nan) {
     double sd_i = stddev(col_i, 1);
     double sd_j = stddev(col_j, 1);
-    if (sd_i == 0.0 || sd_j == 0.0)
-        return use_nan ? std::numeric_limits<double>::quiet_NaN() : 0.0;
+    //if (sd_i == 0.0 || sd_j == 0.0)
+    //    return use_nan ? std::numeric_limits<double>::quiet_NaN() : 0.0;
     double v1 = accu(col_i.t() * col_j);
     double v2 = mean(col_i) * mean(col_j) * col_i.n_rows;
     return ((v1 - v2) / col_i.n_rows) / (sd_i * sd_j);
@@ -126,8 +126,6 @@ struct pairWorker : public Worker {
 
         colvec col_i(nrow);
         colvec col_j(nrow);
-
-        double quiet_nan = std::numeric_limits<double>::quiet_NaN();
         double simil = 0;
         std::vector<double> simils;
         for (uword i = begin; i < end; i++) {
@@ -147,6 +145,7 @@ struct pairWorker : public Worker {
                     break;
                 case 2:
                     simil = simil_correlation(col_i, col_j, use_nan);
+                    simil = replace_inf(simil);
                     break;
                 case 3:
                     simil = simil_ejaccard(col_i, col_j, weight);
@@ -194,17 +193,11 @@ struct pairWorker : public Worker {
             double l = get_limit(simils, rank, limit);
             for (std::size_t k = 0; k < simils.size(); k++) {
                 if (drop0 && simils[k] == 0) continue;
-                if (simils[k] >= l) {
+                if (simils[k] >= l || (use_nan && std::isnan(simils[k]))) {
                     if (diag) {
                         simil_tri.push_back(std::make_tuple(i, i, simils[k]));
                     } else {
                         simil_tri.push_back(std::make_tuple(k, i, simils[k]));
-                    }
-                } else if (use_nan && std::isnan(simils[k])) {
-                    if (diag) {
-                        simil_tri.push_back(std::make_tuple(i, i, quiet_nan));
-                    } else {
-                        simil_tri.push_back(std::make_tuple(k, i, quiet_nan));
                     }
                 }
             }

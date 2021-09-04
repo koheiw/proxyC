@@ -66,7 +66,6 @@ struct linearWorker : public Worker {
 
         rowvec v1, v2;
         std::vector<double> simils(nrow);
-        double quiet_nan = std::numeric_limits<double>::quiet_NaN();
         for (uword i = begin; i < end; i++) {
             switch (method) {
             case 1: // cosine similarity
@@ -80,23 +79,23 @@ struct linearWorker : public Worker {
                 //     if (square1[j] == 0.0 || square2[i] == 0.0)
                 //         simils[j] = use_nan ? std::numeric_limits<double>::quiet_NaN() : 0.0;
                 // }
+                simils = replace_inf(simils);
                 break;
             case 3: // euclidean distance
                 simils = to_vector(sqrt(trans(mt1t * mt2.col(i)) * -2 + square1 + square2[i]));
                 break;
             }
+
             double l = get_limit(simils, rank, limit);
             for (std::size_t k = 0; k < simils.size(); k++) {
-                //Rcout << simils[k] << "\n";
-                //Rcout << "isnan:" << std::isnan(simils[k]) << "\n";
-                //Rcout << "isinf:" << std::isinf(simils[k]) << "\n";
+                // Rcout << simils[k] << " ";
+                // Rcout << "isnormal:" << std::isnormal(simils[k]) << " ";
+                // Rcout << "isnan:" << std::isnan(simils[k]) << " ";
+                // Rcout << "isinf:" << std::isinf(simils[k]) << "\n";
                 if (symm && k > i) continue;
                 if (drop0 && simils[k] == 0) continue;
-                if (simils[k] >= l) {
+                if (simils[k] >= l || (use_nan && std::isnan(simils[k])))
                     simil_tri.push_back(std::make_tuple(k, i, simils[k]));
-                } else if (use_nan && std::isnan(simils[k])) {
-                    simil_tri.push_back(std::make_tuple(k, i, quiet_nan));
-                }
             }
         }
     }
