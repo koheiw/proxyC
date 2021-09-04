@@ -124,10 +124,12 @@ struct pairWorker : public Worker {
         arma::uword nrow = mt1.n_rows;
         arma::uword ncol = mt1.n_cols;
 
-        double simil = 0;
-        std::vector<double> simils;
         colvec col_i(nrow);
         colvec col_j(nrow);
+
+        double quiet_nan = std::numeric_limits<double>::quiet_NaN();
+        double simil = 0;
+        std::vector<double> simils;
         for (uword i = begin; i < end; i++) {
             col_i = mt2.col(i);
             if (diag) {
@@ -191,12 +193,18 @@ struct pairWorker : public Worker {
             }
             double l = get_limit(simils, rank, limit);
             for (std::size_t k = 0; k < simils.size(); k++) {
-                if (simils[k] >= l || (use_nan && std::isnan(simils[k]))) {
-                    if (drop0 && simils[k] == 0) continue;
+                if (drop0 && simils[k] == 0) continue;
+                if (simils[k] >= l) {
                     if (diag) {
                         simil_tri.push_back(std::make_tuple(i, i, simils[k]));
                     } else {
                         simil_tri.push_back(std::make_tuple(k, i, simils[k]));
+                    }
+                } else if (use_nan && std::isnan(simils[k])) {
+                    if (diag) {
+                        simil_tri.push_back(std::make_tuple(i, i, quiet_nan));
+                    } else {
+                        simil_tri.push_back(std::make_tuple(k, i, quiet_nan));
                     }
                 }
             }
@@ -220,8 +228,8 @@ S4 cpp_pair(arma::sp_mat& mt1,
 
     if (mt1.n_rows != mt2.n_rows)
         throw std::range_error("Invalid matrix objects");
-    if (method != 2) // correlation only
-        use_nan = false;
+    //if (method != 2) // correlation only
+    //    use_nan = false;
 
     uword ncol1 = mt1.n_cols;
     uword ncol2 = mt2.n_cols;
