@@ -1,7 +1,37 @@
 require(Matrix)
-mat_test <- rsparsematrix(100, 90, 0.5)
-mat_test[1, ] <- 10.123 # add one row with sd(x) == 0
-mat_test[, 1] <- 10.123 # add one col with sd(x) == 0
+mat_test <- rsparsematrix(100, 50, 0.5)
+mat_test[1, ] <- 0.5 # add one row with sd(x) == 0
+mat_test[, 1] <- 0.5 # add one col with sd(x) == 0
+mat_test[2, ] <- 0.0 # add one row with sum(x) == 0
+mat_test[, 2] <- 0.0 # add one col with sum(x) == 0
+
+is_all0 <- function(x, y = x, margin = 1) {
+    if (margin == 1) {
+        r1 <- outer(rowZeros(x) == ncol(x), rep(TRUE, nrow(x)))
+        r2 <- outer(rep(TRUE, nrow(x)), rowZeros(y) == ncol(y))
+    } else {
+        r1 <- outer(colZeros(x) == nrow(x), rep(TRUE, ncol(x)))
+        r2 <- outer(rep(TRUE, ncol(x)), colZeros(y) == nrow(y))
+    }
+    return(r1 | r2)
+}
+
+#is_all0(mat, margin = 1)
+#is_all0(mat, margin = 2)
+
+is_sd0 <- function(x, y = x, margin = 1) {
+    if (margin == 1) {
+        r1 <- outer(rowSds(x) == 0, rep(TRUE, nrow(y)))
+        r2 <- outer(rep(TRUE, nrow(x)), rowSds(y) == 0)
+    } else {
+        r1 <- outer(colSds(x) == 0, rep(TRUE, ncol(x)))
+        r2 <- outer(rep(TRUE, ncol(x)), colSds(y) == 0)
+    }
+    return(r1 | r2)
+}
+
+#is_sd0(mat, margin = 1)
+#is_sd0(mat, margin = 2)
 
 test_simil <- function(x, method, margin, ignore_upper = FALSE, ignore_diag = TRUE, use_nan = FALSE, ...) {
     # test with only x
@@ -135,3 +165,64 @@ test_that("use_na is working", {
 
 })
 
+
+# TODO: test there is not zero or inf
+
+mat <- Matrix::Matrix(matrix(c(0, 0, 0,
+                               1, 1, 1,
+                               1, 5, 2,
+                               2, 3, 4), byrow = TRUE, nrow = 4), sparse = TRUE)
+
+is_all0(mat, margin = 1)
+is_all0(mat, margin = 2)
+is_sd0(mat, margin = 1)
+is_sd0(mat, margin = 2)
+
+
+s1 <- as.matrix(simil(mat, method = "cosine", margin = 1, use_nan = TRUE))
+s2 <- proxy::as.matrix(proxy::simil(as.matrix(mat), method = "cosine", by_rows = TRUE, diag = TRUE))
+s2[is_all0(mat)] <- NaN
+diag(s1) <- diag(s2) <- 0
+s1
+s2
+
+expect_equal(as.numeric(s1), as.numeric(s2), tolerance = 0.001)
+
+s3 <- as.matrix(simil(mat, method = "correlation", margin = 1, use_nan = TRUE))
+s4 <- proxy::as.matrix(proxy::simil(as.matrix(mat), method = "correlation", by_rows = TRUE, diag = TRUE))
+s4[is_sd0(mat) | is_all0(mat)] <- NaN
+diag(s3) <- diag(s4) <- 0
+s3
+s4
+
+expect_equal(as.numeric(s3), as.numeric(s4), tolerance = 0.001)
+
+
+
+
+
+
+proxyC::simil(mat, method = "cosine")
+proxyC::simil(mat, method = "correlation")
+proxyC::simil(mat, method = "jaccard")
+proxyC::simil(mat, method = "jaccard", use_nan = TRUE)
+
+proxyC::simil(mat, method = "correlation")
+cor(t(as.matrix(mat)))
+
+
+proxyC::simil(mat, method = "correlation")
+proxyC::simil(mat, method = "correlation", diag = TRUE)
+proxyC::simil(mat, method = "cosine", diag = TRUE)
+proxyC::dist(mat, method = "euclidean", diag = TRUE)
+
+proxyC::simil(mat, method = "jaccard")
+proxyC::simil(mat, method = "jaccard", use_nan = TRUE)
+
+
+proxyC::simil(mat, method = "dice")
+proxyC::simil(mat, method = "hamman")
+proxyC::simil(mat, method = "simple matching")
+proxyC::simil(mat, method = "faith")
+
+cor(t(as.matrix(mat)))
