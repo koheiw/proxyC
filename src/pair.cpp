@@ -27,6 +27,7 @@ double simil_ejaccard(colvec& col_i, colvec& col_j, double weight = 1) {
 
 double simil_edice(colvec& col_i, colvec& col_j, double weight = 1) {
     double e = accu(col_i % col_j);
+    if (e == 0) return 0;
     return (2 * e) / (accu(pow(col_i, weight)) + accu(pow(col_j, weight)));
 }
 
