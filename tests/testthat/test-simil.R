@@ -5,33 +5,29 @@ mat_test[, 1] <- 0.5 # add one col with sd(x) == 0
 mat_test[2, ] <- 0.0 # add one row with sum(x) == 0
 mat_test[, 2] <- 0.0 # add one col with sum(x) == 0
 
+# returns TRUE where values are affected by vectors with all zero
 is_all0 <- function(x, y = x, margin = 1) {
     if (margin == 1) {
-        r1 <- outer(rowZeros(x) == ncol(x), rep(TRUE, nrow(x)))
+        r1 <- outer(rowZeros(x) == ncol(x), rep(TRUE, nrow(y)))
         r2 <- outer(rep(TRUE, nrow(x)), rowZeros(y) == ncol(y))
     } else {
-        r1 <- outer(colZeros(x) == nrow(x), rep(TRUE, ncol(x)))
+        r1 <- outer(colZeros(x) == nrow(x), rep(TRUE, ncol(y)))
         r2 <- outer(rep(TRUE, ncol(x)), colZeros(y) == nrow(y))
     }
     return(r1 | r2)
 }
 
-#is_all0(mat, margin = 1)
-#is_all0(mat, margin = 2)
-
+# returns TRUE where values are affected by vectors with zero variance
 is_sd0 <- function(x, y = x, margin = 1) {
     if (margin == 1) {
         r1 <- outer(rowSds(x) == 0, rep(TRUE, nrow(y)))
         r2 <- outer(rep(TRUE, nrow(x)), rowSds(y) == 0)
     } else {
-        r1 <- outer(colSds(x) == 0, rep(TRUE, ncol(x)))
+        r1 <- outer(colSds(x) == 0, rep(TRUE, ncol(y)))
         r2 <- outer(rep(TRUE, ncol(x)), colSds(y) == 0)
     }
     return(r1 | r2)
 }
-
-#is_sd0(mat, margin = 1)
-#is_sd0(mat, margin = 2)
 
 test_simil <- function(x, method, margin, ignore_upper = FALSE, ignore_diag = TRUE, use_nan = FALSE, ...) {
     # test with only x
@@ -44,6 +40,11 @@ test_simil <- function(x, method, margin, ignore_upper = FALSE, ignore_diag = TR
         diag(s1) <- diag(s2) <- 0
     if (ignore_upper)
         s1[upper.tri(s1, TRUE)] <- s2[upper.tri(s2, TRUE)] <- 0
+    if (use_nan) {
+        s2[is_all0(x, y, margin = margin)] <- NaN
+        if (method == "correlation")
+            s2[is_sd0(x, y, margin = margin)] <- NaN
+    }
     expect_equal(as.numeric(s1), as.numeric(s2), tolerance = 0.001)
 
     # test with x and y, different size
@@ -61,6 +62,11 @@ test_simil <- function(x, method, margin, ignore_upper = FALSE, ignore_diag = TR
         diag(s3) <- diag(s4) <- 0
     if (ignore_upper)
         s3[upper.tri(s3, TRUE)] <- s4[upper.tri(s4, TRUE)] <- 0
+    if (use_nan) {
+        s3[is_all0(x, y, margin = margin)] <- NaN
+        if (method == "correlation")
+            s3[is_sd0(x, y, margin = margin)] <- NaN
+    }
     expect_equal(as.numeric(s3), as.numeric(s4), tolerance = 0.001)
 
 
@@ -80,6 +86,13 @@ test_simil <- function(x, method, margin, ignore_upper = FALSE, ignore_diag = TR
         diag(s5) <- diag(s6) <- 0
     if (ignore_upper)
         s5[upper.tri(s5, TRUE)] <- s6[upper.tri(s6, TRUE)] <- 0
+    if (use_nan) {
+        s6[is_all0(x, y, margin = margin)] <- NaN
+        if (method == "correlation")
+            s6[is_sd0(x, y, margin = margin)] <- NaN
+    }
+    print(s5)
+    print(s6)
     expect_equal(as.numeric(s5), as.numeric(s6), tolerance = 0.001)
 }
 
@@ -166,46 +179,73 @@ test_that("use_na is working", {
 })
 
 
-# TODO: test there is not zero or inf
+# TODO: test there is no zero or inf
 
 mat <- Matrix::Matrix(matrix(c(0, 0, 0,
                                1, 1, 1,
                                1, 5, 2,
                                2, 3, 4), byrow = TRUE, nrow = 4), sparse = TRUE)
 
+expect_equivalent(
+    as.matrix(proxyC::simil(mat, metho = "cosine", margin = 1) == 0),
+    is_all0(mat, margin = 1)
+)
+
+expect_equivalent(
+    as.matrix(proxyC::simil(mat, metho = "cosine", margin = 2) == 0),
+    is_all0(mat, margin = 2)
+)
+
+expect_equivalent(
+    suppressWarnings(as.matrix(proxyC::simil(mat, method = "correlation", margin = 1) == 0)),
+    is_all0(mat, margin = 1) | is_sd0(mat, margin = 1)
+)
+
+expect_equivalent(
+    suppressWarnings(as.matrix(proxyC::simil(mat, method = "correlation", margin = 2) == 0)),
+    is_all0(mat, margin = 2) | is_sd0(mat, margin = 2)
+)
+
+expect_equivalent(
+    is.nan(as.matrix(proxyC::simil(mat, metho = "cosine", margin = 1, use_nan = TRUE))),
+    is_all0(mat, margin = 1)
+)
+
+expect_equivalent(
+    is.nan(as.matrix(proxyC::simil(mat, metho = "cosine", margin = 2, use_nan = TRUE))),
+    is_all0(mat, margin = 2)
+)
+
+expect_equivalent(
+    is.nan(as.matrix(proxyC::simil(mat, method = "correlation", margin = 1, use_nan = TRUE))),
+    is_all0(mat, margin = 1) | is_sd0(mat, margin = 1)
+)
+
+expect_equivalent(
+    is.nan(as.matrix(proxyC::simil(mat, method = "correlation", margin = 2, use_nan = TRUE))),
+    is_all0(mat, margin = 2) | is_sd0(mat, margin = 2)
+)
+
 is_all0(mat, margin = 1)
 is_all0(mat, margin = 2)
 is_sd0(mat, margin = 1)
 is_sd0(mat, margin = 2)
 
+is_all0(mat, mat[1:3,], margin = 1)
+is_sd0(mat, mat[1:3,], margin = 1)
+mat
+mat[1:3,]
 
-s1 <- as.matrix(simil(mat, method = "cosine", margin = 1, use_nan = TRUE))
-s2 <- proxy::as.matrix(proxy::simil(as.matrix(mat), method = "cosine", by_rows = TRUE, diag = TRUE))
-s2[is_all0(mat)] <- NaN
-diag(s1) <- diag(s2) <- 0
-s1
-s2
-
-expect_equal(as.numeric(s1), as.numeric(s2), tolerance = 0.001)
-
-s3 <- as.matrix(simil(mat, method = "correlation", margin = 1, use_nan = TRUE))
-s4 <- proxy::as.matrix(proxy::simil(as.matrix(mat), method = "correlation", by_rows = TRUE, diag = TRUE))
-s4[is_sd0(mat) | is_all0(mat)] <- NaN
-diag(s3) <- diag(s4) <- 0
-s3
-s4
-
-expect_equal(as.numeric(s3), as.numeric(s4), tolerance = 0.001)
-
-
-
-
-
+is_all0(mat, mat[,1:2], margin = 2)
+is_sd0(mat, mat[,1:2], margin = 2)
 
 proxyC::simil(mat, method = "cosine")
 proxyC::simil(mat, method = "correlation")
 proxyC::simil(mat, method = "jaccard")
+
 proxyC::simil(mat, method = "jaccard", use_nan = TRUE)
+
+
 
 proxyC::simil(mat, method = "correlation")
 cor(t(as.matrix(mat)))
