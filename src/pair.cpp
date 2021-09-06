@@ -21,6 +21,7 @@ double simil_correlation(colvec& col_i, colvec& col_j, bool use_nan) {
 
 double simil_ejaccard(colvec& col_i, colvec& col_j, double weight = 1) {
     double e = accu(col_i % col_j);
+    if (e == 0) return 0;
     return e / (accu(pow(col_i, weight)) + accu(pow(col_j, weight)) - e);
 }
 
