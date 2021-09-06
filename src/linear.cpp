@@ -79,7 +79,7 @@ struct linearWorker : public Worker {
                 //     if (square1[j] == 0.0 || square2[i] == 0.0)
                 //         simils[j] = use_nan ? std::numeric_limits<double>::quiet_NaN() : 0.0;
                 // }
-                simils = replace_inf(simils);
+                //simils = replace_inf(simils);
                 break;
             case 3: // euclidean distance
                 simils = to_vector(sqrt(trans(mt1t * mt2.col(i)) * -2 + square1 + square2[i]));
@@ -87,8 +87,9 @@ struct linearWorker : public Worker {
             }
 
             double l = get_limit(simils, rank, limit);
+            Rcout << "l=" << l << "\n";
             for (std::size_t k = 0; k < simils.size(); k++) {
-                // Rcout << simils[k] << " ";
+                Rcout << simils[k] << "\n";
                 // Rcout << "isnormal:" << std::isnormal(simils[k]) << " ";
                 // Rcout << "isnan:" << std::isnan(simils[k]) << " ";
                 // Rcout << "isinf:" << std::isinf(simils[k]) << "\n";
