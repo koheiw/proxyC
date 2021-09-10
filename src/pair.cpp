@@ -193,9 +193,7 @@ struct pairWorker : public Worker {
                 simils.push_back(simil);
             }
             double l = get_limit(simils, rank, limit);
-            Rcout << "l=" << l << "\n";
             for (std::size_t k = 0; k < simils.size(); k++) {
-                Rcout << simils[k] << "\n";
                 if (drop0 && simils[k] == 0) continue;
                 if (simils[k] >= l || (use_nan && std::isnan(simils[k]))) {
                     if (diag) {

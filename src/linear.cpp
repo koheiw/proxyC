@@ -87,12 +87,7 @@ struct linearWorker : public Worker {
             }
 
             double l = get_limit(simils, rank, limit);
-            Rcout << "l=" << l << "\n";
             for (std::size_t k = 0; k < simils.size(); k++) {
-                Rcout << simils[k] << "\n";
-                // Rcout << "isnormal:" << std::isnormal(simils[k]) << " ";
-                // Rcout << "isnan:" << std::isnan(simils[k]) << " ";
-                // Rcout << "isinf:" << std::isinf(simils[k]) << "\n";
                 if (symm && k > i) continue;
                 if (drop0 && simils[k] == 0) continue;
                 if (simils[k] >= l || (use_nan && std::isnan(simils[k])))
