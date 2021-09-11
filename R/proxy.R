@@ -58,7 +58,7 @@ dist <- function(x, y = NULL, margin = 1,
 
     method <- match.arg(method)
     proxy(x, y, margin, method, p = p, smooth = smooth, drop0 = drop0,
-          diag = diag, digits = digits)
+          diag = diag, use_nan = use_nan, digits = digits)
 }
 
 #' @import Rcpp
