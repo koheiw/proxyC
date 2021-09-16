@@ -12,8 +12,6 @@ double simil_cosine(colvec& col_i, colvec& col_j) {
 double simil_correlation(colvec& col_i, colvec& col_j) {
     double sd_i = stddev(col_i, 1);
     double sd_j = stddev(col_j, 1);
-    //if (sd_i == 0.0 || sd_j == 0.0)
-    //    return use_nan ? std::numeric_limits<double>::quiet_NaN() : 0.0;
     double v1 = accu(col_i.t() * col_j);
     double v2 = mean(col_i) * mean(col_j) * col_i.n_rows;
     return ((v1 - v2) / col_i.n_rows) / (sd_i * sd_j);

@@ -75,11 +75,6 @@ struct linearWorker : public Worker {
                 v1 = rowvec(trans(mt1t * mt2.col(i)));
                 v2 = center1 * center2[i] * ncol;
                 simils = to_vector(((v1 - v2) / ncol) / (square1 * square2[i]));
-                // for (std::size_t j = 0; j < square1.size(); j++) {
-                //     if (square1[j] == 0.0 || square2[i] == 0.0)
-                //         simils[j] = use_nan ? std::numeric_limits<double>::quiet_NaN() : 0.0;
-                // }
-                //simils = replace_inf(simils);
                 break;
             case 3: // euclidean distance
                 simils = to_vector(sqrt(trans(mt1t * mt2.col(i)) * -2 + square1 + square2[i]));
