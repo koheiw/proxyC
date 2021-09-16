@@ -102,44 +102,96 @@ test_that("simil returns zero or NaN correctly", {
                                    1, 5, 2,
                                    2, 3, 4), byrow = TRUE, nrow = 4), sparse = TRUE)
 
+    # cosine
     expect_equivalent(
-        as.matrix(proxyC::simil(mat, metho = "cosine", margin = 1) == 0),
+        suppressWarnings(as.matrix(proxyC::simil(mat, method = "cosine", margin = 1) == 0)),
         is_all0(mat, margin = 1)
     )
-
     expect_equivalent(
-        as.matrix(proxyC::simil(mat, metho = "cosine", margin = 2) == 0),
+        as.matrix(proxyC::simil(mat, method = "cosine", margin = 2) == 0),
+        is_all0(mat, margin = 2)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::simil(mat, method = "cosine", margin = 1, use_nan = TRUE))),
+        is_all0(mat, margin = 1)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::simil(mat, method = "cosine", margin = 2, use_nan = TRUE))),
         is_all0(mat, margin = 2)
     )
 
+    # correlation
     expect_equivalent(
         suppressWarnings(as.matrix(proxyC::simil(mat, method = "correlation", margin = 1) == 0)),
         is_all0(mat, margin = 1) | is_sd0(mat, margin = 1)
     )
-
     expect_equivalent(
-        suppressWarnings(as.matrix(proxyC::simil(mat, method = "correlation", margin = 2) == 0)),
+        as.matrix(proxyC::simil(mat, method = "correlation", margin = 2) == 0),
         is_all0(mat, margin = 2) | is_sd0(mat, margin = 2)
     )
-
-    expect_equivalent(
-        is.nan(as.matrix(proxyC::simil(mat, metho = "cosine", margin = 1, use_nan = TRUE))),
-        is_all0(mat, margin = 1)
-    )
-
-    expect_equivalent(
-        is.nan(as.matrix(proxyC::simil(mat, metho = "cosine", margin = 2, use_nan = TRUE))),
-        is_all0(mat, margin = 2)
-    )
-
     expect_equivalent(
         is.nan(as.matrix(proxyC::simil(mat, method = "correlation", margin = 1, use_nan = TRUE))),
         is_all0(mat, margin = 1) | is_sd0(mat, margin = 1)
     )
-
     expect_equivalent(
         is.nan(as.matrix(proxyC::simil(mat, method = "correlation", margin = 2, use_nan = TRUE))),
         is_all0(mat, margin = 2) | is_sd0(mat, margin = 2)
+    )
+
+    # jaccard
+    expect_false(
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "jaccard", margin = 1, use_nan = TRUE))))
+    )
+    expect_false(
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "jaccard", margin = 2, use_nan = TRUE))))
+    )
+
+    # ejaccard
+    expect_false(
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "ejaccard", margin = 1, use_nan = TRUE))))
+    )
+    expect_false(
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "ejaccard", margin = 2, use_nan = TRUE))))
+    )
+
+    # dice
+    expect_false(
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "dice", margin = 1, use_nan = TRUE))))
+    )
+    expect_false(
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "dice", margin = 2, use_nan = TRUE))))
+    )
+
+    # edice
+    expect_false(
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "edice", margin = 1, use_nan = TRUE))))
+    )
+    expect_false(
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "edice", margin = 2, use_nan = TRUE))))
+    )
+
+    # hamman
+    expect_false(
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "hamman", margin = 1, use_nan = TRUE))))
+    )
+    expect_false(
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "hamman", margin = 2, use_nan = TRUE))))
+    )
+
+    # simple matching
+    expect_false(
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "simple matching", margin = 1, use_nan = TRUE))))
+    )
+    expect_false(
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "simple matching", margin = 2, use_nan = TRUE))))
+    )
+
+    # faith
+    expect_false(
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "faith", margin = 1, use_nan = TRUE))))
+    )
+    expect_false(
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "faith", margin = 2, use_nan = TRUE))))
     )
 
 })
