@@ -9,7 +9,7 @@ double simil_cosine(colvec& col_i, colvec& col_j) {
     return accu(sum(col_i % col_j) / sqrt(sum(square(col_i)) * sum(square(col_j))));
 }
 
-double simil_correlation(colvec& col_i, colvec& col_j, bool use_nan) {
+double simil_correlation(colvec& col_i, colvec& col_j) {
     double sd_i = stddev(col_i, 1);
     double sd_j = stddev(col_j, 1);
     //if (sd_i == 0.0 || sd_j == 0.0)
@@ -56,7 +56,7 @@ double dist_euclidean(colvec& col_i, colvec& col_j) {
 
 double dist_chisquare(colvec& col_i, colvec& col_j, double smooth) {
     if (smooth == 0 && (any(col_i == 0) || any(col_j == 0)))
-        return 0;
+        return std::numeric_limits<double>::quiet_NaN();
     mat m = join_rows(col_i, col_j) + smooth;
     m = m / accu(m);
     mat e = sum(m, 1) * sum(m, 0);
@@ -66,7 +66,7 @@ double dist_chisquare(colvec& col_i, colvec& col_j, double smooth) {
 
 double dist_kullback(colvec& col_i, colvec& col_j, double smooth) {
     if (smooth == 0 && (any(col_i == 0) || any(col_j == 0)))
-        return 0;
+        return std::numeric_limits<double>::quiet_NaN();
     double s1 = accu(col_i) + smooth * col_i.n_rows;
     double s2 = accu(col_j) + smooth * col_j.n_rows;
     colvec p1 = (col_i + smooth) / s1;
@@ -146,7 +146,7 @@ struct pairWorker : public Worker {
                     simil = simil_cosine(col_i, col_j);
                     break;
                 case 2:
-                    simil = simil_correlation(col_i, col_j, use_nan);
+                    simil = simil_correlation(col_i, col_j);
                     //simil = replace_inf(simil);
                     break;
                 case 3:
