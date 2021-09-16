@@ -145,7 +145,6 @@ struct pairWorker : public Worker {
                     break;
                 case 2:
                     simil = simil_correlation(col_i, col_j);
-                    //simil = replace_inf(simil);
                     break;
                 case 3:
                     simil = simil_ejaccard(col_i, col_j, weight);
