@@ -46,36 +46,38 @@ test_that("rank argument is working", {
 
 test_that("record zeros even in the sparse matrix", {
     mt <- rsparsematrix(100, 100, 0.01)
-    expect_true(any(proxyC:::proxy(mt)@x == 0))
-    expect_true(any(proxyC:::proxy(mt, method = "cosine")@x == 0))
-    expect_true(any(proxyC:::proxy(mt, method = "cosine", min_proxy = -0.5)@x == 0))
-    expect_true(any(proxyC:::proxy(mt, method = "cosine", rank = 2)@x == 0))
-    expect_true(any(proxyC:::proxy(mt, method = "dice")@x == 0))
+    suppressWarnings({
+        expect_true(any(proxyC:::proxy(mt)@x == 0))
+        expect_true(any(proxyC:::proxy(mt, method = "cosine")@x == 0))
+        expect_true(any(proxyC:::proxy(mt, method = "cosine", min_proxy = -0.5)@x == 0))
+        expect_true(any(proxyC:::proxy(mt, method = "cosine", rank = 2)@x == 0))
+        expect_true(any(proxyC:::proxy(mt, method = "dice")@x == 0))
+    })
 })
 
 test_that("do not record zeros when drop0 is TRUE", {
     mt <- rsparsematrix(100, 100, 0.01)
-    expect_false(any(proxyC:::proxy(mt, drop0 = TRUE)@x == 0))
-    expect_false(any(proxyC:::proxy(mt, method = "cosine", drop0 = TRUE)@x == 0))
-    expect_false(any(proxyC:::proxy(mt, method = "cosine", drop0 = TRUE, min_proxy = -0.5)@x == 0))
-    expect_false(any(proxyC:::proxy(mt, method = "cosine", drop0 = TRUE, rank = 2)@x == 0))
-    expect_false(any(proxyC:::proxy(mt, method = "jaccard", drop0 = TRUE)@x == 0))
+    suppressWarnings({
+        expect_false(any(proxyC:::proxy(mt, drop0 = TRUE)@x == 0))
+        expect_false(any(proxyC:::proxy(mt, method = "cosine", drop0 = TRUE)@x == 0))
+        expect_false(any(proxyC:::proxy(mt, method = "cosine", drop0 = TRUE, min_proxy = -0.5)@x == 0))
+        expect_false(any(proxyC:::proxy(mt, method = "cosine", drop0 = TRUE, rank = 2)@x == 0))
+        expect_false(any(proxyC:::proxy(mt, method = "jaccard", drop0 = TRUE)@x == 0))
 
-    expect_equal(
-        as.matrix(proxyC:::proxy(mt, method = "cosine", drop0 = TRUE)),
-        as.matrix(proxyC:::proxy(mt, method = "cosine", drop0 = FALSE))
-    )
-    expect_equal(
-        as.matrix(proxyC:::proxy(mt, method = "jaccard", drop0 = TRUE)),
-        as.matrix(proxyC:::proxy(mt, method = "jaccard", drop0 = FALSE))
-    )
+        expect_equal(
+            as.matrix(proxyC:::proxy(mt, method = "cosine", drop0 = TRUE)),
+            as.matrix(proxyC:::proxy(mt, method = "cosine", drop0 = FALSE))
+        )
+        expect_equal(
+            as.matrix(proxyC:::proxy(mt, method = "jaccard", drop0 = TRUE)),
+            as.matrix(proxyC:::proxy(mt, method = "jaccard", drop0 = FALSE))
+        )
+    })
 })
 
 
 test_that("proxyC:::proxy raises error when the numnber of columns/rows are different", {
-    expect_silent(
-        proxyC:::proxy(mat_test[1:5,], mat_test[1:5,], margin = 2)
-    )
+
     expect_error(proxyC:::proxy(mat_test[,1:5], mat_test[,1:10], margin = 1),
                  "x and y must have the same number of columns")
     expect_error(proxyC:::proxy(mat_test[1:5,], mat_test[1:10,], margin = 2),

@@ -104,8 +104,11 @@ test_simil <- function(x, method, margin, ignore_upper = FALSE, ignore_diag = TR
 
 
 test_dist <- function(x, method, margin, ignore_upper = FALSE, ...) {
+
     # test with only x
-    s1 <- as.matrix(dist(x, method = method, margin = margin, ...))
+    suppressWarnings({
+        s1 <- as.matrix(dist(x, method = method, margin = margin, ...))
+    })
     s2 <- as.matrix(proxy::dist(as.matrix(x),
                                 method = method, by_rows = margin == 1, diag = TRUE, ...))
 
@@ -120,7 +123,9 @@ test_dist <- function(x, method, margin, ignore_upper = FALSE, ...) {
         y <- x[,sample(ncol(x), pmin(ncol(x), 10))]
     }
 
-    s3 <- as.matrix(dist(x, y, method = method, margin = margin, ...))
+    suppressWarnings({
+        s3 <- as.matrix(dist(x, y, method = method, margin = margin, ...))
+    })
     s4 <- as.matrix(proxy::dist(as.matrix(x), as.matrix(y),
                                 method = method, by_rows = margin == 1, diag = TRUE, ...))
     if (ignore_upper)
@@ -134,7 +139,9 @@ test_dist <- function(x, method, margin, ignore_upper = FALSE, ...) {
         y <- x[,sample(ncol(x))]
     }
 
-    s5 <- as.matrix(dist(x, y, method = method, margin = margin, ...))
+    suppressWarnings({
+        s5 <- as.matrix(dist(x, y, method = method, margin = margin, ...))
+    })
     s6 <- as.matrix(proxy::dist(as.matrix(x), as.matrix(y),
                                 method = method, by_rows = margin == 1, diag = TRUE, ...))
     if (ignore_upper)

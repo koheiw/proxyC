@@ -95,6 +95,33 @@ test_that("test hamming distance", {
     )
 })
 
+test_that("use_na is working", {
+
+    mat1 <- Matrix::Matrix(1:4, nrow = 1, sparse = TRUE)
+    mat2 <- Matrix::Matrix(rep(0, 4), nrow = 1, sparse = TRUE)
+
+    expect_warning(proxyC::dist(mat1, mat2, method = "kullback", use_nan = FALSE),
+                   "x or y has vectors with all zero; consider setting use_nan = TRUE")
+    expect_warning(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = FALSE),
+                   "x or y has vectors with all zero; consider setting use_nan = TRUE")
+
+    suppressWarnings({
+        expect_equal(proxyC::dist(mat1, mat2, method = "kullback", use_nan = FALSE)[1,1], 0)
+        expect_equal(proxyC::dist(mat1, mat2, method = "kullback", use_nan = FALSE, diag = TRUE)[1,1], 0)
+    })
+
+    expect_true(is.na(proxyC::dist(mat1, mat2, method = "kullback", use_nan = TRUE)[1,1]))
+    expect_true(is.na(proxyC::dist(mat1, mat2, method = "kullback", use_nan = TRUE, diag = TRUE)[1,1]))
+
+    suppressWarnings({
+        expect_equal(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = FALSE)[1,1], 0)
+        expect_equal(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = FALSE, diag = TRUE)[1,1], 0)
+    })
+
+    expect_true(is.na(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = TRUE)[1,1]))
+    expect_true(is.na(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = TRUE, diag = TRUE)[1,1]))
+})
+
 test_that("dist returns zero or NaN correctly", {
 
     mat <- Matrix::Matrix(matrix(c(0, 0, 0,
@@ -114,11 +141,11 @@ test_that("dist returns zero or NaN correctly", {
 
     # kullback
     expect_equivalent(
-        as.matrix(proxyC::dist(mat, method = "kullback", margin = 1, use_nan = FALSE) == 0),
+        suppressWarnings(as.matrix(proxyC::dist(mat, method = "kullback", margin = 1, use_nan = FALSE) == 0)),
         is_all0(mat, margin = 1) | as.matrix(bandSparse(4, 4, k = 0))
     )
     expect_equivalent(
-        as.matrix(proxyC::dist(mat, method = "kullback", margin = 2, use_nan = FALSE) == 0),
+        suppressWarnings(as.matrix(proxyC::dist(mat, method = "kullback", margin = 2, use_nan = FALSE) == 0)),
         matrix(TRUE, 3, 3)
     )
     expect_equivalent(
@@ -140,11 +167,11 @@ test_that("dist returns zero or NaN correctly", {
 
     # chisquared
     expect_equivalent(
-        as.matrix(proxyC::dist(mat, method = "chisquared", margin = 1, use_nan = FALSE) == 0),
+        suppressWarnings(as.matrix(proxyC::dist(mat, method = "chisquared", margin = 1, use_nan = FALSE) == 0)),
         is_all0(mat, margin = 1) | as.matrix(bandSparse(4, 4, k = 0))
     )
     expect_equivalent(
-        as.matrix(proxyC::dist(mat, method = "chisquared", margin = 2, use_nan = FALSE) == 0),
+        suppressWarnings(as.matrix(proxyC::dist(mat, method = "chisquared", margin = 2, use_nan = FALSE) == 0)),
         matrix(TRUE, 3, 3)
     )
     expect_equivalent(
