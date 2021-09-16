@@ -75,6 +75,8 @@ test_that("use_na is working", {
 
     expect_warning(proxyC::simil(mat1, mat2, method = "correlation", use_nan = FALSE),
                    "x or y has vectors with zero standard deviation; consider setting use_nan = TRUE")
+    expect_warning(proxyC::simil(mat1, mat4, method = "cosine", use_nan = FALSE),
+                   "x or y has vectors with all zero; consider setting use_nan = TRUE")
     suppressWarnings({
         expect_equal(proxyC::simil(mat1, mat2, method = "correlation", use_nan = FALSE)[1,1], 0)
         expect_equal(proxyC::simil(mat1, mat3, method = "correlation", use_nan = FALSE)[1,1], 0)
