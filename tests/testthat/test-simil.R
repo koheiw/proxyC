@@ -1,5 +1,5 @@
 require(Matrix)
-source("../../tests/function.R")
+source("function.R")
 
 mat_test <- rsparsematrix(100, 50, 0.5)
 mat_test[1, ] <- 0.5 # add one row with sd(x) == 0
