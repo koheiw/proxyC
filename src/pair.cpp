@@ -220,8 +220,6 @@ S4 cpp_pair(arma::sp_mat& mt1,
 
     if (mt1.n_rows != mt2.n_rows)
         throw std::range_error("Invalid matrix objects");
-    //if (method != 2) // correlation only
-    //    use_nan = false;
 
     uword ncol1 = mt1.n_cols;
     uword ncol2 = mt2.n_cols;
