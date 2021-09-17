@@ -1,6 +1,17 @@
 require(Matrix)
 mat_test <- rsparsematrix(100, 100, 0.5)
 
+test_that("raise error if the number of raws are differet",{
+    expect_error(
+        proxyC:::cpp_pair(mat_test, mat_test[1:10,], 1, rank = nrow(mat_test)),
+        "Invalid matrix objects"
+    )
+    expect_error(
+        proxyC:::cpp_linear(mat_test, mat_test[1:10,], 1, rank = nrow(mat_test)),
+        "Invalid matrix objects"
+    )
+})
+
 test_that("porxy takes only sparse matrix",{
     expect_error(simil(matrix(mat_test)), "x must be a sparseMatrix")
     expect_error(dist(matrix(mat_test)), "x must be a sparseMatrix")
