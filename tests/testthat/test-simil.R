@@ -83,7 +83,7 @@ test_that("test faith similarity", {
 test_that("use_nan is working", {
 
     mat1 <- Matrix::Matrix(1:4, nrow = 1, sparse = TRUE)
-    mat2 <- Matrix::Matrix(rep(0.001, 4), nrow = 1, sparse = TRUE)
+    mat2 <- Matrix::Matrix(rep(0.0001, 4), nrow = 1, sparse = TRUE)
     mat3 <- Matrix::Matrix(rep(1, 4), nrow = 1, sparse = TRUE)
     mat4 <- Matrix::Matrix(rep(0, 4), nrow = 1, sparse = TRUE)
 
