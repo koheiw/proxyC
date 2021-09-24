@@ -6,8 +6,6 @@ mat_test[1, ] <- 0.5 # set sd(x) == 0
 mat_test[2, ] <- 0.0001 # set sd(x) == 0
 mat_test[3, ] <- 0.0 # set sum(x) == 0
 
-simil(mat_test, method = "correlation")
-
 test_that("test test objects and functions", {
     expect_equal(
         rowSds(mat_test)[1:3],
@@ -44,22 +42,22 @@ test_that("test correlation similarity", {
 test_that("test jaccard similarity", {
     skip_if_not_installed("proxy")
     # proxy::simil(method = "jaccard") wrongly returns 1 for all zero vector
-    test_simil(mat_test[-2, -2], "jaccard", margin = 1)
-    test_simil(mat_test[-2, -2], "jaccard", margin = 2)
+    test_simil(mat_test[-3,], "jaccard", margin = 1)
+    test_simil(mat_test[-3,], "jaccard", margin = 2)
 })
 
 test_that("test ejaccard similarity", {
     skip_if_not_installed("proxy")
     # proxy::simil(method = "ejaccard") wrongly returns 1 for all0  vector
-    test_simil(mat_test[-2, -2], "ejaccard", margin = 1)
-    test_simil(mat_test[-2, -2], "ejaccard", margin = 2)
+    test_simil(mat_test[-3,], "ejaccard", margin = 1)
+    test_simil(mat_test[-3,], "ejaccard", margin = 2)
 })
 
 test_that("test dice similarity", {
     skip_if_not_installed("proxy")
     # proxy::simil(method = "dice") wrongly returns 1 for all0 or sd0 vector
-    test_simil(mat_test[c(-1, -2), c(-1, -2)], "dice", margin = 1)
-    test_simil(mat_test[c(-1, -2), c(-1, -2)], "dice", margin = 2)
+    test_simil(mat_test[1:3 * -1,], "dice", margin = 1)
+    test_simil(mat_test[1:3 * -1,], "dice", margin = 2)
 })
 
 test_that("test edice similarity", {
