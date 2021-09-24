@@ -75,12 +75,12 @@ struct linearWorker : public Worker {
                 v1 = rowvec(trans(mt1t * mt2.col(i)));
                 v2 = center1 * center2[i] * ncol;
                 simils = to_vector(((v1 - v2) / ncol) / (square1 * square2[i]));
+                simils = replace_inf(simils);
                 break;
             case 3: // euclidean distance
                 simils = to_vector(sqrt(trans(mt1t * mt2.col(i)) * -2 + square1 + square2[i]));
                 break;
             }
-
             double l = get_limit(simils, rank, limit);
             for (std::size_t k = 0; k < simils.size(); k++) {
                 if (symm && k > i) continue;

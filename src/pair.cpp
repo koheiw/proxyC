@@ -14,7 +14,17 @@ double simil_correlation(colvec& col_i, colvec& col_j) {
     double sd_j = stddev(col_j, 1);
     double v1 = accu(col_i.t() * col_j);
     double v2 = mean(col_i) * mean(col_j) * col_i.n_rows;
+    // Rcout << "v1 - v2 = " << v1 - v2 << "\n";
+    // Rcout << "col_i.n_rows = " << col_i.n_rows << "\n";
+    // Rcout << "sd_i * sd_j = " << sd_i * sd_j << "\n";
+    // Rcout << "result = " << ((v1 - v2) / col_i.n_rows) / (sd_i * sd_j) << "\n";
+    // Rcout << "0.0 / 0.0 = " << 0.0 / 0.0 << "\n";
+    // Rcout << "1.0 / 0.0 = " << 1.0 / 0.0 << "\n";
+    // Rcout << "0.000001 / 0.0 = " << 0.000001 / 0.0 << "\n";
+    // Rcout << "Inf / 0.0 = " << std::numeric_limits<double>::infinity() / 0.0 << "\n";
+    // Rcout << "Inf / Inf = " << std::numeric_limits<double>::infinity() / std::numeric_limits<double>::infinity() << "\n";
     return ((v1 - v2) / col_i.n_rows) / (sd_i * sd_j);
+
 }
 
 double simil_ejaccard(colvec& col_i, colvec& col_j, double weight = 1) {
@@ -145,6 +155,7 @@ struct pairWorker : public Worker {
                     break;
                 case 2:
                     simil = simil_correlation(col_i, col_j);
+                    simil = replace_inf(simil);
                     break;
                 case 3:
                     simil = simil_ejaccard(col_i, col_j, weight);
