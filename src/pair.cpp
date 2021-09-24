@@ -18,11 +18,6 @@ double simil_correlation(colvec& col_i, colvec& col_j) {
     // Rcout << "col_i.n_rows = " << col_i.n_rows << "\n";
     // Rcout << "sd_i * sd_j = " << sd_i * sd_j << "\n";
     // Rcout << "result = " << ((v1 - v2) / col_i.n_rows) / (sd_i * sd_j) << "\n";
-    // Rcout << "0.0 / 0.0 = " << 0.0 / 0.0 << "\n";
-    // Rcout << "1.0 / 0.0 = " << 1.0 / 0.0 << "\n";
-    // Rcout << "0.000001 / 0.0 = " << 0.000001 / 0.0 << "\n";
-    // Rcout << "Inf / 0.0 = " << std::numeric_limits<double>::infinity() / 0.0 << "\n";
-    // Rcout << "Inf / Inf = " << std::numeric_limits<double>::infinity() / std::numeric_limits<double>::infinity() << "\n";
     return ((v1 - v2) / col_i.n_rows) / (sd_i * sd_j);
 
 }
