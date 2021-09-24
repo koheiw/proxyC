@@ -2,10 +2,32 @@ require(Matrix)
 source("function.R")
 
 mat_test <- rsparsematrix(100, 50, 0.5)
-mat_test[1, ] <- 0.5 # add one row with sd(x) == 0
-mat_test[, 1] <- 0.5 # add one col with sd(x) == 0
-mat_test[2, ] <- 0.0 # add one row with sum(x) == 0
-mat_test[, 2] <- 0.0 # add one col with sum(x) == 0
+mat_test[1, ] <- 0.5 # set sd(x) == 0
+mat_test[2, ] <- 0.0001 # set sd(x) == 0
+mat_test[3, ] <- 0.0 # set sum(x) == 0
+
+simil(mat_test, method = "correlation")
+
+test_that("test test objects and functions", {
+    expect_equal(
+        rowSds(mat_test)[1:3],
+        c(0, 0, 0)
+    )
+    expect_equal(
+        rowZeros(mat_test)[1:3],
+        c(0, 0, 50)
+    )
+
+    mat_sd0 <- mat_all0 <- matrix(FALSE, nrow(mat_test), nrow(mat_test))
+    mat_sd0[1:3,]  <- mat_sd0[,1:3] <- TRUE
+    expect_equivalent(
+        is_sd0(mat_test), mat_sd0
+    )
+    mat_all0[3,] <- mat_all0[,3]<- TRUE
+    expect_equivalent(
+        is_all0(mat_test), mat_all0
+    )
+})
 
 test_that("test cosine similarity", {
     skip_if_not_installed("proxy")
