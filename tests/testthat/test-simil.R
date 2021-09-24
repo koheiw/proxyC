@@ -94,14 +94,18 @@ test_that("use_nan is working", {
     suppressWarnings({
         expect_equal(proxyC::simil(mat1, mat2, method = "correlation", use_nan = FALSE)[1,1], 0)
         expect_equal(proxyC::simil(mat1, mat3, method = "correlation", use_nan = FALSE)[1,1], 0)
+        expect_equal(proxyC::simil(mat1, mat4, method = "correlation", use_nan = FALSE)[1,1], 0)
         expect_equal(proxyC::simil(mat1, mat2, method = "correlation", use_nan = FALSE, diag = TRUE)[1,1], 0)
         expect_equal(proxyC::simil(mat1, mat3, method = "correlation", use_nan = FALSE, diag = TRUE)[1,1], 0)
+        expect_equal(proxyC::simil(mat1, mat4, method = "correlation", use_nan = FALSE, diag = TRUE)[1,1], 0)
     })
 
     expect_true(is.na(proxyC::simil(mat1, mat2, method = "correlation", use_nan = TRUE)[1,1]))
     expect_true(is.na(proxyC::simil(mat1, mat3, method = "correlation", use_nan = TRUE)[1,1]))
+    expect_true(is.na(proxyC::simil(mat1, mat4, method = "correlation", use_nan = TRUE)[1,1]))
     expect_true(is.na(proxyC::simil(mat1, mat2, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1]))
     expect_true(is.na(proxyC::simil(mat1, mat3, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1]))
+    expect_true(is.na(proxyC::simil(mat1, mat4, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1]))
 
     expect_false(is.nan(proxyC::simil(mat1, mat2, method = "cosine", use_nan = TRUE)[1,1]))
     expect_false(is.nan(proxyC::simil(mat1, mat3, method = "cosine", use_nan = TRUE)[1,1]))
