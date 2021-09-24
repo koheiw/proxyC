@@ -1,5 +1,10 @@
 require(Matrix)
 
+mat_test <- rsparsematrix(100, 50, 0.5)
+mat_test[1, ] <- 0.0 # set sum(x) == 0
+mat_test[2, ] <- 0.5 # set sd(x) == 0
+mat_test[3, ] <- 0.0001 # set sd(x) == 0
+
 # returns TRUE where values are affected by vectors with all zero
 is_all0 <- function(x, y = x, margin = 1) {
     if (margin == 1) {

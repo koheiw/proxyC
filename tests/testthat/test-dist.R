@@ -1,10 +1,4 @@
-require(Matrix)
 source("function.R")
-
-mat_test <- rsparsematrix(100, 50, 0.5)
-mat_test[1, ] <- 0.5 # set sd(x) == 0
-mat_test[2, ] <- 0.0001 # set sd(x) == 0
-mat_test[3, ] <- 0.0 # set sum(x) == 0
 
 test_that("test euclidean distance", {
     skip_if_not_installed("proxy")

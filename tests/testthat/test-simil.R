@@ -1,10 +1,4 @@
-require(Matrix)
 source("function.R")
-
-mat_test <- rsparsematrix(100, 50, 0.5)
-mat_test[1, ] <- 0.5 # set sd(x) == 0
-mat_test[2, ] <- 0.0001 # set sd(x) == 0
-mat_test[3, ] <- 0.0 # set sum(x) == 0
 
 test_that("test test objects and functions", {
     expect_equal(
@@ -13,17 +7,17 @@ test_that("test test objects and functions", {
     )
     expect_equal(
         rowZeros(mat_test)[1:3],
-        c(0, 0, 50)
+        c(50, 0, 0)
     )
 
     mat_sd0 <- mat_all0 <- matrix(FALSE, nrow(mat_test), nrow(mat_test))
+    mat_all0[1,] <- mat_all0[,1]<- TRUE
+    expect_equivalent(
+        is_all0(mat_test), mat_all0
+    )
     mat_sd0[1:3,]  <- mat_sd0[,1:3] <- TRUE
     expect_equivalent(
         is_sd0(mat_test), mat_sd0
-    )
-    mat_all0[3,] <- mat_all0[,3]<- TRUE
-    expect_equivalent(
-        is_all0(mat_test), mat_all0
     )
 })
 
@@ -42,15 +36,15 @@ test_that("test correlation similarity", {
 test_that("test jaccard similarity", {
     skip_if_not_installed("proxy")
     # proxy::simil(method = "jaccard") wrongly returns 1 for all zero vector
-    test_simil(mat_test[-3,], "jaccard", margin = 1)
-    test_simil(mat_test[-3,], "jaccard", margin = 2)
+    test_simil(mat_test[-1,], "jaccard", margin = 1)
+    test_simil(mat_test[-1,], "jaccard", margin = 2)
 })
 
 test_that("test ejaccard similarity", {
     skip_if_not_installed("proxy")
     # proxy::simil(method = "ejaccard") wrongly returns 1 for all0  vector
-    test_simil(mat_test[-3,], "ejaccard", margin = 1)
-    test_simil(mat_test[-3,], "ejaccard", margin = 2)
+    test_simil(mat_test[-1,], "ejaccard", margin = 1)
+    test_simil(mat_test[-1,], "ejaccard", margin = 2)
 })
 
 test_that("test dice similarity", {
@@ -63,8 +57,8 @@ test_that("test dice similarity", {
 test_that("test edice similarity", {
     skip_if_not_installed("proxy")
     # proxy::simil(method = "edice") wrongly returns 1 for all0 or sd0 vector
-    test_simil(mat_test[c(-1, -2), c(-1, -2)], "edice", margin = 1)
-    test_simil(mat_test[c(-1, -2), c(-1, -2)], "edice", margin = 2)
+    test_simil(mat_test[1:3 * -1,], "edice", margin = 1)
+    test_simil(mat_test[1:3 * -1,], "edice", margin = 2)
 })
 
 test_that("test simple matching similarity", {
