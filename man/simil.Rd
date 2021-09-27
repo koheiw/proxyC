@@ -56,8 +56,11 @@ recorded.}
 similarity/distance matrix; useful when comparing corresponding rows or
 columns of `x` and `y`.}
 
-\item{use_nan}{if \code{TRUE}, return `NaN` when the standard deviation in
-correlation is zero.}
+\item{use_nan}{if \code{TRUE}, return `NaN` if the standard deviation of a
+vector is zero when `method` is "correlation"; if all the values are zero
+in a vector when `method` is "cosine", "kullback" or "chisquared". Note
+that use of `NaN` makes the similarity/distance matrix denser and therefore
+larger.}
 
 \item{digits}{determines rounding of small values towards zero. Use primarily
 to correct rounding errors in C++. See \link{zapsmall}.}

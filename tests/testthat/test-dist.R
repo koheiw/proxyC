@@ -1,46 +1,4 @@
-require(Matrix)
-mat_test <- rsparsematrix(100, 90, 0.5)
-mat_test[1, ] <- 10.123 # add one row with sd(x) == 0
-mat_test[, 1] <- 10.123 # add one col with sd(x) == 0
-
-test_dist <- function(x, method, margin, ignore_upper = FALSE, ...) {
-    # test with only x
-    s1 <- as.matrix(dist(x, method = method, margin = margin, ...))
-    s2 <- as.matrix(proxy::dist(as.matrix(x),
-                                method = method, by_rows = margin == 1, diag = TRUE, ...))
-
-    if (ignore_upper)
-        s1[upper.tri(s1, TRUE)] <- s2[upper.tri(s2, TRUE)] <- 0
-    expect_equal(as.numeric(s1), as.numeric(s2), tolerance = 0.001)
-
-    # test with x and y, different size
-    if (margin == 1) {
-        y <- x[sample(nrow(x), 10),]
-    } else {
-        y <- x[,sample(ncol(x), 10)]
-    }
-
-    s3 <- as.matrix(dist(x, y, method = method, margin = margin, ...))
-    s4 <- as.matrix(proxy::dist(as.matrix(x), as.matrix(y),
-                                method = method, by_rows = margin == 1, diag = TRUE, ...))
-    if (ignore_upper)
-        s3[upper.tri(s3, TRUE)] <- s4[upper.tri(s4, TRUE)] <- 0
-    expect_equal(as.numeric(s3), as.numeric(s4), tolerance = 0.001)
-
-    # test with x and y, same size
-    if (margin == 1) {
-        y <- x[sample(nrow(x)),]
-    } else {
-        y <- x[,sample(ncol(x))]
-    }
-
-    s5 <- as.matrix(dist(x, y, method = method, margin = margin, ...))
-    s6 <- as.matrix(proxy::dist(as.matrix(x), as.matrix(y),
-                                method = method, by_rows = margin == 1, diag = TRUE, ...))
-    if (ignore_upper)
-        s5[upper.tri(s5, TRUE)] <- s6[upper.tri(s5, TRUE)] <- 0
-    expect_equal(as.numeric(s5), as.numeric(s6), tolerance = 0.001)
-}
+source("function.R")
 
 test_that("test euclidean distance", {
     skip_if_not_installed("proxy")
@@ -128,4 +86,142 @@ test_that("test hamming distance", {
         .9 * nrow(new_mat_test), # thanks to rand.x function, there's a 10% chance that values from different rows will match
         tolerance = 1
     )
+})
+
+test_that("use_nan is working", {
+
+    mat1 <- Matrix::Matrix(1:4, nrow = 1, sparse = TRUE)
+    mat2 <- Matrix::Matrix(rep(0, 4), nrow = 1, sparse = TRUE)
+
+    expect_warning(proxyC::dist(mat1, mat2, method = "kullback", use_nan = FALSE),
+                   "x or y has vectors with all zero; consider setting use_nan = TRUE")
+    expect_warning(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = FALSE),
+                   "x or y has vectors with all zero; consider setting use_nan = TRUE")
+
+    suppressWarnings({
+        expect_equal(proxyC::dist(mat1, mat2, method = "kullback", use_nan = FALSE)[1,1], 0)
+        expect_equal(proxyC::dist(mat1, mat2, method = "kullback", use_nan = FALSE, diag = TRUE)[1,1], 0)
+    })
+
+    expect_true(is.na(proxyC::dist(mat1, mat2, method = "kullback", use_nan = TRUE)[1,1]))
+    expect_true(is.na(proxyC::dist(mat1, mat2, method = "kullback", use_nan = TRUE, diag = TRUE)[1,1]))
+
+    suppressWarnings({
+        expect_equal(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = FALSE)[1,1], 0)
+        expect_equal(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = FALSE, diag = TRUE)[1,1], 0)
+    })
+
+    expect_true(is.na(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = TRUE)[1,1]))
+    expect_true(is.na(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = TRUE, diag = TRUE)[1,1]))
+})
+
+test_that("dist returns zero or NaN correctly", {
+
+    mat <- Matrix::Matrix(matrix(c(0, 0, 0,
+                                   1, 1, 1,
+                                   1, 5, 2,
+                                   2, 3, 4), byrow = TRUE, nrow = 4), sparse = TRUE)
+
+    # euclidean
+    expect_equivalent(
+        as.matrix(proxyC::dist(mat, method = "euclidean", margin = 1, use_nan = TRUE) == 0),
+        as.matrix(bandSparse(4, 4, k = 0))
+    )
+    expect_equivalent(
+        as.matrix(proxyC::dist(mat, method = "euclidean", margin = 2, use_nan = TRUE) == 0),
+        as.matrix(bandSparse(3, 3, k = 0))
+    )
+
+    # kullback
+    expect_equivalent(
+        suppressWarnings(as.matrix(proxyC::dist(mat, method = "kullback", margin = 1, use_nan = FALSE) == 0)),
+        is_all0(mat, margin = 1) | as.matrix(bandSparse(4, 4, k = 0))
+    )
+    expect_equivalent(
+        suppressWarnings(as.matrix(proxyC::dist(mat, method = "kullback", margin = 2, use_nan = FALSE) == 0)),
+        matrix(TRUE, 3, 3)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "kullback", margin = 1, use_nan = TRUE))),
+        is_all0(mat, margin = 1)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "kullback", margin = 2, use_nan = TRUE))),
+        matrix(TRUE, 3, 3)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "kullback", margin = 1, smooth = 1, use_nan = TRUE))),
+        matrix(FALSE, 4, 4)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "kullback", margin = 2, smooth = 1, use_nan = TRUE))),
+        matrix(FALSE, 3, 3)
+    )
+
+    # chisquared
+    expect_equivalent(
+        suppressWarnings(as.matrix(proxyC::dist(mat, method = "chisquared", margin = 1, use_nan = FALSE) == 0)),
+        is_all0(mat, margin = 1) | as.matrix(bandSparse(4, 4, k = 0))
+    )
+    expect_equivalent(
+        suppressWarnings(as.matrix(proxyC::dist(mat, method = "chisquared", margin = 2, use_nan = FALSE) == 0)),
+        matrix(TRUE, 3, 3)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "chisquared", margin = 1, use_nan = TRUE))),
+        is_all0(mat, margin = 1)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "chisquared", margin = 2, use_nan = TRUE))),
+        matrix(TRUE, 3, 3)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "chisquared", margin = 1, smooth = 1, use_nan = TRUE))),
+        matrix(FALSE, 4, 4)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "chisquared", margin = 2, smooth = 1, use_nan = TRUE))),
+        matrix(FALSE, 3, 3)
+    )
+
+    # manhattan
+    expect_false(
+        any(is.nan(as.numeric(proxyC::dist(mat, method = "manhattan", margin = 1, use_nan = TRUE))))
+    )
+    expect_false(
+        any(is.nan(as.numeric(proxyC::dist(mat, method = "manhattan", margin = 2, use_nan = TRUE))))
+    )
+
+    # maximum
+    expect_false(
+        any(is.nan(as.numeric(proxyC::dist(mat, method = "maximum", margin = 1, use_nan = TRUE))))
+    )
+    expect_false(
+        any(is.nan(as.numeric(proxyC::dist(mat, method = "maximum", margin = 2, use_nan = TRUE))))
+    )
+
+    # canberra
+    expect_false(
+        any(is.nan(as.numeric(proxyC::dist(mat, method = "canberra", margin = 1, use_nan = TRUE))))
+    )
+    expect_false(
+        any(is.nan(as.numeric(proxyC::dist(mat, method = "canberra", margin = 2, use_nan = TRUE))))
+    )
+
+    # minkowski
+    expect_false(
+        any(is.nan(as.numeric(proxyC::dist(mat, method = "minkowski", margin = 1, use_nan = TRUE))))
+    )
+    expect_false(
+        any(is.nan(as.numeric(proxyC::dist(mat, method = "minkowski", margin = 2, use_nan = TRUE))))
+    )
+
+    # hamming
+    expect_false(
+        any(is.nan(as.numeric(proxyC::dist(mat, method = "hamming", margin = 1, use_nan = TRUE))))
+    )
+    expect_false(
+        any(is.nan(as.numeric(proxyC::dist(mat, method = "hamming", margin = 2, use_nan = TRUE))))
+    )
+
 })

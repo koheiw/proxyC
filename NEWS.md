@@ -1,3 +1,9 @@
+# proxyC 0.2.2
+
+## New features
+- `use_nan = TRUE` can be used not only for correlation but for all the distance 
+  and similarity measures (#22).
+
 # proxyC 0.2.1
 
 ## New features
@@ -23,31 +29,23 @@
 - Fixed a bug in pairwise similarity/distance computation when `drop0 = TRUE` 
   (#17).
 
-
 # proxyC 0.1.5
 
 ## New features
-
 - Add the `drop0` argument to address the floating point precision issue (#10).
 
 ## Bug fixes
-
 - The digit argument is now passed to `dist()` (#11).
-
 
 # proxyC 0.1.4
 
 ## New features
-
-- Added `rowSds()`, `colSds()`, `rowZeros()` and `colZeros()` (#9).
-
+- Add `rowSds()`, `colSds()`, `rowZeros()` and `colZeros()` (#9).
 
 # proxyC 0.1.3
 
 ## Bug fixes
-
 - No longer assumes symmetry of resulting matrix when `x != y` (#4).
 
 ## New features
-
-- Added the `digits` argument to correct rounding errors in C++ (#5).
+- Add the `digits` argument to correct rounding errors in C++ (#5).

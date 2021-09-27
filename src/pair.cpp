@@ -9,23 +9,28 @@ double simil_cosine(colvec& col_i, colvec& col_j) {
     return accu(sum(col_i % col_j) / sqrt(sum(square(col_i)) * sum(square(col_j))));
 }
 
-double simil_correlation(colvec& col_i, colvec& col_j, bool use_nan) {
+double simil_correlation(colvec& col_i, colvec& col_j) {
     double sd_i = stddev(col_i, 1);
     double sd_j = stddev(col_j, 1);
-    if (sd_i == 0.0 || sd_j == 0.0)
-        return use_nan ? std::numeric_limits<double>::quiet_NaN() : 0.0;
     double v1 = accu(col_i.t() * col_j);
     double v2 = mean(col_i) * mean(col_j) * col_i.n_rows;
+    // Rcout << "v1 - v2 = " << v1 - v2 << "\n";
+    // Rcout << "col_i.n_rows = " << col_i.n_rows << "\n";
+    // Rcout << "sd_i * sd_j = " << sd_i * sd_j << "\n";
+    // Rcout << "result = " << ((v1 - v2) / col_i.n_rows) / (sd_i * sd_j) << "\n";
     return ((v1 - v2) / col_i.n_rows) / (sd_i * sd_j);
+
 }
 
 double simil_ejaccard(colvec& col_i, colvec& col_j, double weight = 1) {
     double e = accu(col_i % col_j);
+    if (e == 0) return 0;
     return e / (accu(pow(col_i, weight)) + accu(pow(col_j, weight)) - e);
 }
 
 double simil_edice(colvec& col_i, colvec& col_j, double weight = 1) {
     double e = accu(col_i % col_j);
+    if (e == 0) return 0;
     return (2 * e) / (accu(pow(col_i, weight)) + accu(pow(col_j, weight)));
 }
 
@@ -54,7 +59,7 @@ double dist_euclidean(colvec& col_i, colvec& col_j) {
 
 double dist_chisquare(colvec& col_i, colvec& col_j, double smooth) {
     if (smooth == 0 && (any(col_i == 0) || any(col_j == 0)))
-        return 0;
+        return std::numeric_limits<double>::quiet_NaN();
     mat m = join_rows(col_i, col_j) + smooth;
     m = m / accu(m);
     mat e = sum(m, 1) * sum(m, 0);
@@ -64,7 +69,7 @@ double dist_chisquare(colvec& col_i, colvec& col_j, double smooth) {
 
 double dist_kullback(colvec& col_i, colvec& col_j, double smooth) {
     if (smooth == 0 && (any(col_i == 0) || any(col_j == 0)))
-        return 0;
+        return std::numeric_limits<double>::quiet_NaN();
     double s1 = accu(col_i) + smooth * col_i.n_rows;
     double s2 = accu(col_j) + smooth * col_j.n_rows;
     colvec p1 = (col_i + smooth) / s1;
@@ -124,10 +129,10 @@ struct pairWorker : public Worker {
         arma::uword nrow = mt1.n_rows;
         arma::uword ncol = mt1.n_cols;
 
-        double simil = 0;
-        std::vector<double> simils;
         colvec col_i(nrow);
         colvec col_j(nrow);
+        double simil = 0;
+        std::vector<double> simils;
         for (uword i = begin; i < end; i++) {
             col_i = mt2.col(i);
             if (diag) {
@@ -144,7 +149,8 @@ struct pairWorker : public Worker {
                     simil = simil_cosine(col_i, col_j);
                     break;
                 case 2:
-                    simil = simil_correlation(col_i, col_j, use_nan);
+                    simil = simil_correlation(col_i, col_j);
+                    simil = replace_inf(simil);
                     break;
                 case 3:
                     simil = simil_ejaccard(col_i, col_j, weight);
@@ -191,8 +197,8 @@ struct pairWorker : public Worker {
             }
             double l = get_limit(simils, rank, limit);
             for (std::size_t k = 0; k < simils.size(); k++) {
+                if (drop0 && simils[k] == 0) continue;
                 if (simils[k] >= l || (use_nan && std::isnan(simils[k]))) {
-                    if (drop0 && simils[k] == 0) continue;
                     if (diag) {
                         simil_tri.push_back(std::make_tuple(i, i, simils[k]));
                     } else {
@@ -220,8 +226,6 @@ S4 cpp_pair(arma::sp_mat& mt1,
 
     if (mt1.n_rows != mt2.n_rows)
         throw std::range_error("Invalid matrix objects");
-    if (method != 2) // correlation only
-        use_nan = false;
 
     uword ncol1 = mt1.n_cols;
     uword ncol2 = mt2.n_cols;

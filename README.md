@@ -1,6 +1,18 @@
 
 # proxyC: R package for large-scale similarity/distance computation
 
+<!-- badges: start -->
+
+[![CRAN
+Version](https://www.r-pkg.org/badges/version/proxyC)](https://CRAN.R-project.org/package=proxyC)
+[![Downloads](https://cranlogs.r-pkg.org/badges/proxyC)](https://CRAN.R-project.org/package=proxyC)
+[![Total
+Downloads](https://cranlogs.r-pkg.org/badges/grand-total/proxyC?color=orange)](https://CRAN.R-project.org/package=proxyC)
+[![R build
+status](https://github.com/koheiw/proxyC/workflows/R-CMD-check/badge.svg)](https://github.com/koheiw/proxyC/actions)
+[![codecov](https://codecov.io/gh/koheiw/proxyC/branch/master/graph/badge.svg)](https://codecov.io/gh/koheiw/proxyC)
+<!-- badges: end -->
+
 **proxyC** computes proximity between rows or columns of large matrices
 efficiently in C++. It is optimized for large sparse matrices using the
 Armadillo and Intel TBB libraries. Among several built-in
@@ -83,7 +95,7 @@ Flooring by `min_simil` makes the resulting object much smaller.
 proxyC::simil(sm10k, margin = 2, method = "cosine") %>% 
   object.size() %>% 
   print(units = "MB")
-## 762.9 Mb
+## 763 Mb
 proxyC::simil(sm10k, margin = 2, method = "cosine", min_simil = 0.9) %>% 
   object.size() %>% 
   print(units = "MB")

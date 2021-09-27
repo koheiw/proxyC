@@ -63,6 +63,7 @@ struct linearWorker : public Worker {
 
         uword nrow = mt1t.n_rows;
         uword ncol = mt1t.n_cols;
+
         rowvec v1, v2;
         std::vector<double> simils(nrow);
         for (uword i = begin; i < end; i++) {
@@ -74,10 +75,7 @@ struct linearWorker : public Worker {
                 v1 = rowvec(trans(mt1t * mt2.col(i)));
                 v2 = center1 * center2[i] * ncol;
                 simils = to_vector(((v1 - v2) / ncol) / (square1 * square2[i]));
-                for (std::size_t j = 0; j < square1.size(); j++) {
-                    if (square1[j] == 0.0 || square2[i] == 0.0)
-                        simils[j] = use_nan ? std::numeric_limits<double>::quiet_NaN() : 0.0;
-                }
+                simils = replace_inf(simils);
                 break;
             case 3: // euclidean distance
                 simils = to_vector(sqrt(trans(mt1t * mt2.col(i)) * -2 + square1 + square2[i]));
@@ -87,9 +85,8 @@ struct linearWorker : public Worker {
             for (std::size_t k = 0; k < simils.size(); k++) {
                 if (symm && k > i) continue;
                 if (drop0 && simils[k] == 0) continue;
-                if (simils[k] >= l || (use_nan && std::isnan(simils[k]))) {
+                if (simils[k] >= l || (use_nan && std::isnan(simils[k])))
                     simil_tri.push_back(std::make_tuple(k, i, simils[k]));
-                }
             }
         }
     }
@@ -107,8 +104,6 @@ S4 cpp_linear(arma::sp_mat& mt1,
 
     if (mt1.n_rows != mt2.n_rows)
         throw std::range_error("Invalid matrix objects");
-    if (method != 2) // correlation only
-        use_nan = false;
 
     uword ncol1 = mt1.n_cols;
     uword ncol2 = mt2.n_cols;
