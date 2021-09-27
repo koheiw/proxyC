@@ -83,11 +83,13 @@ namespace proxyc{
         return simils;
     }
 
+    /* not used anywhere
     inline double replace_inf(double simil) {
         if (std::isinf(simil))
             return std::numeric_limits<double>::quiet_NaN();
         return simil;
     }
+    */
 
     inline std::vector<double> to_vector(const arma::sp_mat& mt) {
         return arma::conv_to< std::vector<double> >::from(arma::mat(mt));
