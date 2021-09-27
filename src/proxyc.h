@@ -75,10 +75,12 @@ namespace proxyc{
     }
 
     inline std::vector<double> replace_inf(std::vector<double> simils) {
-        for (auto it = simils.begin() ; it != simils.end(); ++it)
-            if (std::isinf(*it))
+        for (auto it = simils.begin() ; it != simils.end(); ++it) {
+            if (std::isinf(*it)) {
                 *it = std::numeric_limits<double>::quiet_NaN();
-            return simils;
+            }
+        }
+        return simils;
     }
 
     inline double replace_inf(double simil) {
