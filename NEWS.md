@@ -2,7 +2,7 @@
 
 ## New features
 - `use_nan = TRUE` can be used not only for correlation but for all the distance 
-  and similarity measures (#22).
+  and similarity measures.
 
 # proxyC 0.2.1
 
