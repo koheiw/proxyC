@@ -74,7 +74,7 @@ namespace proxyc{
         return limit;
     }
 
-    inline std::vector<double> replace_inf(std::vector<double> simils) {
+    inline std::vector<double> replace_inf_vec(std::vector<double> simils) {
         for (auto it = simils.begin() ; it != simils.end(); ++it) {
             if (std::isinf(*it)) {
                 *it = std::numeric_limits<double>::quiet_NaN();
@@ -83,13 +83,11 @@ namespace proxyc{
         return simils;
     }
 
-    /* not used anywhere
     inline double replace_inf(double simil) {
         if (std::isinf(simil))
             return std::numeric_limits<double>::quiet_NaN();
         return simil;
     }
-    */
 
     inline std::vector<double> to_vector(const arma::sp_mat& mt) {
         return arma::conv_to< std::vector<double> >::from(arma::mat(mt));
