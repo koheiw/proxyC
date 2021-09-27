@@ -88,7 +88,7 @@ test_that("test hamming distance", {
     )
 })
 
-test_that("use_na is working", {
+test_that("use_nan is working", {
 
     mat1 <- Matrix::Matrix(1:4, nrow = 1, sparse = TRUE)
     mat2 <- Matrix::Matrix(rep(0, 4), nrow = 1, sparse = TRUE)
