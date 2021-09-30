@@ -225,3 +225,18 @@ test_that("dist returns zero or NaN correctly", {
     )
 
 })
+
+
+test_that("dist works with dense matrices", {
+
+    smat <- rsparsematrix(100, 50, 0.5)
+    dmat <- as.matrix(smat)
+    emat <- Matrix(smat, sparse = FALSE)
+    d <- proxyC::dist(smat, smat)
+
+    expect_identical(as.matrix(proxyC::dist(dmat, dmat)), as.matrix(d))
+    expect_identical(as.matrix(proxyC::dist(emat, emat)), as.matrix(d))
+    expect_silent(proxyC::dist(smat > 0, smat > 0))
+    expect_error(proxyC::dist(forceSymmetric(emat), forceSymmetric(emat)))
+
+})

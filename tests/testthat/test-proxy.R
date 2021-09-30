@@ -12,11 +12,6 @@ test_that("raise error if the number of rows are different",{
     )
 })
 
-test_that("porxy takes only sparse matrix",{
-    expect_error(simil(matrix(mat_test)), "x must be a sparseMatrix")
-    expect_error(dist(matrix(mat_test)), "x must be a sparseMatrix")
-})
-
 test_that("porxy stops as expected for methods not supported",{
     expect_error(simil(mat_test, method = "Yule"))
     expect_error(dist(mat_test, method = "Yule"))
@@ -93,17 +88,6 @@ test_that("proxyC:::proxy raises error when the numnber of columns/rows are diff
                  "x and y must have the same number of columns")
     expect_error(proxyC:::proxy(mat_test[1:5,], mat_test[1:10,], margin = 2),
                  "x and y must have the same number of rows")
-})
-
-test_that("proxyC:::proxy raises error when x or y is not a sparse matrix", {
-    expect_error(proxyC:::proxy(as(mat_test, "denseMatrix")),
-                 "x must be a sparseMatrix")
-    expect_error(proxyC:::proxy(mat_test, as(mat_test, "denseMatrix")),
-                 "y must be a sparseMatrix")
-    expect_error(proxyC:::proxy(as.matrix(mat_test)),
-                 "x must be a sparseMatrix")
-    expect_error(proxyC:::proxy(mat_test, as.matrix(mat_test)),
-                 "y must be a sparseMatrix")
 })
 
 test_that("digits is working", {
