@@ -34,7 +34,8 @@ dist(
 )
 }
 \arguments{
-\item{x}{\link{Matrix} object}
+\item{x}{\link{matrix} or \link{Matrix} object. Dense matrices are covered to
+the \link{CsparseMatrix-class} internally.}
 
 \item{y}{if a \link{matrix} or \link{Matrix} object is provided, proximity
 between documents or features in \code{x} and \code{y} is computed.}
