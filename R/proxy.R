@@ -6,7 +6,8 @@
 #' Please increase the number of threads for better performance using
 #' \code{\link[RcppParallel]{setThreadOptions}}.
 #'
-#' @param x \link{Matrix} object
+#' @param x \link{matrix} or \link{Matrix} object. Dense matrices are covered to
+#'   the \link{CsparseMatrix-class} internally.
 #' @param y if a \link{matrix} or \link{Matrix} object is provided, proximity
 #'   between documents or features in \code{x} and \code{y} is computed.
 #' @param margin integer indicating margin of similarity/distance computation. 1
@@ -75,22 +76,14 @@ proxy <- function(x, y = NULL, margin = 1,
                   diag = FALSE, use_nan = FALSE, digits = 14) {
 
     method <- match.arg(method)
-    if(is(x, 'sparseMatrix')) {
-        x <- as(x, "dgCMatrix")
-    } else {
-        stop("x must be a sparseMatrix")
-    }
+    x <- as(x, "dgCMatrix")
 
     symm <- is.null(y)
 
     if (is.null(y)) {
         y <- x
     } else {
-        if(is(y, 'sparseMatrix')) {
-            y <- as(y, "dgCMatrix")
-        } else {
-            stop("y must be a sparseMatrix")
-        }
+        y <- as(y, "dgCMatrix")
     }
     if (!margin %in% c(1, 2))
         stop("Matrgin must be 1 (row) or 2 (column)")

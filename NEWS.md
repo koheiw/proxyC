@@ -1,6 +1,7 @@
 # proxyC 0.2.2
 
 ## New features
+- `simil()` and `dist()` work with both dense and sparse matrices.
 - `use_nan = TRUE` can be used not only for correlation but for all the distance 
   and similarity measures.
 
