@@ -10,7 +10,7 @@ Version](https://www.r-pkg.org/badges/version/proxyC)](https://CRAN.R-project.or
 Downloads](https://cranlogs.r-pkg.org/badges/grand-total/proxyC?color=orange)](https://CRAN.R-project.org/package=proxyC)
 [![R build
 status](https://github.com/koheiw/proxyC/workflows/R-CMD-check/badge.svg)](https://github.com/koheiw/proxyC/actions)
-[![codecov](https://codecov.io/gh/koheiw/proxyC/branch/master/graph/badge.svg)](https://codecov.io/gh/koheiw/proxyC)
+[![codecov](https://codecov.io/gh/koheiw/proxyC/branch/master/graph/badge.svg)](https://app.codecov.io/gh/koheiw/proxyC)
 <!-- badges: end -->
 
 **proxyC** computes proximity between rows or columns of large matrices
