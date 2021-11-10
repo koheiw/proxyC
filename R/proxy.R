@@ -38,10 +38,11 @@
 #' simil(mt, method = "cosine")[1:5, 1:5]
 simil <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
-                             "dice", "edice", "hamman", "simple matching", "faith"),
+                             "dice", "edice", "hamann", "simple matching", "faith"),
                   min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE,
                   use_nan = FALSE, digits = 14) {
 
+    method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
     proxy(x, y, margin, method, min_proxy = min_simil, rank = rank, drop0 = drop0,
           diag = diag, use_nan = use_nan, digits = digits)
@@ -69,12 +70,13 @@ dist <- function(x, y = NULL, margin = 1,
 #' @useDynLib proxyC
 proxy <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
-                             "dice", "edice", "hamman", "simple matching", "faith",
+                             "dice", "edice", "hamann", "simple matching", "faith",
                              "euclidean", "chisquared", "kullback",
                              "manhattan", "maximum", "canberra", "minkowski", "hamming"),
                   p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE,
                   diag = FALSE, use_nan = FALSE, digits = 14) {
 
+    method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
     x <- as(x, "dgCMatrix")
 
@@ -123,7 +125,7 @@ proxy <- function(x, y = NULL, margin = 1,
         method <- "edice"
     } else if (method == "edice") {
         weight <- 2
-    } else if (method == "hamman") {
+    } else if (method == "hamann") {
         boolean <- TRUE
     } else if (method == "faith") {
         boolean <- TRUE
@@ -154,7 +156,7 @@ proxy <- function(x, y = NULL, margin = 1,
             mt1 = x,
             mt2 = y,
             method = match(method, c("cosine", "correlation", "ejaccard", "edice",
-                                     "hamman", "simple matching", "faith",
+                                     "hamann", "simple matching", "faith",
                                      "euclidean", "chisquared", "kullback", "manhattan",
                                      "maximum", "canberra", "minkowski", "hamming")),
             rank = rank,

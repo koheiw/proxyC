@@ -9,7 +9,7 @@ simil(
   x,
   y = NULL,
   margin = 1,
-  method = c("cosine", "correlation", "jaccard", "ejaccard", "dice", "edice", "hamman",
+  method = c("cosine", "correlation", "jaccard", "ejaccard", "dice", "edice", "hamann",
     "simple matching", "faith"),
   min_simil = NULL,
   rank = NULL,
