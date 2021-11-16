@@ -67,10 +67,10 @@ test_that("test simple matching similarity", {
     test_simil(mat_test, "simple matching", margin = 2)
 })
 
-test_that("test hamman similarity", {
+test_that("test hamanm similarity", {
     skip_if_not_installed("proxy")
-    test_simil(mat_test, "hamman", margin = 1)
-    test_simil(mat_test, "hamman", margin = 2)
+    test_simil(mat_test, "hamman", margin = 1) # use misspelling for proxy
+    test_simil(mat_test, "hamman", margin = 2) # use misspelling for proxy
 })
 
 test_that("test faith similarity", {
@@ -222,10 +222,10 @@ test_that("simil returns zero or NaN correctly", {
 
     # hamman
     expect_false(
-        any(is.nan(as.numeric(proxyC::simil(mat, method = "hamman", margin = 1, use_nan = TRUE))))
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "hamann", margin = 1, use_nan = TRUE))))
     )
     expect_false(
-        any(is.nan(as.numeric(proxyC::simil(mat, method = "hamman", margin = 2, use_nan = TRUE))))
+        any(is.nan(as.numeric(proxyC::simil(mat, method = "hamann", margin = 2, use_nan = TRUE))))
     )
 
     # simple matching
