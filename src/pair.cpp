@@ -34,10 +34,10 @@ double simil_edice(colvec& col_i, colvec& col_j, double weight = 1) {
     return (2 * e) / (accu(pow(col_i, weight)) + accu(pow(col_j, weight)));
 }
 
-double simil_hamman(colvec& col_i, colvec& col_j, double weight = 1) {
+double simil_hamann(colvec& col_i, colvec& col_j) {
     double e = accu(col_i == col_j);
     double u = col_i.n_rows - e;
-    return (e - (u * weight)) / (e + u);
+    return (e - u) / (e + u);
 }
 
 double simil_faith(colvec& col_i, colvec& col_j) {
@@ -159,7 +159,7 @@ struct pairWorker : public Worker {
                     simil = simil_edice(col_i, col_j, weight);
                     break;
                 case 5:
-                    simil = simil_hamman(col_i, col_j, weight);
+                    simil = simil_hamann(col_i, col_j);
                     break;
                 case 6:
                     simil = simil_matching(col_i, col_j);
