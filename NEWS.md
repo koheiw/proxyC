@@ -1,3 +1,7 @@
+# proxyC 0.2.3
+
+- Change "hamman" to "hamann" in `simil()` to correct misspelling (#26).
+
 # proxyC 0.2.2
 
 ## New features
