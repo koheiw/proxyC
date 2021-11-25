@@ -1,3 +1,6 @@
+## New features and improvements
+- `rowSds()`, `colSds()`, `rowZeros()` and `colZeros()` return row or column names. They also work with both dense and sparse matrices (#28).
+
 # proxyC 0.2.2
 
 ## New features

@@ -3,14 +3,14 @@
 \name{colSds}
 \alias{colSds}
 \alias{rowSds}
-\title{Standard deviation of columns and rows in sparse matrix}
+\title{Standard deviation of columns and rows of large matrices}
 \usage{
 colSds(x)
 
 rowSds(x)
 }
 \arguments{
-\item{x}{\link{Matrix} object}
+\item{x}{\link{matrix} or \link{Matrix} object}
 }
 \description{
 Produces the same result as \code{apply(x, 1, sd)} or \code{apply(x, 2, sd)}

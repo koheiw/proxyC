@@ -3,14 +3,14 @@
 \name{colZeros}
 \alias{colZeros}
 \alias{rowZeros}
-\title{Count number of zeros in columns and rows in sparse matrix}
+\title{Count number of zeros in columns and rows of large matrices}
 \usage{
 colZeros(x)
 
 rowZeros(x)
 }
 \arguments{
-\item{x}{\link{Matrix} object}
+\item{x}{\link{matrix} or \link{Matrix} object}
 }
 \description{
 Produces the same result as applying \code{sum(x == 0)} to each row or column.
