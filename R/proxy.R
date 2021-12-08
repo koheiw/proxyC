@@ -78,14 +78,14 @@ proxy <- function(x, y = NULL, margin = 1,
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
-    x <- as(x, "dgCMatrix")
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
 
     symm <- is.null(y)
 
     if (is.null(y)) {
         y <- x
     } else {
-        y <- as(y, "dgCMatrix")
+        y <- as(as(y, "CsparseMatrix"), "dgCMatrix")
     }
     if (!margin %in% c(1, 2))
         stop("Matrgin must be 1 (row) or 2 (column)")
@@ -176,62 +176,54 @@ proxy <- function(x, y = NULL, margin = 1,
     return(result)
 }
 
-#' Standard deviation of columns and rows in sparse matrix
+#' Standard deviation of columns and rows of large matrices
 #'
 #' Produces the same result as \code{apply(x, 1, sd)} or \code{apply(x, 2, sd)}
 #' without coercing matrix to dense matrix. Values are not identical to
 #' \code{sd} because of the floating point precision issue in C++.
-#' @param x \link{Matrix} object
+#' @param x \link{matrix} or \link{Matrix} object
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' colSds(mt)
 #' apply(mt, 2, sd) # the same
 #' @export
 colSds <- function(x) {
-    if(is(x, 'sparseMatrix')) {
-        x <- as(x, "dgCMatrix")
-    } else {
-        stop("x must be a sparseMatrix")
-    }
-    cpp_sd(x)
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
+    result <- cpp_sd(x)
+    names(result) <- colnames(x)
+    return(result)
 }
 
 #' @rdname colSds
 #' @export
 rowSds <- function(x) {
-    if(is(x, 'sparseMatrix')) {
-        x <- as(x, "dgCMatrix")
-    } else {
-        stop("x must be a sparseMatrix")
-    }
-    cpp_sd(t(x))
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
+    result <- cpp_sd(t(x))
+    names(result) <- rownames(x)
+    return(result)
 }
 
-#' Count number of zeros in columns and rows in sparse matrix
+#' Count number of zeros in columns and rows of large matrices
 #'
 #' Produces the same result as applying \code{sum(x == 0)} to each row or column.
-#' @param x \link{Matrix} object
+#' @param x \link{matrix} or \link{Matrix} object
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' colZeros(mt)
 #' apply(mt, 2, function(x) sum(x == 0)) # the same
 #' @export
 colZeros <- function(x) {
-    if(is(x, 'sparseMatrix')) {
-        x <- as(x, "dgCMatrix")
-    } else {
-        stop("x must be a sparseMatrix")
-    }
-    nrow(x) - cpp_nz(x)
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
+    result <- nrow(x) - cpp_nz(x)
+    names(result) <- colnames(x)
+    return(result)
 }
 
 #' @rdname colZeros
 #' @export
 rowZeros <- function(x) {
-    if(is(x, 'sparseMatrix')) {
-        x <- as(x, "dgCMatrix")
-    } else {
-        stop("x must be a sparseMatrix")
-    }
-    ncol(x) - cpp_nz(t(x))
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
+    result <- ncol(x) - cpp_nz(t(x))
+    names(result) <- rownames(x)
+    return(result)
 }

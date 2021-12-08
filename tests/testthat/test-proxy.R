@@ -102,18 +102,26 @@ test_that("digits is working", {
 
 test_that("colSds and rowSds are working", {
     mt <- rsparsematrix(100, 100, 0.01)
+    dimnames(mt) <- list(paste0("row", seq_len(nrow(mt))),
+                         paste0("col", seq_len(ncol(mt))))
     expect_equal(rowSds(mt), apply(mt, 1, sd))
     expect_equal(colSds(mt), apply(mt, 2, sd))
-    expect_error(rowSds(matrix(mt)), "x must be a sparseMatrix")
-    expect_error(colSds(matrix(mt)), "x must be a sparseMatrix")
+    expect_equal(rowSds(as.matrix(mt)), apply(mt, 1, sd))
+    expect_equal(colSds(as.matrix(mt)), apply(mt, 2, sd))
 })
 
 test_that("colZeros and rowZeros are working", {
     mt <- rsparsematrix(100, 100, 0.01)
+    dimnames(mt) <- list(paste0("row", seq_len(nrow(mt))),
+                         paste0("col", seq_len(ncol(mt))))
+    expect_equal(names(rowZeros(mt)), rownames(mt))
+    expect_equal(names(colZeros(mt)), colnames(mt))
+    expect_equal(names(rowSds(mt)), rownames(mt))
+    expect_equal(names(colSds(mt)), colnames(mt))
     expect_equal(rowZeros(mt), apply(mt, 1, function(x) sum(x == 0)))
     expect_equal(colZeros(mt), apply(mt, 2, function(x) sum(x == 0)))
-    expect_error(rowZeros(matrix(mt)), "x must be a sparseMatrix")
-    expect_error(colZeros(matrix(mt)), "x must be a sparseMatrix")
+    expect_equal(rowZeros(as.matrix(mt)), apply(mt, 1, function(x) sum(x == 0)))
+    expect_equal(colZeros(as.matrix(mt)), apply(mt, 2, function(x) sum(x == 0)))
 })
 
 test_that("diag is working", {
@@ -138,3 +146,44 @@ test_that("diag is working", {
         diag(sim3)
     )
 })
+
+
+test_that("functions works with different matrices", {
+
+    smat <- rsparsematrix(50, 50, 0.5)
+    dmat <- as.matrix(smat)
+    emat <- Matrix(smat, sparse = FALSE)
+    s <- proxyC::simil(smat, smat)
+
+    expect_identical(as.matrix(proxyC:::proxy(dmat, dmat)), as.matrix(s))
+    expect_identical(as.matrix(proxyC:::proxy(emat, emat)), as.matrix(s))
+    expect_silent(proxyC:::proxy(smat > 0, smat > 0))
+    expect_silent(proxyC:::proxy(forceSymmetric(smat), forceSymmetric(smat)))
+    expect_silent(proxyC:::proxy(forceSymmetric(emat), forceSymmetric(emat)))
+
+    expect_identical(rowSds(dmat), rowSds(smat))
+    expect_identical(rowSds(emat), rowSds(smat))
+    expect_identical(rowSds(emat > 0), rowSds(smat > 0))
+    expect_identical(colSds(dmat), colSds(smat))
+    expect_identical(colSds(emat), colSds(smat))
+    expect_identical(colSds(emat > 0), colSds(smat > 0))
+
+    expect_silent(rowSds(forceSymmetric(smat)))
+    expect_silent(colSds(forceSymmetric(smat)))
+    expect_silent(rowSds(forceSymmetric(emat)))
+    expect_silent(colSds(forceSymmetric(emat)))
+
+    expect_identical(rowZeros(dmat), rowZeros(smat))
+    expect_identical(rowZeros(emat), rowZeros(smat))
+    expect_identical(rowZeros(emat > 0), rowZeros(smat > 0))
+    expect_identical(colZeros(dmat), colZeros(smat))
+    expect_identical(colZeros(emat), colZeros(smat))
+    expect_identical(colZeros(emat > 0), colZeros(smat > 0))
+
+    expect_silent(rowZeros(forceSymmetric(smat)))
+    expect_silent(colZeros(forceSymmetric(smat)))
+    expect_silent(rowZeros(forceSymmetric(emat)))
+    expect_silent(colZeros(forceSymmetric(emat)))
+})
+
+
