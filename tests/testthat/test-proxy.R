@@ -142,3 +142,44 @@ test_that("diag is working", {
         diag(sim3)
     )
 })
+
+
+test_that("functions works with different matrices", {
+
+    smat <- rsparsematrix(50, 50, 0.5)
+    dmat <- as.matrix(smat)
+    emat <- Matrix(smat, sparse = FALSE)
+    s <- proxyC::simil(smat, smat)
+
+    expect_identical(as.matrix(proxyC:::proxy(dmat, dmat)), as.matrix(s))
+    expect_identical(as.matrix(proxyC:::proxy(emat, emat)), as.matrix(s))
+    expect_silent(proxyC:::proxy(smat > 0, smat > 0))
+    expect_silent(proxyC:::proxy(forceSymmetric(smat), forceSymmetric(smat)))
+    expect_silent(proxyC:::proxy(forceSymmetric(emat), forceSymmetric(emat)))
+
+    expect_identical(rowSds(dmat), rowSds(smat))
+    expect_identical(rowSds(emat), rowSds(smat))
+    expect_identical(rowSds(emat > 0), rowSds(smat > 0))
+    expect_identical(colSds(dmat), colSds(smat))
+    expect_identical(colSds(emat), colSds(smat))
+    expect_identical(colSds(emat > 0), colSds(smat > 0))
+
+    expect_silent(rowSds(forceSymmetric(smat)))
+    expect_silent(colSds(forceSymmetric(smat)))
+    expect_silent(rowSds(forceSymmetric(emat)))
+    expect_silent(colSds(forceSymmetric(emat)))
+
+    expect_identical(rowZeros(dmat), rowZeros(smat))
+    expect_identical(rowZeros(emat), rowZeros(smat))
+    expect_identical(rowZeros(emat > 0), rowZeros(smat > 0))
+    expect_identical(colZeros(dmat), colZeros(smat))
+    expect_identical(colZeros(emat), colZeros(smat))
+    expect_identical(colZeros(emat > 0), colZeros(smat > 0))
+
+    expect_silent(rowZeros(forceSymmetric(smat)))
+    expect_silent(colZeros(forceSymmetric(smat)))
+    expect_silent(rowZeros(forceSymmetric(emat)))
+    expect_silent(colZeros(forceSymmetric(emat)))
+})
+
+
