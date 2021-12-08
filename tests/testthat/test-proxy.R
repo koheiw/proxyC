@@ -114,6 +114,10 @@ test_that("colZeros and rowZeros are working", {
     mt <- rsparsematrix(100, 100, 0.01)
     dimnames(mt) <- list(paste0("row", seq_len(nrow(mt))),
                          paste0("col", seq_len(ncol(mt))))
+    expect_equal(names(rowZeros(mt)), rownames(mt))
+    expect_equal(names(colZeros(mt)), colnames(mt))
+    expect_equal(names(rowSds(mt)), rownames(mt))
+    expect_equal(names(colSds(mt)), colnames(mt))
     expect_equal(rowZeros(mt), apply(mt, 1, function(x) sum(x == 0)))
     expect_equal(colZeros(mt), apply(mt, 2, function(x) sum(x == 0)))
     expect_equal(rowZeros(as.matrix(mt)), apply(mt, 1, function(x) sum(x == 0)))
