@@ -188,7 +188,7 @@ proxy <- function(x, y = NULL, margin = 1,
 #' apply(mt, 2, sd) # the same
 #' @export
 colSds <- function(x) {
-    x<- as(as(x, "CsparseMatrix"), "dgCMatrix")
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
     result <- cpp_sd(x)
     names(result) <- colnames(x)
     return(result)
@@ -197,7 +197,7 @@ colSds <- function(x) {
 #' @rdname colSds
 #' @export
 rowSds <- function(x) {
-    x<- as(as(x, "CsparseMatrix"), "dgCMatrix")
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
     result <- cpp_sd(t(x))
     names(result) <- rownames(x)
     return(result)
@@ -213,7 +213,7 @@ rowSds <- function(x) {
 #' apply(mt, 2, function(x) sum(x == 0)) # the same
 #' @export
 colZeros <- function(x) {
-    x<- as(as(x, "CsparseMatrix"), "dgCMatrix")
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
     result <- nrow(x) - cpp_nz(x)
     names(result) <- colnames(x)
     return(result)
@@ -222,7 +222,7 @@ colZeros <- function(x) {
 #' @rdname colZeros
 #' @export
 rowZeros <- function(x) {
-    x<- as(as(x, "CsparseMatrix"), "dgCMatrix")
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
     result <- ncol(x) - cpp_nz(t(x))
     names(result) <- rownames(x)
     return(result)
