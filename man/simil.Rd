@@ -23,8 +23,8 @@ dist(
   x,
   y = NULL,
   margin = 1,
-  method = c("euclidean", "chisquared", "kullback", "manhattan", "maximum", "canberra",
-    "minkowski", "hamming"),
+  method = c("euclidean", "chisquared", "kullback", "jeffreys", "manhattan", "maximum",
+    "canberra", "minkowski", "hamming"),
   p = 2,
   smooth = 0,
   drop0 = FALSE,
@@ -59,9 +59,9 @@ columns of `x` and `y`.}
 
 \item{use_nan}{if \code{TRUE}, return `NaN` if the standard deviation of a
 vector is zero when `method` is "correlation"; if all the values are zero
-in a vector when `method` is "cosine", "kullback" or "chisquared". Note
-that use of `NaN` makes the similarity/distance matrix denser and therefore
-larger.}
+in a vector when `method` is "cosine", "kullback", "jeffreys" or "chisquared".
+Note that use of `NaN` makes the similarity/distance matrix denser and
+therefore larger.}
 
 \item{digits}{determines rounding of small values towards zero. Use primarily
 to correct rounding errors in C++. See \link{zapsmall}.}
@@ -69,7 +69,7 @@ to correct rounding errors in C++. See \link{zapsmall}.}
 \item{p}{weight for Minkowski distance}
 
 \item{smooth}{adds a  fixed value to all the cells to avoid division by zero.
-Only used when `method` is "chisquared" or "kullback".}
+Only used when `method` is "chisquared", "kullback" or "jeffreys".}
 }
 \description{
 Fast similarity/distance computation function for large sparse matrices. You
