@@ -69,6 +69,20 @@ test_that("test kullback leibler distance", {
     )
 })
 
+test_that("test jeffreys distance", {
+    skip_if_not_installed("entropy")
+    smat <- rsparsematrix(10, 2, 0.5, rand.x = sample.int)
+    expect_equal(
+        proxyC::dist(smat, method = "jeffreys", margin = 2)[1,2],
+        0.0
+    )
+    dmat <- as.matrix(smat)
+    kl <- as.matrix(proxyC::dist(smat, method = "kullback", margin = 2, smooth = 1))
+    jd <- as.matrix(proxyC::dist(smat, method = "jeffreys", margin = 2, smooth = 1))
+    dimnames(kl) <- dimnames(jd) <- list(NULL, NULL)
+    expect_equal(kl + t(kl), jd)
+})
+
 test_that("test hamming distance", {
     new_mat_test <- rsparsematrix(100, 90, 1, rand.x = function(x) sample.int(10, x, replace = TRUE))
     dmat <- as.matrix(proxyC::dist(new_mat_test, method = "hamming"))
