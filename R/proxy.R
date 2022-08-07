@@ -57,7 +57,7 @@ simil <- function(x, y = NULL, margin = 1,
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' dist(mt, method = "euclidean")[1:5, 1:5]
 dist <- function(x, y = NULL, margin = 1,
-                 method = c("euclidean", "chisquared", "kullback", "jeffreys",
+                 method = c("euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                             "manhattan", "maximum", "canberra", "minkowski", "hamming"),
                  p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, use_nan = FALSE, digits = 14) {
 
@@ -71,7 +71,7 @@ dist <- function(x, y = NULL, margin = 1,
 proxy <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
                              "dice", "edice", "hamann", "simple matching", "faith",
-                             "euclidean", "chisquared", "kullback", "jeffreys",
+                             "euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                              "manhattan", "maximum", "canberra", "minkowski", "hamming"),
                   p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE,
                   diag = FALSE, use_nan = FALSE, digits = 14) {
@@ -108,7 +108,7 @@ proxy <- function(x, y = NULL, margin = 1,
         if (method == "correlation") {
             if (any(colSds(x) == 0) || any(colSds(y) == 0))
                 warning("x or y has vectors with zero standard deviation; consider setting use_nan = TRUE", call. = FALSE)
-        } else if (method %in% c("cosine", "kullback", "chisquared", "jeffreys")) {
+        } else if (method %in% c("cosine", "kullback", "chisquared", "jeffreys", "jensen")) {
             if (any(colZeros(x) == nrow(x)) || any(colZeros(y) == nrow(y)))
                 warning("x or y has vectors with all zero; consider setting use_nan = TRUE", call. = FALSE)
         }
@@ -159,7 +159,7 @@ proxy <- function(x, y = NULL, margin = 1,
                                      "hamann", "simple matching", "faith",
                                      "euclidean", "chisquared", "kullback", "manhattan",
                                      "maximum", "canberra", "minkowski", "hamming",
-                                     "jeffreys")),
+                                     "jeffreys", "jensen")),
             rank = rank,
             limit = min_proxy,
             weight = weight,

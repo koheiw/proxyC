@@ -83,6 +83,74 @@ test_that("test jeffreys distance", {
     expect_equal(kl + t(kl), jd)
 })
 
+
+test_that("test jensen shannon distance", {
+
+    smat1 <- rsparsematrix(5, 5, 1, rand.x = sample.int)
+    smat2 <- rsparsematrix(5, 5, 1, rand.x = sample.int)
+
+    expect_true(
+        isSymmetric(proxyC::dist(smat1, method = "jensen", margin = 2, smooth = 0))
+    )
+    expect_false(
+        isSymmetric(proxyC::dist(smat1, smat2, method = "jensen", margin = 2, smooth = 0))
+    )
+
+    v1 <- sample(1:10, 10) / 100
+    v2 <- sample(1:10, 10) / 100
+    p1 <- v1 / sum(v1)
+    p2 <- v2 / sum(v2)
+    m <- (p1 + p2) / 2
+
+    d1 <- proxyC::dist(p1, m, method = "kullback", margin = 2)[1,1]
+    d2 <- proxyC::dist(p2, m, method = "kullback", margin = 2)[1,1]
+
+    expect_equal(d1, entropy::KL.empirical(p1, m))
+    expect_equal(d2, entropy::KL.empirical(p2, m))
+    jansen <- (d1 + d2) / 2
+
+    js1 <- proxyC::dist(p1, p2, method = "jensen", margin = 2)[1,1]
+    js2 <- proxyC::dist(p2, p1, method = "jensen", margin = 2)[1,1]
+    expect_equal(js1, jansen)
+    expect_equal(js2, jansen)
+
+})
+
+expect_equal(
+    as.matrix(proxyC::dist(smat1, smat2, method = "jensen", margin = 2, smooth = 0)),
+    t(as.matrix(proxyC::dist(smat2, smat1, method = "jensen", margin = 2, smooth = 0)))
+)
+
+as.matrix(proxyC::dist(smat1, smat2, method = "euclidean", margin = 2, smooth = 0))
+as.matrix(proxyC::dist(smat1, method = "euclidean", margin = 2, smooth = 0))
+
+as.matrix(proxyC::dist(smat1, smat2, method = "jensen", margin = 2, smooth = 0))
+as.matrix())
+
+expect_ture(
+    isSymmetric(proxyC::dist(smat1, method = "jensen", margin = 2, smooth = 0))
+)
+expect_false(
+    isSymmetric(proxyC::dist(smat1, smat2, method = "jensen", margin = 2, smooth = 0))
+)
+
+
+
+p[,1]
+q[,1]
+m[,1]
+
+entropy::KL.empirical(smat1[,1], smat1[,2])
+philentropy::kullback_leibler_distance(smat1[,1], smat1[,2], TRUE, "log2", 0)
+
+as.matrix(proxyC::dist(smat1, method = "jensen", margin = 2))
+as.matrix(proxyC::dist(smat1, method = "kullback", margin = 1))
+
+philentropy::JSD(as.matrix(smat1))
+philentropy:::jensen_shannon
+proxyC::dist(as.matrix(smat1), method = "jensen", margin = 2, smooth = 0.000001)
+
+
 test_that("test hamming distance", {
     new_mat_test <- rsparsematrix(100, 90, 1, rand.x = function(x) sample.int(10, x, replace = TRUE))
     dmat <- as.matrix(proxyC::dist(new_mat_test, method = "hamming"))
