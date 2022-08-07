@@ -205,6 +205,42 @@ test_that("dist returns zero or NaN correctly", {
         matrix(FALSE, 3, 3)
     )
 
+    # jeffreys
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jeffreys", margin = 1, use_nan = TRUE))),
+        is_all0(mat, margin = 1)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jeffreys", margin = 2, use_nan = TRUE))),
+        matrix(TRUE, 3, 3)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jeffreys", margin = 1, smooth = 1, use_nan = TRUE))),
+        matrix(FALSE, 4, 4)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jeffreys", margin = 2, smooth = 1, use_nan = TRUE))),
+        matrix(FALSE, 3, 3)
+    )
+
+    # jensen
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jensen", margin = 1, use_nan = TRUE))),
+        is_all0(mat, margin = 1)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jensen", margin = 2, use_nan = TRUE))),
+        matrix(TRUE, 3, 3)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jensen", margin = 1, smooth = 1, use_nan = TRUE))),
+        matrix(FALSE, 4, 4)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jensen", margin = 2, smooth = 1, use_nan = TRUE))),
+        matrix(FALSE, 3, 3)
+    )
+
     # chisquared
     expect_equivalent(
         suppressWarnings(as.matrix(proxyC::dist(mat, method = "chisquared", margin = 1, use_nan = FALSE) == 0)),
