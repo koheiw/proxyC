@@ -1,3 +1,9 @@
+# proxyC 0.3.1
+
+## New features and improvements
+
+- Add "jensen" to `dist()` for Jensen-Shannon divergence as a symmetric version of Kullback-Leibluer divergence.
+
 # proxyC 0.3.0
 
 ## New features and improvements
