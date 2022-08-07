@@ -29,6 +29,31 @@
 #'   therefore larger.
 #' @param digits determines rounding of small values towards zero. Use primarily
 #'   to correct rounding errors in C++. See \link{zapsmall}.
+#' @details
+#' Available methods for similarity:
+#' \itemize{
+#'   \item `cosine`: cosine similarity
+#'   \item `correlation`: Pearson's correlation
+#'   \item `jaccard`: Jaccard coefficient
+#'   \item `ejaccard`: the real value version of `jaccard`
+#'   \item `dice`: Dice coefficient
+#'   \item `edice`: the real value version of `dice`
+#'   \item `faith`: Faith similarity
+#'   \item `simple matching`: the percentage of common elements
+#' }
+#' Available methods for distance:
+#' \itemize{
+#'   \item `euclidean`: Euclidean distance
+#'   \item `chisquared`: chi-squared distance
+#'   \item `kullback`: Kullback–Leibler divergence
+#'   \item `jeffreys`: Jeffreys divergence
+#'   \item `jensen`: Jensen–Shannon divergence
+#'   \item `manhattan`: Manhattan distance
+#'   \item `maximum`: the largest difference between values
+#'   \item `canberra`: Canberra distance
+#'   \item `minkowski`: Minkowski distance
+#'   \item `hamming`: Hamming distance
+#' }
 #' @import methods Matrix
 #' @importFrom RcppParallel RcppParallelLibs
 #' @seealso zapsmall
@@ -38,7 +63,7 @@
 #' simil(mt, method = "cosine")[1:5, 1:5]
 simil <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
-                             "dice", "edice", "hamann", "simple matching", "faith"),
+                             "dice", "edice", "hamann", "faith", "simple matching"),
                   min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE,
                   use_nan = FALSE, digits = 14) {
 
@@ -52,6 +77,7 @@ simil <- function(x, y = NULL, margin = 1,
 #' @rdname simil
 #' @param smooth adds a  fixed value to all the cells to avoid division by zero.
 #'   Only used when `method` is "chisquared", "kullback" or "jeffreys".
+
 #' @export
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
