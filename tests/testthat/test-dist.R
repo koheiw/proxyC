@@ -83,6 +83,39 @@ test_that("test jeffreys distance", {
     expect_equal(kl + t(kl), jd)
 })
 
+
+test_that("test jensen shannon distance", {
+
+    smat1 <- rsparsematrix(5, 5, 1, rand.x = sample.int)
+    smat2 <- rsparsematrix(5, 5, 1, rand.x = sample.int)
+
+    expect_true(
+        isSymmetric(proxyC::dist(smat1, method = "jensen", margin = 2, smooth = 0))
+    )
+    expect_false(
+        isSymmetric(proxyC::dist(smat1, smat2, method = "jensen", margin = 2, smooth = 0))
+    )
+
+    v1 <- sample(1:10, 10) / 100
+    v2 <- sample(1:10, 10) / 100
+    p1 <- v1 / sum(v1)
+    p2 <- v2 / sum(v2)
+    m <- (p1 + p2) / 2
+
+    d1 <- proxyC::dist(p1, m, method = "kullback", margin = 2)[1,1]
+    d2 <- proxyC::dist(p2, m, method = "kullback", margin = 2)[1,1]
+
+    expect_equal(d1, entropy::KL.empirical(p1, m))
+    expect_equal(d2, entropy::KL.empirical(p2, m))
+    jansen <- (d1 + d2) / 2
+
+    js1 <- proxyC::dist(p1, p2, method = "jensen", margin = 2)[1,1]
+    js2 <- proxyC::dist(p2, p1, method = "jensen", margin = 2)[1,1]
+    expect_equal(js1, jansen)
+    expect_equal(js2, jansen)
+
+})
+
 test_that("test hamming distance", {
     new_mat_test <- rsparsematrix(100, 90, 1, rand.x = function(x) sample.int(10, x, replace = TRUE))
     dmat <- as.matrix(proxyC::dist(new_mat_test, method = "hamming"))
@@ -169,6 +202,42 @@ test_that("dist returns zero or NaN correctly", {
     )
     expect_equivalent(
         is.nan(as.matrix(proxyC::dist(mat, method = "kullback", margin = 2, smooth = 1, use_nan = TRUE))),
+        matrix(FALSE, 3, 3)
+    )
+
+    # jeffreys
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jeffreys", margin = 1, use_nan = TRUE))),
+        is_all0(mat, margin = 1)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jeffreys", margin = 2, use_nan = TRUE))),
+        matrix(TRUE, 3, 3)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jeffreys", margin = 1, smooth = 1, use_nan = TRUE))),
+        matrix(FALSE, 4, 4)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jeffreys", margin = 2, smooth = 1, use_nan = TRUE))),
+        matrix(FALSE, 3, 3)
+    )
+
+    # jensen
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jensen", margin = 1, use_nan = TRUE))),
+        is_all0(mat, margin = 1)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jensen", margin = 2, use_nan = TRUE))),
+        matrix(TRUE, 3, 3)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jensen", margin = 1, smooth = 1, use_nan = TRUE))),
+        matrix(FALSE, 4, 4)
+    )
+    expect_equivalent(
+        is.nan(as.matrix(proxyC::dist(mat, method = "jensen", margin = 2, smooth = 1, use_nan = TRUE))),
         matrix(FALSE, 3, 3)
     )
 

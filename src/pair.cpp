@@ -87,6 +87,17 @@ double dist_jeffreys(colvec& col_i, colvec& col_j, double smooth) {
     return accu(trans(p2 - p1) * log(p2 / p1));
 }
 
+double dist_jensen(colvec& col_i, colvec& col_j, double smooth) {
+    if (smooth == 0 && (any(col_i == 0) || any(col_j == 0)))
+        return std::numeric_limits<double>::quiet_NaN();
+    double s1 = accu(col_i) + smooth * col_i.n_rows;
+    double s2 = accu(col_j) + smooth * col_j.n_rows;
+    colvec p1 = (col_i + smooth) / s1;
+    colvec p2 = (col_j + smooth) / s2;
+    colvec m = (p1 + p2) / 2;
+    return (accu(trans(p1) * log(p1 / m)) + accu(trans(p2) * log(p2 / m))) / 2;
+}
+
 double dist_manhattan(colvec& col_i, colvec& col_j) {
     return accu(abs(col_i - col_j));
 }
@@ -203,6 +214,9 @@ struct pairWorker : public Worker {
                     break;
                 case 16:
                     simil = dist_jeffreys(col_i, col_j, smooth);
+                    break;
+                case 17:
+                    simil = dist_jensen(col_i, col_j, smooth);
                     break;
                 }
                 //Rcout << "simil=" << simil << "\n";
