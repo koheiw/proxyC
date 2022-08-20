@@ -10,12 +10,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Distance
 
-# Euclidian
+### Euclidian
 
 $$
 dist = \sqrt{\vec{x}^2 + \vec{y}^2}
 $$
-# Chi-squared
+### Chi-squared
 
 $$
 O_{ij} = \text{augmented matrix from } \vec{x} \text{ and } \vec{y} \\
