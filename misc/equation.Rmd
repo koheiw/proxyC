@@ -1,0 +1,24 @@
+---
+title: "Equation"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Distance
+
+# Euclidian
+
+$$
+dist = \sqrt{\vec{x}^2 + \vec{y}^2}
+$$
+# Chi-squared
+
+$$
+O_{ij} = \text{augmented matrix from } \vec{x} \text{ and } \vec{y} \\
+E_{ij} = \text{matrix of expected count for } O_{ij} \\
+dist = \sum{(E_{ij} - O_{ij}) ^ 2 / E_{ij}} \\
+$$
