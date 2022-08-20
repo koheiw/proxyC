@@ -10,15 +10,43 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Distance
 
-### Euclidian
+### Euclidian distance
 
 $$
-dist = \sqrt{\vec{x}^2 + \vec{y}^2}
+dist = \sum{\sqrt{\vec{x}^2 + \vec{y}^2}}
 $$
-### Chi-squared
+### Chi-squared divergence
 
 $$
 O_{ij} = \text{augmented matrix from } \vec{x} \text{ and } \vec{y} \\
 E_{ij} = \text{matrix of expected count for } O_{ij} \\
 dist = \sum{(E_{ij} - O_{ij}) ^ 2 / E_{ij}} \\
 $$
+
+## Kullback–Leibler divergence
+
+$$
+\vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
+\vec{q} = \frac{\vec{y}}{\sum{\vec{y}}} \\
+dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}}
+$$
+
+## Jeffreys divergence
+
+$$
+\vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
+\vec{q} = \frac{\vec{y}}{\sum{\vec{y}}} \\
+dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}} + 
+       \sum{\vec{p} \log_2{\frac{\vec{p}}{\vec{q}}}}
+$$
+
+## Jensen–Shannon divergence
+
+$$
+\vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
+\vec{q} = \frac{\vec{y}}{\sum{\vec{y}}} \\
+\vec{m} = \frac{1}{2} (\vec{p} + \vec{q}) \\
+dist = \frac{1}{2} \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{m}}}} + 
+       \frac{1}{2} \sum{\vec{p} \log_2{\frac{\vec{p}}{\vec{m}}}}
+$$
+
