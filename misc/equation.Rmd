@@ -10,20 +10,50 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Distance
 
-### Euclidian distance
+### Manhattan distance ("manhattan")
+
+$$
+dist = \sum{|\vec{x} - \vec{y}|}
+$$
+
+### Canberra distance ("canberra")
+
+$$
+dist = \frac{|\vec{x} - \vec{y}|}{|\vec{x}| + |\vec{y}|}
+$$
+
+### Euclidian ("euclidian")
 
 $$
 dist = \sum{\sqrt{\vec{x}^2 + \vec{y}^2}}
 $$
-### Chi-squared divergence
+
+### Minkowski distance ("minkowski")
+
+$$
+dist = \Bigl( \sum{|\vec{x} - \vec{y}| ^ p} \Bigr) ^ \frac{1}{p}
+$$
+
+### Hamming distance ("hamming")
+
+$$
+dist = \sum{\vec{x} \ne \vec{y}}
+$$
+### The largest difference between values ("maximum")
+
+$$
+dist = \max{\vec{x} - \vec{y}}
+$$
+
+### Chi-squared divergence ("chisquared")
 
 $$
 O_{ij} = \text{augmented matrix from } \vec{x} \text{ and } \vec{y} \\
 E_{ij} = \text{matrix of expected count for } O_{ij} \\
-dist = \sum{(E_{ij} - O_{ij}) ^ 2 / E_{ij}} \\
+dist = \sum{\frac{(E_{ij} - O_{ij}) ^ 2}{ E_{ij}}} \\
 $$
 
-## Kullback–Leibler divergence
+### Kullback–Leibler divergence ("kullback")
 
 $$
 \vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
@@ -31,7 +61,7 @@ $$
 dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}}
 $$
 
-## Jeffreys divergence
+### Jeffreys divergence ("jeffreys")
 
 $$
 \vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
@@ -40,7 +70,7 @@ dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}} +
        \sum{\vec{p} \log_2{\frac{\vec{p}}{\vec{q}}}}
 $$
 
-## Jensen–Shannon divergence
+### Jensen–Shannon divergence ("jensen")
 
 $$
 \vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
