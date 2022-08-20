@@ -50,7 +50,7 @@ $$
 $$
 O_{ij} = \text{augmented matrix from } \vec{x} \text{ and } \vec{y} \\
 E_{ij} = \text{matrix of expected count for } O_{ij} \\
-dist = \sum{\frac{(E_{ij} - O_{ij}) ^ 2}{ E_{ij}}} \\
+dist = \sum{\frac{(O_{ij} - E_{ij}) ^ 2}{ E_{ij}}} \\
 $$
 
 ### Kullback–Leibler divergence ("kullback")
