@@ -8,6 +8,53 @@ date: "`r Sys.Date()`"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Similarity
+
+### Cosine similarity ("cosine")
+
+$$
+simil = \frac{\sum{\vec{x}\vec{y}}}{\sqrt{\sum{\vec{x} ^ 2}} \sqrt{\sum{\vec{y} ^ 2}}}
+$$
+
+### Pearson correlation coefficient ("correlation")
+
+$$
+simil = \frac{Cov(\vec{x},\vec{y})}{Var(\vec{x}) Var(\vec{y})}
+$$
+
+### Jaccard similarity ("jaccard" and "ejaccard")
+
+The values of $x$ and $y$ are Boolean for "jaccard".
+
+$$
+e = \sum{\vec{x} \vec{y}} \\
+w = \text{user-provided weight} \\
+simil = \frac{e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w} - e}
+$$
+
+### Dice similarity ("dice" and "edice")
+
+The values of $x$ and $y$ are Boolean for "dice".
+
+$$
+e = \sum{\vec{x} \vec{y}} \\
+w = \text{user-provided weight} \\
+simil = \frac{2 e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w}}
+$$
+
+### Hamann similarity ("hamann")
+
+
+### Faith similarity ("faith")
+
+
+
+### Simple matching ("matching")
+
+$$
+simil = \sum{\vec{x} = \vec{y}}
+$$
+
 ## Distance
 
 ### Manhattan distance ("manhattan")
@@ -31,6 +78,7 @@ $$
 ### Minkowski distance ("minkowski")
 
 $$
+p = \text{user-provided parameter} \\
 dist = \Bigl( \sum{|\vec{x} - \vec{y}| ^ p} \Bigr) ^ \frac{1}{p}
 $$
 
@@ -38,7 +86,8 @@ $$
 
 $$
 dist = \sum{\vec{x} \ne \vec{y}}
-$$
+$$ 
+
 ### The largest difference between values ("maximum")
 
 $$
@@ -53,7 +102,7 @@ E_{ij} = \text{matrix of expected count for } O_{ij} \\
 dist = \sum{\frac{(O_{ij} - E_{ij}) ^ 2}{ E_{ij}}} \\
 $$
 
-### Kullback–Leibler divergence ("kullback")
+### Kullback--Leibler divergence ("kullback")
 
 $$
 \vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
@@ -70,7 +119,7 @@ dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}} +
        \sum{\vec{p} \log_2{\frac{\vec{p}}{\vec{q}}}}
 $$
 
-### Jensen–Shannon divergence ("jensen")
+### Jensen-Shannon divergence ("jensen")
 
 $$
 \vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
@@ -79,4 +128,3 @@ $$
 dist = \frac{1}{2} \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{m}}}} + 
        \frac{1}{2} \sum{\vec{p} \log_2{\frac{\vec{p}}{\vec{m}}}}
 $$
-
