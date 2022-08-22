@@ -1,3 +1,5 @@
+- Change how `x` and `y` are coerced to dgCMatrix for Matrix v1.4-2
+
 # proxyC 0.2.3
 
 - Change "hamman" to "hamann" in `simil()` to correct misspelling (#26).
