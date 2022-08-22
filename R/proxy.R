@@ -24,11 +24,36 @@
 #'   columns of `x` and `y`.
 #' @param use_nan if \code{TRUE}, return `NaN` if the standard deviation of a
 #'   vector is zero when `method` is "correlation"; if all the values are zero
-#'   in a vector when `method` is "cosine", "kullback" or "chisquared". Note
-#'   that use of `NaN` makes the similarity/distance matrix denser and therefore
-#'   larger.
+#'   in a vector when `method` is "cosine", "kullback", "jeffreys" or "chisquared".
+#'   Note that use of `NaN` makes the similarity/distance matrix denser and
+#'   therefore larger.
 #' @param digits determines rounding of small values towards zero. Use primarily
 #'   to correct rounding errors in C++. See \link{zapsmall}.
+#' @details
+#' Available methods for similarity:
+#' \itemize{
+#'   \item `cosine`: cosine similarity
+#'   \item `correlation`: Pearson's correlation
+#'   \item `jaccard`: Jaccard coefficient
+#'   \item `ejaccard`: the real value version of `jaccard`
+#'   \item `dice`: Dice coefficient
+#'   \item `edice`: the real value version of `dice`
+#'   \item `faith`: Faith similarity
+#'   \item `simple matching`: the percentage of common elements
+#' }
+#' Available methods for distance:
+#' \itemize{
+#'   \item `euclidean`: Euclidean distance
+#'   \item `chisquared`: chi-squared distance
+#'   \item `kullback`: Kullback–Leibler divergence
+#'   \item `jeffreys`: Jeffreys divergence
+#'   \item `jensen`: Jensen–Shannon divergence
+#'   \item `manhattan`: Manhattan distance
+#'   \item `maximum`: the largest difference between values
+#'   \item `canberra`: Canberra distance
+#'   \item `minkowski`: Minkowski distance
+#'   \item `hamming`: Hamming distance
+#' }
 #' @import methods Matrix
 #' @importFrom RcppParallel RcppParallelLibs
 #' @seealso zapsmall
@@ -38,7 +63,7 @@
 #' simil(mt, method = "cosine")[1:5, 1:5]
 simil <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
-                             "dice", "edice", "hamann", "simple matching", "faith"),
+                             "dice", "edice", "hamann", "faith", "simple matching"),
                   min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE,
                   use_nan = FALSE, digits = 14) {
 
@@ -51,13 +76,14 @@ simil <- function(x, y = NULL, margin = 1,
 
 #' @rdname simil
 #' @param smooth adds a  fixed value to all the cells to avoid division by zero.
-#'   Only used when `method` is "chisquared" or "kullback".
+#'   Only used when `method` is "chisquared", "kullback" or "jeffreys".
+
 #' @export
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' dist(mt, method = "euclidean")[1:5, 1:5]
 dist <- function(x, y = NULL, margin = 1,
-                 method = c("euclidean", "chisquared", "kullback",
+                 method = c("euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                             "manhattan", "maximum", "canberra", "minkowski", "hamming"),
                  p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, use_nan = FALSE, digits = 14) {
 
@@ -71,22 +97,21 @@ dist <- function(x, y = NULL, margin = 1,
 proxy <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
                              "dice", "edice", "hamann", "simple matching", "faith",
-                             "euclidean", "chisquared", "kullback",
+                             "euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                              "manhattan", "maximum", "canberra", "minkowski", "hamming"),
                   p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE,
                   diag = FALSE, use_nan = FALSE, digits = 14) {
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
-    #x <- as(x, "dgCMatrix")
+    #x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
     x <- as(as(as(x, "CsparseMatrix"), "generalMatrix"), "dMatrix") # for Matrix v1.4-2 or later
-
     symm <- is.null(y)
 
     if (is.null(y)) {
         y <- x
     } else {
-        #y <- as(y, "dgCMatrix")
+        #y <- as(as(y, "CsparseMatrix"), "dgCMatrix")
         y <- as(as(as(y, "CsparseMatrix"), "generalMatrix"), "dMatrix") # for Matrix v1.4-2 or later
     }
     if (!margin %in% c(1, 2))
@@ -110,7 +135,7 @@ proxy <- function(x, y = NULL, margin = 1,
         if (method == "correlation") {
             if (any(colSds(x) == 0) || any(colSds(y) == 0))
                 warning("x or y has vectors with zero standard deviation; consider setting use_nan = TRUE", call. = FALSE)
-        } else if (method %in% c("cosine", "kullback", "chisquared")) {
+        } else if (method %in% c("cosine", "kullback", "chisquared", "jeffreys", "jensen")) {
             if (any(colZeros(x) == nrow(x)) || any(colZeros(y) == nrow(y)))
                 warning("x or y has vectors with all zero; consider setting use_nan = TRUE", call. = FALSE)
         }
@@ -160,7 +185,8 @@ proxy <- function(x, y = NULL, margin = 1,
             method = match(method, c("cosine", "correlation", "ejaccard", "edice",
                                      "hamann", "simple matching", "faith",
                                      "euclidean", "chisquared", "kullback", "manhattan",
-                                     "maximum", "canberra", "minkowski", "hamming")),
+                                     "maximum", "canberra", "minkowski", "hamming",
+                                     "jeffreys", "jensen")),
             rank = rank,
             limit = min_proxy,
             weight = weight,
@@ -178,62 +204,54 @@ proxy <- function(x, y = NULL, margin = 1,
     return(result)
 }
 
-#' Standard deviation of columns and rows in sparse matrix
+#' Standard deviation of columns and rows of large matrices
 #'
 #' Produces the same result as \code{apply(x, 1, sd)} or \code{apply(x, 2, sd)}
 #' without coercing matrix to dense matrix. Values are not identical to
 #' \code{sd} because of the floating point precision issue in C++.
-#' @param x \link{Matrix} object
+#' @param x \link{matrix} or \link{Matrix} object
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' colSds(mt)
 #' apply(mt, 2, sd) # the same
 #' @export
 colSds <- function(x) {
-    if(is(x, 'sparseMatrix')) {
-        x <- as(x, "dgCMatrix")
-    } else {
-        stop("x must be a sparseMatrix")
-    }
-    cpp_sd(x)
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
+    result <- cpp_sd(x)
+    names(result) <- colnames(x)
+    return(result)
 }
 
 #' @rdname colSds
 #' @export
 rowSds <- function(x) {
-    if(is(x, 'sparseMatrix')) {
-        x <- as(x, "dgCMatrix")
-    } else {
-        stop("x must be a sparseMatrix")
-    }
-    cpp_sd(t(x))
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
+    result <- cpp_sd(t(x))
+    names(result) <- rownames(x)
+    return(result)
 }
 
-#' Count number of zeros in columns and rows in sparse matrix
+#' Count number of zeros in columns and rows of large matrices
 #'
 #' Produces the same result as applying \code{sum(x == 0)} to each row or column.
-#' @param x \link{Matrix} object
+#' @param x \link{matrix} or \link{Matrix} object
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' colZeros(mt)
 #' apply(mt, 2, function(x) sum(x == 0)) # the same
 #' @export
 colZeros <- function(x) {
-    if(is(x, 'sparseMatrix')) {
-        x <- as(x, "dgCMatrix")
-    } else {
-        stop("x must be a sparseMatrix")
-    }
-    nrow(x) - cpp_nz(x)
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
+    result <- nrow(x) - cpp_nz(x)
+    names(result) <- colnames(x)
+    return(result)
 }
 
 #' @rdname colZeros
 #' @export
 rowZeros <- function(x) {
-    if(is(x, 'sparseMatrix')) {
-        x <- as(x, "dgCMatrix")
-    } else {
-        stop("x must be a sparseMatrix")
-    }
-    ncol(x) - cpp_nz(t(x))
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
+    result <- ncol(x) - cpp_nz(t(x))
+    names(result) <- rownames(x)
+    return(result)
 }

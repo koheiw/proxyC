@@ -10,7 +10,7 @@ simil(
   y = NULL,
   margin = 1,
   method = c("cosine", "correlation", "jaccard", "ejaccard", "dice", "edice", "hamann",
-    "simple matching", "faith"),
+    "faith", "simple matching"),
   min_simil = NULL,
   rank = NULL,
   drop0 = FALSE,
@@ -23,8 +23,8 @@ dist(
   x,
   y = NULL,
   margin = 1,
-  method = c("euclidean", "chisquared", "kullback", "manhattan", "maximum", "canberra",
-    "minkowski", "hamming"),
+  method = c("euclidean", "chisquared", "kullback", "jeffreys", "jensen", "manhattan",
+    "maximum", "canberra", "minkowski", "hamming"),
   p = 2,
   smooth = 0,
   drop0 = FALSE,
@@ -59,9 +59,9 @@ columns of `x` and `y`.}
 
 \item{use_nan}{if \code{TRUE}, return `NaN` if the standard deviation of a
 vector is zero when `method` is "correlation"; if all the values are zero
-in a vector when `method` is "cosine", "kullback" or "chisquared". Note
-that use of `NaN` makes the similarity/distance matrix denser and therefore
-larger.}
+in a vector when `method` is "cosine", "kullback", "jeffreys" or "chisquared".
+Note that use of `NaN` makes the similarity/distance matrix denser and
+therefore larger.}
 
 \item{digits}{determines rounding of small values towards zero. Use primarily
 to correct rounding errors in C++. See \link{zapsmall}.}
@@ -69,7 +69,7 @@ to correct rounding errors in C++. See \link{zapsmall}.}
 \item{p}{weight for Minkowski distance}
 
 \item{smooth}{adds a  fixed value to all the cells to avoid division by zero.
-Only used when `method` is "chisquared" or "kullback".}
+Only used when `method` is "chisquared", "kullback" or "jeffreys".}
 }
 \description{
 Fast similarity/distance computation function for large sparse matrices. You
@@ -77,6 +77,32 @@ can floor small similarity value to to save computation time and storage
 space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}).
 Please increase the number of threads for better performance using
 \code{\link[RcppParallel]{setThreadOptions}}.
+}
+\details{
+Available methods for similarity:
+\itemize{
+  \item `cosine`: cosine similarity
+  \item `correlation`: Pearson's correlation
+  \item `jaccard`: Jaccard coefficient
+  \item `ejaccard`: the real value version of `jaccard`
+  \item `dice`: Dice coefficient
+  \item `edice`: the real value version of `dice`
+  \item `faith`: Faith similarity
+  \item `simple matching`: the percentage of common elements
+}
+Available methods for distance:
+\itemize{
+  \item `euclidean`: Euclidean distance
+  \item `chisquared`: chi-squared distance
+  \item `kullback`: Kullback–Leibler divergence
+  \item `jeffreys`: Jeffreys divergence
+  \item `jensen`: Jensen–Shannon divergence
+  \item `manhattan`: Manhattan distance
+  \item `maximum`: the largest difference between values
+  \item `canberra`: Canberra distance
+  \item `minkowski`: Minkowski distance
+  \item `hamming`: Hamming distance
+}
 }
 \examples{
 mt <- Matrix::rsparsematrix(100, 100, 0.01)

@@ -246,17 +246,3 @@ test_that("simil returns zero or NaN correctly", {
 
 })
 
-
-test_that("simil works with dense matrices", {
-
-    smat <- rsparsematrix(100, 50, 0.5)
-    dmat <- as.matrix(smat)
-    emat <- Matrix(smat, sparse = FALSE)
-    s <- proxyC::simil(smat, smat)
-
-    expect_identical(as.matrix(proxyC::simil(dmat, dmat)), as.matrix(s))
-    expect_identical(as.matrix(proxyC::simil(emat, emat)), as.matrix(s))
-    expect_silent(proxyC::simil(smat > 0, smat > 0))
-    expect_error(proxyC::simil(forceSymmetric(emat), forceSymmetric(emat)))
-
-})
