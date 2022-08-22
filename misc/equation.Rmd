@@ -8,6 +8,10 @@ date: "`r Sys.Date()`"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+Choi, S.-S., Cha, S.-H., & Tappert, C. C. (2010). A survey of binary similarity and distance measures. Journal of Systemics, Cybernetics and Informatics, 8(1), 43–48.
+
+
 ## Similarity
 
 ### Cosine similarity ("cosine")
@@ -44,10 +48,21 @@ $$
 
 ### Hamann similarity ("hamann")
 
+$$
+e = \sum{\vec{x} \vec{y}} \\
+n = |\vec{x}| = |\vec{y}| \\
+u = n - e \\
+simil = \frac{e - u}{e + u}
+$$
 
 ### Faith similarity ("faith")
 
-
+$$
+t = \sum{(\vec{x} = 1) (\vec{y} = 1)} \\
+f = \sum{(\vec{x} = 0) (\vec{y} = 0)} \\
+n = |\vec{x}| = |\vec{y}| \\
+simil = \frac{t + 0.5 f}{n}
+$$
 
 ### Simple matching ("matching")
 
