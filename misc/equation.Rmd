@@ -8,6 +8,7 @@ date: "`r Sys.Date()`"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Notation
 
 $$
 \vec{x} = [x_i, x_{i + 1}, \dots, x_n] \\
@@ -91,12 +92,12 @@ $$
 ### Simple matching ("matching")
 
 $$
-simil = \sum{\vec{x} = \vec{y}}
+simil = \sum{[\vec{x} = \vec{y}]}
 $$
 
 ## Distance Measures
 
-Similarity measures are available in `proxyC::dist()`.
+Similarity measures are available in `proxyC::dist()`. Smoothing of the vectors can be performed when `method` is "chisquared", "kullback", "jefferys" or "jensen": the value of `smooth` will be added to each element of $\vec{x}$ and $\vec{y}$.
 
 ### Manhattan distance ("manhattan")
 
