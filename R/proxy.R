@@ -77,7 +77,7 @@ simil <- function(x, y = NULL, margin = 1,
 
 #' @rdname simil
 #' @param smooth adds a  fixed value to all the cells to avoid division by zero.
-#'   Only used when `method` is "chisquared", "kullback" or "jeffreys".
+#'   Only used when `method` is "chisquared", "kullback", "jeffreys" or "jensen".
 
 #' @export
 #' @examples

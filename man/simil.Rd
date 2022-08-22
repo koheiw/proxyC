@@ -69,7 +69,7 @@ to correct rounding errors in C++. See \link{zapsmall}.}
 \item{p}{weight for Minkowski distance}
 
 \item{smooth}{adds a  fixed value to all the cells to avoid division by zero.
-Only used when `method` is "chisquared", "kullback" or "jeffreys".}
+Only used when `method` is "chisquared", "kullback", "jeffreys" or "jensen".}
 }
 \description{
 Fast similarity/distance computation function for large sparse matrices. You
@@ -87,6 +87,7 @@ Available methods for similarity:
   \item `ejaccard`: the real value version of `jaccard`
   \item `dice`: Dice coefficient
   \item `edice`: the real value version of `dice`
+  \item `hamann`: Hamann similarity
   \item `faith`: Faith similarity
   \item `simple matching`: the percentage of common elements
 }
