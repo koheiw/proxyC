@@ -87,6 +87,7 @@ Available methods for similarity:
   \item `ejaccard`: the real value version of `jaccard`
   \item `dice`: Dice coefficient
   \item `edice`: the real value version of `dice`
+  \item `hamann`: Hamann similarity
   \item `faith`: Faith similarity
   \item `simple matching`: the percentage of common elements
 }
