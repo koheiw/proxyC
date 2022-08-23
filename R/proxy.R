@@ -24,9 +24,9 @@
 #'   columns of `x` and `y`.
 #' @param use_nan if \code{TRUE}, return `NaN` if the standard deviation of a
 #'   vector is zero when `method` is "correlation"; if all the values are zero
-#'   in a vector when `method` is "cosine", "kullback", "jeffreys" or "chisquared".
-#'   Note that use of `NaN` makes the similarity/distance matrix denser and
-#'   therefore larger.
+#'   in a vector when `method` is "cosine", chisquared", "kullback", "jeffreys"
+#'   or "jensen" Note that use of `NaN` makes the similarity/distance matrix
+#'   denser and therefore larger in RAM.
 #' @param digits determines rounding of small values towards zero. Use primarily
 #'   to correct rounding errors in C++. See \link{zapsmall}.
 #' @details
