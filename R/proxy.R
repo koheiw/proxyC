@@ -24,8 +24,8 @@
 #'   columns of `x` and `y`.
 #' @param use_nan if \code{TRUE}, return `NaN` if the standard deviation of a
 #'   vector is zero when `method` is "correlation"; if all the values are zero
-#'   in a vector when `method` is "cosine", "chisquared", "kullback", "jeffreys"
-#'   or "jensen". Note that use of `NaN` makes the similarity/distance matrix
+#'   in a vector when `method` is "cosine", chisquared", "kullback", "jeffreys"
+#'   or "jensen" Note that use of `NaN` makes the similarity/distance matrix
 #'   denser and therefore larger in RAM.
 #' @param digits determines rounding of small values towards zero. Use primarily
 #'   to correct rounding errors in C++. See \link{zapsmall}.
@@ -165,8 +165,8 @@ proxy <- function(x, y = NULL, margin = 1,
         weight <- p
     }
     if (boolean) {
-        x <- as(as(x, "lMatrix"), "dMatrix")
-        y <- as(as(y, "lMatrix"), "dMatrix")
+        x <- as(as(x, "lgCMatrix"), "dgCMatrix")
+        y <- as(as(y, "lgCMatrix"), "dgCMatrix")
     }
     if (method %in% c("cosine", "correlation", "euclidean") && !diag) {
         result <- cpp_linear(
@@ -217,7 +217,7 @@ proxy <- function(x, y = NULL, margin = 1,
 #' apply(mt, 2, sd) # the same
 #' @export
 colSds <- function(x) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
     result <- cpp_sd(x)
     names(result) <- colnames(x)
     return(result)
@@ -226,7 +226,7 @@ colSds <- function(x) {
 #' @rdname colSds
 #' @export
 rowSds <- function(x) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
     result <- cpp_sd(t(x))
     names(result) <- rownames(x)
     return(result)
@@ -242,7 +242,7 @@ rowSds <- function(x) {
 #' apply(mt, 2, function(x) sum(x == 0)) # the same
 #' @export
 colZeros <- function(x) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
     result <- nrow(x) - cpp_nz(x)
     names(result) <- colnames(x)
     return(result)
@@ -251,7 +251,7 @@ colZeros <- function(x) {
 #' @rdname colZeros
 #' @export
 rowZeros <- function(x) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
+    x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
     result <- ncol(x) - cpp_nz(t(x))
     names(result) <- rownames(x)
     return(result)
