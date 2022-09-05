@@ -1,3 +1,9 @@
+# proxyC 0.3.2
+
+## Bug fixes
+
+- Make further changes for Matrix v1.4-2.
+
 # proxyC 0.3.1
 
 ## New features and improvements
