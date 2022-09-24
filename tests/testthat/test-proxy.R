@@ -26,13 +26,19 @@ test_that("raises error when p is smaller than 1", {
 test_that("sparse objects are of expected class and occur when expected", {
 
     expect_is(proxyC:::proxy(mat_test),
-              "dsTMatrix")
+              "dspMatrix")
+    expect_is(proxyC:::proxy(mat_test[1:50,], mat_test[1:50,]),
+              "dspMatrix")
+    expect_is(proxyC:::proxy(mat_test[1:50,], mat_test[51:100,]),
+              "dgeMatrix")
     expect_is(proxyC:::proxy(mat_test, min_proxy = 10),
+              "dsTMatrix")
+    expect_is(proxyC:::proxy(mat_test, drop0 = TRUE),
               "dsTMatrix")
     expect_is(proxyC:::proxy(mat_test, rank = 2),
               "dgTMatrix")
     expect_is(proxyC:::proxy(mat_test, method = "kullback"),
-              "dgTMatrix")
+              "dgeMatrix")
 
 })
 

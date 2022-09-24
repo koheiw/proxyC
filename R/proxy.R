@@ -107,14 +107,14 @@ proxy <- function(x, y = NULL, margin = 1,
     method <- match.arg(method)
     #x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
     x <- as(as(as(x, "CsparseMatrix"), "generalMatrix"), "dMatrix") # for Matrix v1.4-2 or later
-    symm <- is.null(y)
-
     if (is.null(y)) {
         y <- x
     } else {
         #y <- as(as(y, "CsparseMatrix"), "dgCMatrix")
         y <- as(as(as(y, "CsparseMatrix"), "generalMatrix"), "dMatrix") # for Matrix v1.4-2 or later
     }
+    symm <- identical(x, y)
+
     if (!margin %in% c(1, 2))
         stop("Matrgin must be 1 (row) or 2 (column)")
     if (margin == 1) {
@@ -197,6 +197,13 @@ proxy <- function(x, y = NULL, margin = 1,
             drop0 = drop0,
             use_nan = use_nan
         )
+    }
+    if (!drop0 && min_proxy == -1 && rank == ncol(x)) {
+        if (is(result, "dsTMatrix")) {
+            result <- as(result, "packedMatrix")
+        } else {
+            result <- as(result, "denseMatrix")
+        }
     }
     if (diag)
         result <- as(as(result, "diagonalMatrix"), "ddiMatrix")
