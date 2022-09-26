@@ -34,3 +34,4 @@ LinkingTo:
 SystemRequirements: C++11
 Encoding: UTF-8
 RoxygenNote: 7.2.1
+Roxygen: list(markdown = TRUE)
