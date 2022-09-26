@@ -22,11 +22,13 @@
 #' @param diag if \code{TRUE}, only compute diagonal elements of the
 #'   similarity/distance matrix; useful when comparing corresponding rows or
 #'   columns of `x` and `y`.
-#' @param use_nan if \code{TRUE}, return `NaN` if the standard deviation of a
+#' @param use_nan if `TRUE`, return `NaN` if the standard deviation of a
 #'   vector is zero when `method` is "correlation"; if all the values are zero
 #'   in a vector when `method` is "cosine", "chisquared", "kullback", "jeffreys"
 #'   or "jensen". Note that use of `NaN` makes the similarity/distance matrix
-#'   denser and therefore larger in RAM.
+#'   denser and therefore larger in RAM. If `FALSE`, return zero in same use
+#'   situations as above. If `NULL`, will also return zero but also generate
+#'   a warning (default).
 #' @param digits determines rounding of small values towards zero. Use primarily
 #'   to correct rounding errors in C++. See \link{zapsmall}.
 #' @details
@@ -66,7 +68,7 @@ simil <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard",
                              "dice", "edice", "hamann", "faith", "simple matching"),
                   min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE,
-                  use_nan = FALSE, digits = 14) {
+                  use_nan = NULL, digits = 14) {
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
@@ -86,7 +88,7 @@ simil <- function(x, y = NULL, margin = 1,
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                             "manhattan", "maximum", "canberra", "minkowski", "hamming"),
-                 p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, use_nan = FALSE, digits = 14) {
+                 p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, use_nan = NULL, digits = 14) {
 
     method <- match.arg(method)
     proxy(x, y, margin, method, p = p, smooth = smooth, drop0 = drop0,
@@ -101,7 +103,7 @@ proxy <- function(x, y = NULL, margin = 1,
                              "euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                              "manhattan", "maximum", "canberra", "minkowski", "hamming"),
                   p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE,
-                  diag = FALSE, use_nan = FALSE, digits = 14) {
+                  diag = FALSE, use_nan = NULL, digits = 14) {
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
@@ -132,14 +134,21 @@ proxy <- function(x, y = NULL, margin = 1,
         rank <- ncol(x)
     if (rank < 1)
         stop("rank must be great than or equal to 1")
-    if (!use_nan) {
-        if (method == "correlation") {
-            if (any(colSds(x) == 0) || any(colSds(y) == 0))
-                warning("x or y has vectors with zero standard deviation; consider setting use_nan = TRUE", call. = FALSE)
-        } else if (method %in% c("cosine", "kullback", "chisquared", "jeffreys", "jensen")) {
-            if (any(colZeros(x) == nrow(x)) || any(colZeros(y) == nrow(y)))
-                warning("x or y has vectors with all zero; consider setting use_nan = TRUE", call. = FALSE)
+    if (is.null(use_nan)) {
+        if (method == "correlation" && (any(colSds(x) == 0) || any(colSds(y) == 0))) {
+            warning(paste0(
+                "x or y has vectors with zero standard deviation; ",
+                "consider setting use_nan = TRUE to set these values to NaN ",
+                "or use_nan = FALSE to suppress this warning"), call. = FALSE)
+        } else if (
+            method %in% c("cosine", "kullback", "chisquared", "jeffreys", "jensen") &&
+            (any(colZeros(x) == nrow(x)) || any(colZeros(y) == nrow(y)))) {
+            warning(paste0(
+                "x or y has vectors with all zero; ",
+                "consider setting use_nan = TRUE to set these values to NaN ",
+                "or use_nan = FALSE to suppress this warning"), call. = FALSE)
         }
+        use_nan <- FALSE
     }
     boolean <- FALSE
     weight <- 1
