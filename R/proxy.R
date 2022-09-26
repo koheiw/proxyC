@@ -202,7 +202,7 @@ proxy <- function(x, y = NULL, margin = 1,
         if (is(result, "dsTMatrix")) {
             result <- as(result, "packedMatrix")
         } else {
-            result <- as(result, "denseMatrix")
+            result <- as(result, "unpackedMatrix")
         }
     }
     if (diag)
