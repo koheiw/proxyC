@@ -145,17 +145,19 @@ test_that("use_nan is working", {
     expect_warning(proxyC::dist(mat1, mat2, method = "chisquared"),
                    "x or y has vectors with all zero; consider setting use_nan = TRUE")
 
-    expect_equal(proxyC::dist(mat1, mat2, method = "kullback", use_nan = FALSE)[1,1], 0)
-    expect_equal(proxyC::dist(mat1, mat2, method = "kullback", use_nan = FALSE, diag = TRUE)[1,1], 0)
+    expect_silent({
+        expect_equal(proxyC::dist(mat1, mat2, method = "kullback", use_nan = FALSE)[1,1], 0)
+        expect_equal(proxyC::dist(mat1, mat2, method = "kullback", use_nan = FALSE, diag = TRUE)[1,1], 0)
 
-    expect_true(is.na(proxyC::dist(mat1, mat2, method = "kullback", use_nan = TRUE)[1,1]))
-    expect_true(is.na(proxyC::dist(mat1, mat2, method = "kullback", use_nan = TRUE, diag = TRUE)[1,1]))
+        expect_true(is.na(proxyC::dist(mat1, mat2, method = "kullback", use_nan = TRUE)[1,1]))
+        expect_true(is.na(proxyC::dist(mat1, mat2, method = "kullback", use_nan = TRUE, diag = TRUE)[1,1]))
 
-    expect_equal(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = FALSE)[1,1], 0)
-    expect_equal(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = FALSE, diag = TRUE)[1,1], 0)
+        expect_equal(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = FALSE)[1,1], 0)
+        expect_equal(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = FALSE, diag = TRUE)[1,1], 0)
 
-    expect_true(is.na(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = TRUE)[1,1]))
-    expect_true(is.na(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = TRUE, diag = TRUE)[1,1]))
+        expect_true(is.na(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = TRUE)[1,1]))
+        expect_true(is.na(proxyC::dist(mat1, mat2, method = "chisquared", use_nan = TRUE, diag = TRUE)[1,1]))
+    })
 })
 
 test_that("dist returns zero or NaN correctly", {
