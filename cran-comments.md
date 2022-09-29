@@ -21,3 +21,12 @@ Update documentation, add a new feature and fix a bug
 ## Downstream dependencies
 
 Changes do not affect in existing users
+
+
+```
+> revdepcheck::revdep_reset()
+> revdepcheck::revdep_check(timeout = as.difftime(600, units = "mins"), num_workers = 30)
+
+todo: fill in
+
+```

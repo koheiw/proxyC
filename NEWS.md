@@ -1,3 +1,9 @@
+# proxyC 0.3.3
+
+## Minor changes
+
+- Explicitly setting `use_nan = FALSE` will suppress warnings in `simil()` and `dist()`.
+
 # proxyC 0.3.2
 
 ## Bug fixes
