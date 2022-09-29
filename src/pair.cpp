@@ -257,7 +257,7 @@ S4 cpp_pair(arma::sp_mat& mt1,
     uword ncol1 = mt1.n_cols;
     uword ncol2 = mt2.n_cols;
     if (rank < 1) rank = 1;
-    symm = symm && method != 10 && rank == ncol2; // exception for kullback
+    symm = symm && rank == ncol2 && method != 10; // exception for kullback
 
     //dev::Timer timer;
     //dev::start_timer("Compute similarity", timer);
