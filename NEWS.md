@@ -1,8 +1,9 @@
 # proxyC 0.3.3
 
-## Minor changes
+## New features and improvements
 
 - Explicitly setting `use_nan = FALSE` will suppress warnings in `simil()` and `dist()`.
+- Add vignettes to explain how the similarity and distance measures are computed.  
 
 # proxyC 0.3.2
 
