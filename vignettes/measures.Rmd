@@ -1,10 +1,10 @@
 ---
-title: "Similarity and Distant Measures in proxyC"
+title: "Similarity and Distance Measures in proxyC"
 author: "Kohei Watanabe"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Similarity and Distant Measures in proxyC}
+  %\VignetteIndexEntry{Similarity and Distance Measures in proxyC}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,7 +13,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This vignette explains the similarity and distance measures are computed in **proxyC**.
+This vignette explains how **proxyC** compute the similarity and distance measures.
 
 ## Notation
 
