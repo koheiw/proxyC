@@ -104,6 +104,7 @@ Available methods for distance:
   \item `minkowski`: Minkowski distance
   \item `hamming`: Hamming distance
 }
+See the [vignette](https://cran.r-project.org/web/packages/proxyC/vignettes/measures.html) for how the similarity and distance are computed.
 }
 \examples{
 mt <- Matrix::rsparsematrix(100, 100, 0.01)
