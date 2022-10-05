@@ -57,7 +57,8 @@
 #'   \item `minkowski`: Minkowski distance
 #'   \item `hamming`: Hamming distance
 #' }
-#' See the [vignette](https://cran.r-project.org/web/packages/proxyC/vignettes/measures.html) for how the similarity and distance are computed.
+#' See the vignette for how the similarity and distance are computed:
+#' `vignette("measures", package = "proxyC")`
 #' @import methods Matrix
 #' @importFrom RcppParallel RcppParallelLibs
 #' @seealso zapsmall
