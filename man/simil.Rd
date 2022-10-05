@@ -71,7 +71,7 @@ to correct rounding errors in C++. See \link{zapsmall}.}
 \item{p}{weight for Minkowski distance}
 
 \item{smooth}{adds a  fixed value to all the cells to avoid division by zero.
-Only used when \code{method} is "chisquared", "kullback" or "jeffreys".}
+Only used when \code{method} is "chisquared", "kullback", "jeffreys" or "jensen".}
 }
 \description{
 Fast similarity/distance computation function for large sparse matrices. You
@@ -106,6 +106,8 @@ Available methods for distance:
 \item \code{minkowski}: Minkowski distance
 \item \code{hamming}: Hamming distance
 }
+See the vignette for how the similarity and distance are computed:
+\code{vignette("measures", package = "proxyC")}
 }
 \examples{
 mt <- Matrix::rsparsematrix(100, 100, 0.01)

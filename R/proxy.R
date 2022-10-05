@@ -57,6 +57,8 @@
 #'   \item `minkowski`: Minkowski distance
 #'   \item `hamming`: Hamming distance
 #' }
+#' See the vignette for how the similarity and distance are computed:
+#' `vignette("measures", package = "proxyC")`
 #' @import methods Matrix
 #' @importFrom RcppParallel RcppParallelLibs
 #' @seealso zapsmall
@@ -79,7 +81,7 @@ simil <- function(x, y = NULL, margin = 1,
 
 #' @rdname simil
 #' @param smooth adds a  fixed value to all the cells to avoid division by zero.
-#'   Only used when `method` is "chisquared", "kullback" or "jeffreys".
+#'   Only used when `method` is "chisquared", "kullback", "jeffreys" or "jensen".
 
 #' @export
 #' @examples
