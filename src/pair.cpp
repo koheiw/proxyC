@@ -28,6 +28,15 @@ double simil_ejaccard(colvec& col_i, colvec& col_j, double weight = 1) {
     return e / (accu(pow(col_i, weight)) + accu(pow(col_j, weight)) - e);
 }
 
+double simil_fjaccard(colvec& col_i, colvec& col_j) {
+    ucolvec l = (col_i <= col_j);
+    colvec min = (col_i % l) + (col_j % (1 - l));
+    colvec max = (col_i % (1 - l)) + (col_j % l);
+    // Rcout << "min\n" << min.t();
+    // Rcout << "max\n" << max.t();
+    return accu(min) / accu(max);
+}
+
 double simil_edice(colvec& col_i, colvec& col_j, double weight = 1) {
     double e = accu(col_i % col_j);
     if (e == 0) return 0;
@@ -203,6 +212,9 @@ struct pairWorker : public Worker {
                     break;
                 case 16:
                     simil = dist_jeffreys(col_i, col_j, smooth);
+                    break;
+                case 17:
+                    simil = simil_fjaccard(col_i, col_j);
                     break;
                 }
                 //Rcout << "simil=" << simil << "\n";
