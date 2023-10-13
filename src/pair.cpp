@@ -29,6 +29,9 @@ double simil_ejaccard(colvec& col_i, colvec& col_j, double weight = 1) {
 }
 
 double simil_fjaccard(colvec& col_i, colvec& col_j) {
+    if (any(col_i < 0) || any(1.0 < col_i) ||
+        any(col_j < 0) || any(1.0 < col_j))
+        return std::numeric_limits<double>::quiet_NaN();
     ucolvec l = (col_i <= col_j);
     colvec min = (col_i % l) + (col_j % (1 - l));
     colvec max = (col_i % (1 - l)) + (col_j % l);
