@@ -10,12 +10,12 @@ simil(
   y = NULL,
   margin = 1,
   method = c("cosine", "correlation", "jaccard", "ejaccard", "fjaccard", "dice", "edice",
-    "hamann", "simple matching", "faith"),
+    "hamann", "faith", "simple matching"),
   min_simil = NULL,
   rank = NULL,
   drop0 = FALSE,
   diag = FALSE,
-  use_nan = FALSE,
+  use_nan = NULL,
   digits = 14
 )
 
@@ -23,13 +23,13 @@ dist(
   x,
   y = NULL,
   margin = 1,
-  method = c("euclidean", "chisquared", "kullback", "jeffreys", "manhattan", "maximum",
-    "canberra", "minkowski", "hamming"),
+  method = c("euclidean", "chisquared", "kullback", "jeffreys", "jensen", "manhattan",
+    "maximum", "canberra", "minkowski", "hamming"),
   p = 2,
   smooth = 0,
   drop0 = FALSE,
   diag = FALSE,
-  use_nan = FALSE,
+  use_nan = NULL,
   digits = 14
 )
 }
@@ -55,13 +55,15 @@ recorded.}
 
 \item{diag}{if \code{TRUE}, only compute diagonal elements of the
 similarity/distance matrix; useful when comparing corresponding rows or
-columns of `x` and `y`.}
+columns of \code{x} and \code{y}.}
 
-\item{use_nan}{if \code{TRUE}, return `NaN` if the standard deviation of a
-vector is zero when `method` is "correlation"; if all the values are zero
-in a vector when `method` is "cosine", "kullback", "jeffreys" or "chisquared".
-Note that use of `NaN` makes the similarity/distance matrix denser and
-therefore larger.}
+\item{use_nan}{if \code{TRUE}, return \code{NaN} if the standard deviation of a
+vector is zero when \code{method} is "correlation"; if all the values are zero
+in a vector when \code{method} is "cosine", "chisquared", "kullback", "jeffreys"
+or "jensen". Note that use of \code{NaN} makes the similarity/distance matrix
+denser and therefore larger in RAM. If \code{FALSE}, return zero in same use
+situations as above. If \code{NULL}, will also return zero but also generate
+a warning (default).}
 
 \item{digits}{determines rounding of small values towards zero. Use primarily
 to correct rounding errors in C++. See \link{zapsmall}.}
@@ -69,7 +71,7 @@ to correct rounding errors in C++. See \link{zapsmall}.}
 \item{p}{weight for Minkowski distance}
 
 \item{smooth}{adds a  fixed value to all the cells to avoid division by zero.
-Only used when `method` is "chisquared", "kullback" or "jeffreys".}
+Only used when \code{method} is "chisquared", "kullback", "jeffreys" or "jensen".}
 }
 \description{
 Fast similarity/distance computation function for large sparse matrices. You
@@ -77,6 +79,35 @@ can floor small similarity value to to save computation time and storage
 space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}).
 Please increase the number of threads for better performance using
 \code{\link[RcppParallel]{setThreadOptions}}.
+}
+\details{
+Available methods for similarity:
+\itemize{
+\item \code{cosine}: cosine similarity
+\item \code{correlation}: Pearson's correlation
+\item \code{jaccard}: Jaccard coefficient
+\item \code{ejaccard}: the real value version of \code{jaccard}
+\item \code{dice}: Dice coefficient
+\item \code{edice}: the real value version of \code{dice}
+\item \code{hamann}: Hamann similarity
+\item \code{faith}: Faith similarity
+\item \verb{simple matching}: the percentage of common elements
+}
+Available methods for distance:
+\itemize{
+\item \code{euclidean}: Euclidean distance
+\item \code{chisquared}: chi-squared distance
+\item \code{kullback}: Kullback–Leibler divergence
+\item \code{jeffreys}: Jeffreys divergence
+\item \code{jensen}: Jensen–Shannon divergence
+\item \code{manhattan}: Manhattan distance
+\item \code{maximum}: the largest difference between values
+\item \code{canberra}: Canberra distance
+\item \code{minkowski}: Minkowski distance
+\item \code{hamming}: Hamming distance
+}
+See the vignette for how the similarity and distance are computed:
+\code{vignette("measures", package = "proxyC")}
 }
 \examples{
 mt <- Matrix::rsparsematrix(100, 100, 0.01)

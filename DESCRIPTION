@@ -1,7 +1,7 @@
 Package: proxyC
 Type: Package
 Title: Computes Proximity in Large Sparse Matrices
-Version: 0.3.0
+Version: 0.3.3
 Authors@R: c(
     person("Kohei", "Watanabe", email = "watanabe.kohei@gmail.com", role = c("cre", "aut", "cph"), 
            comment = c(ORCID = "0000-0001-6519-5265")),
@@ -26,7 +26,9 @@ Imports:
 Suggests:
     testthat,
     entropy,
-    proxy
+    proxy,
+    knitr, 
+    rmarkdown
 LinkingTo: 
     Rcpp, 
     RcppParallel, 
@@ -34,3 +36,5 @@ LinkingTo:
 SystemRequirements: C++11
 Encoding: UTF-8
 RoxygenNote: 7.2.3
+Roxygen: list(markdown = TRUE)
+VignetteBuilder: knitr

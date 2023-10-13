@@ -1,8 +1,28 @@
+# proxyC 0.3.3
+
+## New features and improvements
+
+- Explicitly setting `use_nan = FALSE` will suppress warnings in `simil()` and `dist()`.
+- Add vignettes to explain how the similarity and distance measures are computed.  
+
+# proxyC 0.3.2
+
+## Bug fixes
+
+- Make further changes for Matrix v1.4-2.
+
+# proxyC 0.3.1
+
+## New features and improvements
+
+- Add "jensen" to `dist()` for Jensen-Shannon divergence as a symmetric version of Kullback-Leibler divergence.
+- Change how `x` and `y` are coerced to dgCMatrix for Matrix v1.4-2.
+
 # proxyC 0.3.0
 
 ## New features and improvements
 
-- Add "jeffreys" to `dist()` for Jeffreys divergence. It is a symmetric version of Kullback-Leibluer divergence (#31).
+- Add "jeffreys" to `dist()` for Jeffreys divergence. It is a symmetric version of Kullback-Leibler divergence (#31).
 
 # proxyC 0.2.4
 

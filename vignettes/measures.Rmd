@@ -1,0 +1,188 @@
+---
+title: "Similarity and Distance Measures in proxyC"
+author: "Kohei Watanabe"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Similarity and Distance Measures in proxyC}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This vignette explains how **proxyC** compute the similarity and distance measures.
+
+## Notation
+
+$$
+\vec{x} = [x_i, x_{i + 1}, \dots, x_n] \\
+\vec{y} = [y_i, y_{i + 1}, \dots, y_n]
+$$
+The length of the vector $n = ||\vec{x}||$, while $|\vec{x}|$ is the absolute values of the elements.
+
+Operations on vectors are element-wise:
+
+$$
+\vec{z} = \vec{x}\vec{y} \\
+n = ||\vec{x}|| = ||\vec{y}|| =||\vec{z}||
+$$
+
+Summation of the elements of vectors is written using sigma without specifying the range:
+
+$$
+\sum{\vec{x}} = \sum_{i=1}^{n}{x_i}
+$$
+
+When the elements of the vector is compared with a value in a pair of square brackets, the summation is counting the number of elements that equal (or unequal) to the value:
+
+$$
+\sum{[\vec{x} = 1]} = \sum_{i=1}^{n}{[x_i = 1]}
+$$
+
+## Similarity Measures
+
+Similarity measures are available in `proxyC::simil()`.
+
+### Cosine similarity ("cosine")
+
+$$
+simil = \frac{\sum{\vec{x}\vec{y}}}{\sqrt{\sum{\vec{x} ^ 2}} \sqrt{\sum{\vec{y} ^ 2}}}
+$$
+
+### Pearson correlation coefficient ("correlation")
+
+$$
+simil = \frac{Cov(\vec{x},\vec{y})}{Var(\vec{x}) Var(\vec{y})}
+$$
+
+### Jaccard similarity ("jaccard" and "ejaccard")
+
+The values of $x$ and $y$ are Boolean for "jaccard".
+
+$$
+e = \sum{\vec{x} \vec{y}} \\
+w = \text{user-provided weight} \\
+simil = \frac{e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w} - e}
+$$
+
+### Dice similarity ("dice" and "edice")
+
+The values of $x$ and $y$ are Boolean for "dice".
+
+$$
+e = \sum{\vec{x} \vec{y}} \\
+w = \text{user-provided weight} \\
+simil = \frac{2 e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w}}
+$$
+
+### Hamann similarity ("hamann")
+
+$$
+e = \sum{\vec{x} \vec{y}} \\
+n = ||\vec{x}|| = ||\vec{y}|| \\
+u = n - e \\
+simil = \frac{e - u}{e + u}
+$$
+
+### Faith similarity ("faith")
+
+$$
+t = \sum{[\vec{x} = 1][\vec{y} = 1]} \\
+f = \sum{[\vec{x} = 0][\vec{y} = 0]} \\
+n = ||\vec{x}|| = ||\vec{y}|| \\
+simil = \frac{t + 0.5 f}{n}
+$$
+
+### Simple matching ("matching")
+
+$$
+simil = \sum{[\vec{x} = \vec{y}]}
+$$
+
+## Distance Measures
+
+Similarity measures are available in `proxyC::dist()`. Smoothing of the vectors can be performed when `method` is "chisquared", "kullback", "jefferys" or "jensen": the value of `smooth` will be added to each element of $\vec{x}$ and $\vec{y}$.
+
+### Manhattan distance ("manhattan")
+
+$$
+dist = \sum{|\vec{x} - \vec{y}|}
+$$
+
+### Canberra distance ("canberra")
+
+$$
+dist = \frac{|\vec{x} - \vec{y}|}{|\vec{x}| + |\vec{y}|}
+$$
+
+### Euclidian ("euclidian")
+
+$$
+dist = \sum{\sqrt{\vec{x}^2 + \vec{y}^2}}
+$$
+
+### Minkowski distance ("minkowski")
+
+$$
+p = \text{user-provided parameter} \\
+dist = \Bigl( \sum{|\vec{x} - \vec{y}| ^ p} \Bigr) ^ \frac{1}{p}
+$$
+
+### Hamming distance ("hamming")
+
+$$
+dist = \sum{[\vec{x} \ne \vec{y}]}
+$$ 
+
+### The largest difference between values ("maximum")
+
+$$
+dist = \max{\vec{x} - \vec{y}}
+$$
+
+### Chi-squared divergence ("chisquared")
+
+$$
+O_{ij} = \text{augmented matrix from } \vec{x} \text{ and } \vec{y} \\
+E_{ij} = \text{matrix of expected count for } O_{ij} \\
+dist = \sum{\frac{(O_{ij} - E_{ij}) ^ 2}{ E_{ij}}} \\
+$$
+
+### Kullback--Leibler divergence ("kullback")
+
+$$
+\vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
+\vec{q} = \frac{\vec{y}}{\sum{\vec{y}}} \\
+dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}}
+$$
+
+### Jeffreys divergence ("jeffreys")
+
+$$
+\vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
+\vec{q} = \frac{\vec{y}}{\sum{\vec{y}}} \\
+dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}} + 
+       \sum{\vec{p} \log_2{\frac{\vec{p}}{\vec{q}}}}
+$$
+
+### Jensen-Shannon divergence ("jensen")
+
+$$
+\vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
+\vec{q} = \frac{\vec{y}}{\sum{\vec{y}}} \\
+\vec{m} = \frac{1}{2} (\vec{p} + \vec{q}) \\
+dist = \frac{1}{2} \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{m}}}} + 
+       \frac{1}{2} \sum{\vec{p} \log_2{\frac{\vec{p}}{\vec{m}}}}
+$$
+
+## References
+
+- Choi, S.-S., Cha, S.-H., & Tappert, C. C. (2010). A survey of binary similarity and distance measures. Journal of Systemics, *Cybernetics and Informatics*, 8(1), 43–48.
+- Nielsen, F. (2019). On the Jensen–Shannon Symmetrization of Distances Relying on Abstract Means. *Entropy*, 21(5), 485. https://doi.org/10.3390/e21050485
+- Jain, G., Mahara, T., & Tripathi, K. N. (2020). A Survey of Similarity Measures for Collaborative Filtering-Based Recommender System. In M. Pant, T. K. Sharma, O. P. Verma, R. Singla, & A. Sikander (Eds.), *Soft Computing: Theories and Applications* (pp. 343–352). Springer. https://doi.org/10.1007/978-981-15-0751-9_32
+
+
+
