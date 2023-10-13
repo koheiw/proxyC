@@ -37,7 +37,7 @@
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' simil(mt, method = "cosine")[1:5, 1:5]
 simil <- function(x, y = NULL, margin = 1,
-                  method = c("cosine", "correlation", "jaccard", "ejaccard",
+                  method = c("cosine", "correlation", "jaccard", "ejaccard", "fjaccard",
                              "dice", "edice", "hamann", "simple matching", "faith"),
                   min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE,
                   use_nan = FALSE, digits = 14) {
@@ -69,7 +69,7 @@ dist <- function(x, y = NULL, margin = 1,
 #' @import Rcpp
 #' @useDynLib proxyC
 proxy <- function(x, y = NULL, margin = 1,
-                  method = c("cosine", "correlation", "jaccard", "ejaccard",
+                  method = c("cosine", "correlation", "jaccard", "ejaccard", "fjaccard",
                              "dice", "edice", "hamann", "simple matching", "faith",
                              "euclidean", "chisquared", "kullback", "jeffreys",
                              "manhattan", "maximum", "canberra", "minkowski", "hamming"),
@@ -159,7 +159,7 @@ proxy <- function(x, y = NULL, margin = 1,
                                      "hamann", "simple matching", "faith",
                                      "euclidean", "chisquared", "kullback", "manhattan",
                                      "maximum", "canberra", "minkowski", "hamming",
-                                     "jeffreys")),
+                                     "jeffreys", "fjaccard")),
             rank = rank,
             limit = min_proxy,
             weight = weight,
