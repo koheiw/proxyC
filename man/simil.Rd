@@ -87,6 +87,7 @@ Available methods for similarity:
 \item \code{correlation}: Pearson's correlation
 \item \code{jaccard}: Jaccard coefficient
 \item \code{ejaccard}: the real value version of \code{jaccard}
+\item \code{fjaccard}: Fuzzy Jaccard coefficient
 \item \code{dice}: Dice coefficient
 \item \code{edice}: the real value version of \code{dice}
 \item \code{hamann}: Hamann similarity

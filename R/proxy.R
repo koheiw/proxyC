@@ -38,6 +38,7 @@
 #'   \item `correlation`: Pearson's correlation
 #'   \item `jaccard`: Jaccard coefficient
 #'   \item `ejaccard`: the real value version of `jaccard`
+#'   \item `fjaccard`: Fuzzy Jaccard coefficient
 #'   \item `dice`: Dice coefficient
 #'   \item `edice`: the real value version of `dice`
 #'   \item `hamann`: Hamann similarity
