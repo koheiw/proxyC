@@ -68,6 +68,14 @@ w = \text{user-provided weight} \\
 simil = \frac{e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w} - e}
 $$
 
+### Fuzzy Jaccard similarity ("fjaccard")
+
+The values must be $0 \le x \le 1.0$ and $0 \le y \le 1.0$.
+
+$$
+simil = \frac{\sum{min(\vec{x}, \vec{y})}}{\sum{max(\vec{x}, \vec{y})}}
+$$
+
 ### Dice similarity ("dice" and "edice")
 
 The values of $x$ and $y$ are Boolean for "dice".
@@ -180,9 +188,10 @@ $$
 
 ## References
 
-- Choi, S.-S., Cha, S.-H., & Tappert, C. C. (2010). A survey of binary similarity and distance measures. Journal of Systemics, *Cybernetics and Informatics*, 8(1), 43–48.
+- Choi, S., Cha, S., & Tappert, C. C. (2010). A survey of binary similarity and distance measures. Journal of Systemics, *Cybernetics and Informatics*, 8(1), 43–48.
 - Nielsen, F. (2019). On the Jensen–Shannon Symmetrization of Distances Relying on Abstract Means. *Entropy*, 21(5), 485. https://doi.org/10.3390/e21050485
 - Jain, G., Mahara, T., & Tripathi, K. N. (2020). A Survey of Similarity Measures for Collaborative Filtering-Based Recommender System. In M. Pant, T. K. Sharma, O. P. Verma, R. Singla, & A. Sikander (Eds.), *Soft Computing: Theories and Applications* (pp. 343–352). Springer. https://doi.org/10.1007/978-981-15-0751-9_32
+- Miyamoto, S. (1990). Hierarchical Cluster Analysis and Fuzzy Sets. In S. Miyamoto (Ed.), Fuzzy Sets in Information Retrieval and Cluster Analysis (pp. 125–188). Springer Netherlands. https://doi.org/10.1007/978-94-015-7887-5_6
 
 
 

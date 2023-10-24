@@ -1,3 +1,9 @@
+# proxyC 0.3.4
+
+## New features and improvements
+
+- Add "fjaccard" to `simil()` for Fuzzy Jaccard similarity (#42).
+
 # proxyC 0.3.3
 
 ## New features and improvements
