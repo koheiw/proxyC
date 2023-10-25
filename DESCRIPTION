@@ -33,7 +33,6 @@ LinkingTo:
     Rcpp, 
     RcppParallel, 
     RcppArmadillo (>= 0.7.600.1.0)
-SystemRequirements: C++11
 Encoding: UTF-8
 RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
