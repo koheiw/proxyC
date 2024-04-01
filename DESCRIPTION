@@ -21,8 +21,7 @@ Depends:
     methods
 Imports:
     Matrix (>= 1.2),
-    Rcpp (>= 0.12.12),
-    RcppParallel
+    Rcpp (>= 0.12.12)
 Suggests:
     testthat,
     entropy,
@@ -31,7 +30,6 @@ Suggests:
     rmarkdown
 LinkingTo: 
     Rcpp, 
-    RcppParallel, 
     RcppArmadillo (>= 0.7.600.1.0)
 Encoding: UTF-8
 RoxygenNote: 7.2.3
