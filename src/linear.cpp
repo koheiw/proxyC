@@ -119,7 +119,7 @@ S4 cpp_linear(arma::sp_mat& mt1,
     tbb::task_arena arena(thread);
     arena.execute([&]{
         tbb::parallel_for(tbb::blocked_range<int>(0, I), [&](tbb::blocked_range<int> r) {
-            for (int i = r.begin(); i < r.end(); ++i) {
+            for (int i = r.begin(); i < r.end(); i++) {
                 proxy_linear(i, mt1, mt2, simil_tri,
                              square1, center1, square2, center2,
                              method, rank, limit, symm, drop0, use_nan);

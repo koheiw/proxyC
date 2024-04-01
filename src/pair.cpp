@@ -258,18 +258,16 @@ S4 cpp_pair(arma::sp_mat& mt1,
     tbb::task_arena arena(thread);
     arena.execute([&]{
         tbb::parallel_for(tbb::blocked_range<int>(0, I), [&](tbb::blocked_range<int> r) {
-            for (int i = r.begin(); i < r.end(); ++i) {
+            for (int i = r.begin(); i < r.end(); i++) {
                 proxy_pair(i, mt1, mt2, simil_tri, method, rank, limit, symm,
                            diag, weight, smooth, drop0, use_nan);
             }
         });
     });
 #else
-    for (std::size_t i = 0; i < i; i++) {
-        for (int i = r.begin(); i < r.end(); ++i) {
-            proxy_pair(i, mt1, mt2, simil_tri, method, rank, limit, symm,
-                       diag, weight, smooth, drop0, use_nan);
-        }
+    for (std::size_t i = 0; i < I; i++) {
+        proxy_pair(i, mt1, mt2, simil_tri, method, rank, limit, symm,
+                   diag, weight, smooth, drop0, use_nan);
     }
 # endif
 
