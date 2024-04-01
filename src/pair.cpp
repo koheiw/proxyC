@@ -254,6 +254,7 @@ S4 cpp_pair(arma::sp_mat& mt1,
 
     Triplets simil_tri;
     std::size_t I = ncol2;
+#if PROXYC_USE_TBB
     tbb::task_arena arena(thread);
     arena.execute([&]{
         tbb::parallel_for(tbb::blocked_range<int>(0, I), [&](tbb::blocked_range<int> r) {
@@ -263,6 +264,14 @@ S4 cpp_pair(arma::sp_mat& mt1,
             }
         });
     });
+#else
+    for (std::size_t i = 0; i < i; i++) {
+        for (int i = r.begin(); i < r.end(); ++i) {
+            proxy_pair(i, mt1, mt2, simil_tri, method, rank, limit, symm,
+                       diag, weight, smooth, drop0, use_nan);
+        }
+    }
+# endif
 
     return to_matrix(simil_tri, ncol1, ncol2, symm);
 

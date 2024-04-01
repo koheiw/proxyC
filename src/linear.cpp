@@ -115,6 +115,7 @@ S4 cpp_linear(arma::sp_mat& mt1,
     Triplets simil_tri;
     mt1 = trans(mt1);
     std::size_t I = ncol2;
+#if PROXYC_USE_TBB
     tbb::task_arena arena(thread);
     arena.execute([&]{
         tbb::parallel_for(tbb::blocked_range<int>(0, I), [&](tbb::blocked_range<int> r) {
@@ -125,6 +126,13 @@ S4 cpp_linear(arma::sp_mat& mt1,
             }
         });
     });
+# else
+    for (std::size_t i = 0; i < I; i++) {
+        proxy_linear(i, mt1, mt2, simil_tri,
+                     square1, center1, square2, center2,
+                     method, rank, limit, symm, drop0, use_nan);
+    }
+# endif
 
     return to_matrix(simil_tri, ncol1, ncol2, symm);
 }
