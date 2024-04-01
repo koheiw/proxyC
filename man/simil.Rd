@@ -77,8 +77,8 @@ Only used when \code{method} is "chisquared", "kullback", "jeffreys" or "jensen"
 Fast similarity/distance computation function for large sparse matrices. You
 can floor small similarity value to to save computation time and storage
 space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}).
-Please increase the number of threads for better performance using
-\code{\link[RcppParallel]{setThreadOptions}}.
+You can set the number of threads for parallel computing via
+\code{options(proxyC.threads)}.
 }
 \details{
 Available methods for similarity:

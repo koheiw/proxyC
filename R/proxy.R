@@ -3,8 +3,8 @@
 #' Fast similarity/distance computation function for large sparse matrices. You
 #' can floor small similarity value to to save computation time and storage
 #' space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}).
-#' Please increase the number of threads for better performance using
-#' \code{\link[RcppParallel]{setThreadOptions}}.
+#' You can set the number of threads for parallel computing via
+#' `options(proxyC.threads)`.
 #'
 #' @param x \link{matrix} or \link{Matrix} object. Dense matrices are covered to
 #'   the \link{CsparseMatrix-class} internally.
@@ -179,6 +179,10 @@ proxy <- function(x, y = NULL, margin = 1,
         x <- as(as(x, "lMatrix"), "dMatrix")
         y <- as(as(y, "lMatrix"), "dMatrix")
     }
+    threads <- as.integer(getOption("proxyC.threads", -1))
+    if (is.na(threads) || length(threads) != 1) {
+        stop("proxyC.threads must be an integer")
+    }
     if (method %in% c("cosine", "correlation", "euclidean") && !diag) {
         result <- cpp_linear(
             mt1 = x,
@@ -188,7 +192,8 @@ proxy <- function(x, y = NULL, margin = 1,
             limit = min_proxy,
             symm = symm,
             drop0 = drop0,
-            use_nan = use_nan
+            use_nan = use_nan,
+            thread = threads
         )
     } else {
         result <- cpp_pair(
@@ -206,7 +211,8 @@ proxy <- function(x, y = NULL, margin = 1,
             symm = symm,
             diag = diag,
             drop0 = drop0,
-            use_nan = use_nan
+            use_nan = use_nan,
+            thread = threads
         )
     }
     if (diag)
