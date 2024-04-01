@@ -25,24 +25,37 @@ similarity/distance between documents or features in large corpora, but
 separated as a stand-alone package to make it available for broader data
 scientific purposes.
 
+## Install
+
+Since **proxyC** v0.4.0, it requires the Intel oneAPI Threading Building
+Blocks for parallel computing. Windows and Mac users can download binary
+packages from CRAN, but Linux users must install the library manually
+before installing using the commands below:
+
+    # Fedora, CentOS, RHEL
+    sudo yum install tbb-devel
+
+    # Debian and Ubuntu
+    sudo apt install libtbb-dev
+
 ``` r
 install.packages("proxyC")
 ```
+
+## Performance
 
 ``` r
 require(Matrix)
 ## Loading required package: Matrix
 require(microbenchmark)
 ## Loading required package: microbenchmark
-require(RcppParallel)
-## Loading required package: RcppParallel
 require(ggplot2)
 ## Loading required package: ggplot2
 require(magrittr)
 ## Loading required package: magrittr
 
 # Set number of threads
-setThreadOptions(8)
+options("proxyC.threads" = 8)
 
 # Make a matrix with 99% zeros
 sm1k <- rsparsematrix(1000, 1000, 0.01) # 1,000 columns
@@ -67,7 +80,6 @@ bm1 <- microbenchmark(
     times = 10
 )
 autoplot(bm1)
-## Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](man/images/unnamed-chunk-4-1.png)<!-- -->
@@ -84,7 +96,6 @@ bm2 <- microbenchmark(
     times = 10
 )
 autoplot(bm2)
-## Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](man/images/unnamed-chunk-5-1.png)<!-- -->
@@ -113,7 +124,6 @@ bm3 <- microbenchmark(
     times = 10
 )
 autoplot(bm3)
-## Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](man/images/unnamed-chunk-7-1.png)<!-- -->
