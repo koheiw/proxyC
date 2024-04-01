@@ -180,7 +180,7 @@ proxy <- function(x, y = NULL, margin = 1,
         y <- as(as(y, "lMatrix"), "dMatrix")
     }
     threads <- as.integer(getOption("proxyC.threads", -1))
-    if (is.na(threads) || length(threads) != 1) {
+    if (length(threads) != 1 || is.na(threads)) {
         stop("proxyC.threads must be an integer")
     }
     if (method %in% c("cosine", "correlation", "euclidean") && !diag) {

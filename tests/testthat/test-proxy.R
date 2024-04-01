@@ -186,4 +186,18 @@ test_that("functions works with different matrices", {
     expect_silent(colZeros(forceSymmetric(emat)))
 })
 
+test_that("options are working", {
 
+    smat <- rsparsematrix(50, 50, 0.5)
+    options("proxyC.threads" = "abc")
+    expect_error(
+        suppressWarnings(proxyC:::proxy(smat)),
+        "proxyC.threads must be an integer"
+    )
+    options("proxyC.threads" = NA)
+    expect_error(
+        suppressWarnings(proxyC:::proxy(smat)),
+        "proxyC.threads must be an integer"
+    )
+    options("proxyC.threads" = NULL) # reset
+})
