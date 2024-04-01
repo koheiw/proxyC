@@ -1,3 +1,11 @@
+# proxyC 0.4.0
+
+## New features and improvements
+
+- Remove the RcppParallel package from the dependency.
+- Use Intel oneAPI TBB library to improve the stability in parallel computing.
+- Add `options(proxyC.threads)` to control the number of threads in parallel computing.
+
 # proxyC 0.3.4
 
 ## New features and improvements
