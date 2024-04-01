@@ -13,6 +13,14 @@ cpp_nz <- function(mt) {
     .Call('_proxyC_cpp_nz', PACKAGE = 'proxyC', mt)
 }
 
+cpp_get_max_thread <- function() {
+    .Call('_proxyC_cpp_get_max_thread', PACKAGE = 'proxyC')
+}
+
+cpp_tbb_enabled <- function() {
+    .Call('_proxyC_cpp_tbb_enabled', PACKAGE = 'proxyC')
+}
+
 cpp_pair <- function(mt1, mt2, method, rank, limit = -1.0, weight = 1.0, smooth = 0, symm = FALSE, diag = FALSE, drop0 = FALSE, use_nan = FALSE, thread = -1L) {
     .Call('_proxyC_cpp_pair', PACKAGE = 'proxyC', mt1, mt2, method, rank, limit, weight, smooth, symm, diag, drop0, use_nan, thread)
 }
