@@ -1,11 +1,6 @@
 #ifndef PROXYC // prevent redefining
 #define PROXYC
 
-#ifndef ARMA_64BIT_WORD
-#define ARMA_64BIT_WORD
-#endif
-#include <RcppArmadillo.h>
-
 #ifdef TBB
 #include <tbb/tbb.h>
 #ifdef ONETBB_SPEC_VERSION
