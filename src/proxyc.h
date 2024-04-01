@@ -1,6 +1,8 @@
 #ifndef PROXYC // prevent redefining
 #define PROXYC
 
+#define ARMA_NO_DEBUG
+#include <RcppArmadillo.h>
 #ifdef TBB
 #include <tbb/tbb.h>
 #ifdef ONETBB_SPEC_VERSION
@@ -93,4 +95,5 @@ namespace proxyc{
         return arma::conv_to< std::vector<double> >::from(v);
     }
 }
+
 #endif
