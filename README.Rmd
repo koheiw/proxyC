@@ -35,7 +35,6 @@ install.packages("proxyC")
 ```{r}
 require(Matrix)
 require(microbenchmark)
-require(RcppParallel)
 require(ggplot2)
 require(magrittr)
 

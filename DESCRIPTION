@@ -32,6 +32,6 @@ LinkingTo:
     Rcpp, 
     RcppArmadillo (>= 0.7.600.1.0)
 Encoding: UTF-8
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr

@@ -61,7 +61,6 @@
 #' See the vignette for how the similarity and distance are computed:
 #' `vignette("measures", package = "proxyC")`
 #' @import methods Matrix
-#' @importFrom RcppParallel RcppParallelLibs
 #' @seealso zapsmall
 #' @export
 #' @examples
