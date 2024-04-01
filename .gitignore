@@ -8,3 +8,8 @@ src/*.dll
 README_files/*
 revdep/**/
 inst/doc
+src/Makevars
+autom4te.cache
+config.log
+config.status
+*~
