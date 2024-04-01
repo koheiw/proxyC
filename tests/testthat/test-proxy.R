@@ -199,4 +199,5 @@ test_that("options are working", {
         suppressWarnings(proxyC:::proxy(smat)),
         "proxyC.threads must be an integer"
     )
+    options("proxyC.threads" = NULL) # reset
 })
