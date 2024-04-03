@@ -1,5 +1,3 @@
-#define ARMA_NO_DEBUG
-#include "armadillo.h"
 #include "proxyc.h"
 #include "dev.h"
 using namespace proxyc;
@@ -147,6 +145,24 @@ NumericVector cpp_sd(arma::sp_mat& mt) {
 NumericVector cpp_nz(arma::sp_mat& mt) {
     std::vector<double> nzs = to_vector(nnz(mt));
     return wrap(nzs);
+}
+
+// [[Rcpp::export]]
+int cpp_get_max_thread() {
+#if PROXYC_USE_TBB
+    return tbb::this_task_arena::max_concurrency();
+#else
+    return 1;
+#endif
+}
+
+// [[Rcpp::export]]
+bool cpp_tbb_enabled(){
+#if PROXYC_USE_TBB
+    return true;
+#else
+    return false;
+#endif
 }
 
 /***R
