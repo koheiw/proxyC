@@ -2,9 +2,13 @@
 
 ## New features and improvements
 
-- Remove the RcppParallel package from the dependency.
-- Use Intel oneAPI TBB library to improve the stability in parallel computing.
-- Add `options(proxyC.threads)` to control the number of threads in parallel computing.
+- Use more recent Intel oneAPI Threads Building Blocks (TBB) library to improve the stability in parallel computing.
+- Add `options(proxyC.threads)` to control the number of threads in parallel computing (but `RCPP_PARALLEL_NUM_THREADS` still has effect).
+
+## New system requirements
+
+- The RcppParallel package is no longer required as the TBB library in the operating system (Linux and MacOS) or Rtools (Windows) is used.
+- Linux and MacOS must have the TBB library for parallel computing before installing this package.
 
 # proxyC 0.3.4
 
