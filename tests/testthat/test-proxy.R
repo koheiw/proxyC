@@ -206,6 +206,7 @@ test_that("C++ utility functions are working", {
 
     expect_type(proxyC:::cpp_tbb_enabled(), "logical")
     expect_type(proxyC:::cpp_get_max_thread(), "integer")
+    expect_length(proxyC:::cpp_get_max_thread(), 1)
 
 })
 

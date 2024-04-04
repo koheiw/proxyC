@@ -1,7 +1,5 @@
 #include "proxyc.h"
 #include "dev.h"
-using namespace proxyc;
-using namespace arma;
 
 // [[Rcpp::export]]
 int cpp_get_max_thread() {
