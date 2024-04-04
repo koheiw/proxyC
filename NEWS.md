@@ -8,7 +8,7 @@
 ## New system requirements
 
 - The RcppParallel package is no longer required as the TBB library in the operating system (Linux and MacOS) or Rtools (Windows) is used.
-- Linux and MacOS must have the TBB library for parallel computing before installing this package.
+- Linux and MacOS must have the TBB library to enable parallel computing before installing this package from the source.
 
 # proxyC 0.3.4
 
