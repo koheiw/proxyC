@@ -1,5 +1,3 @@
-#define ARMA_NO_DEBUG
-#include "armadillo.h"
 #include "proxyc.h"
 #include "dev.h"
 using namespace proxyc;
@@ -32,75 +30,54 @@ rowvec mean(const sp_mat& mt) {
     return(v);
 }
 
-struct linearWorker : public Worker {
+void proxy_linear(const uword i,
+                  const sp_mat& mt1t, const sp_mat& mt2, Triplets& simil_tri,
+                  const rowvec& square1, const rowvec& center1,
+                  const rowvec& square2, const rowvec& center2,
+                  const int method,
+                  const unsigned int rank, const double limit,
+                  const bool symm, const bool drop0, const bool use_nan) {
 
-    const arma::sp_mat& mt1t; // input
-    const arma::sp_mat& mt2; // input
-    Triplets& simil_tri; // output
-    const rowvec& square1;
-    const rowvec& center1;
-    const rowvec& square2;
-    const rowvec& center2;
-    const int method;
-    const unsigned int rank;
-    const double limit;
-    const bool symm;
-    const bool drop0;
-    const bool use_nan;
+    uword nrow = mt1t.n_rows;
+    uword ncol = mt1t.n_cols;
 
-    linearWorker(const sp_mat& mt1t_, const sp_mat& mt2_, Triplets& simil_tri_,
-                      const rowvec& square1_, const rowvec& center1_,
-                      const rowvec& square2_, const rowvec& center2_,
-                      const int method_,
-                      const unsigned int rank_, const double limit_,
-                      const bool symm_, const bool drop0_, const bool use_nan_) :
-        mt1t(mt1t_), mt2(mt2_), simil_tri(simil_tri_),
-        square1(square1_), center1(center1_), square2(square2_), center2(center2_),
-        method(method_), rank(rank_), limit(limit_), symm(symm_), drop0(drop0_),
-        use_nan(use_nan_) {}
-
-    void operator()(std::size_t begin, std::size_t end) {
-
-        uword nrow = mt1t.n_rows;
-        uword ncol = mt1t.n_cols;
-
-        rowvec v1, v2;
-        std::vector<double> simils(nrow);
-        for (uword i = begin; i < end; i++) {
-            switch (method) {
-            case 1: // cosine similarity
-                simils = to_vector(trans(mt1t * mt2.col(i)) / (square1 * square2[i]));
-                break;
-            case 2: // correlation similarity
-                v1 = rowvec(trans(mt1t * mt2.col(i)));
-                v2 = center1 * center2[i] * ncol;
-                simils = to_vector(((v1 - v2) / ncol) / (square1 * square2[i]));
-                simils = replace_inf(simils);
-                break;
-            case 3: // euclidean distance
-                simils = to_vector(sqrt(trans(mt1t * mt2.col(i)) * -2 + square1 + square2[i]));
-                break;
-            }
-            double l = get_limit(simils, rank, limit);
-            for (std::size_t k = 0; k < simils.size(); k++) {
-                if (symm && k > i) continue;
-                if (drop0 && simils[k] == 0) continue;
-                if (simils[k] >= l || (use_nan && std::isnan(simils[k])))
-                    simil_tri.push_back(std::make_tuple(k, i, simils[k]));
-            }
+    rowvec v1, v2;
+    std::vector<double> simils(nrow);
+    //for (uword i = begin; i < end; i++) {
+        switch (method) {
+        case 1: // cosine similarity
+            simils = to_vector(trans(mt1t * mt2.col(i)) / (square1 * square2[i]));
+            break;
+        case 2: // correlation similarity
+            v1 = rowvec(trans(mt1t * mt2.col(i)));
+            v2 = center1 * center2[i] * ncol;
+            simils = to_vector(((v1 - v2) / ncol) / (square1 * square2[i]));
+            simils = replace_inf(simils);
+            break;
+        case 3: // euclidean distance
+            simils = to_vector(sqrt(trans(mt1t * mt2.col(i)) * -2 + square1 + square2[i]));
+            break;
         }
-    }
-};
+        double l = get_limit(simils, rank, limit);
+        for (std::size_t k = 0; k < simils.size(); k++) {
+            if (symm && k > i) continue;
+            if (drop0 && simils[k] == 0) continue;
+            if (simils[k] >= l || (use_nan && std::isnan(simils[k])))
+                simil_tri.push_back(std::make_tuple(k, i, simils[k]));
+        }
+    //}
+}
 
 // [[Rcpp::export]]
 S4 cpp_linear(arma::sp_mat& mt1,
               arma::sp_mat& mt2,
               const int method,
               unsigned int rank,
-              double limit = -1.0,
+              const double limit = -1.0,
               bool symm = false,
-              bool drop0 = false,
-              bool use_nan = false) {
+              const bool drop0 = false,
+              const bool use_nan = false,
+              const int thread = -1) {
 
     if (mt1.n_rows != mt2.n_rows)
         throw std::range_error("Invalid matrix objects");
@@ -135,11 +112,25 @@ S4 cpp_linear(arma::sp_mat& mt1,
 
     Triplets simil_tri;
     mt1 = trans(mt1);
-    linearWorker proxy_linear(mt1, mt2, simil_tri,
-                              square1, center1, square2, center2,
-                              method, rank, limit, symm, drop0, use_nan);
-    parallelFor(0, ncol2, proxy_linear);
-    //dev::stop_timer("Compute similarity", timer);
+    std::size_t I = ncol2;
+#if PROXYC_USE_TBB
+    tbb::task_arena arena(thread);
+    arena.execute([&]{
+        tbb::parallel_for(tbb::blocked_range<int>(0, I), [&](tbb::blocked_range<int> r) {
+            for (int i = r.begin(); i < r.end(); i++) {
+                proxy_linear(i, mt1, mt2, simil_tri,
+                             square1, center1, square2, center2,
+                             method, rank, limit, symm, drop0, use_nan);
+            }
+        });
+    });
+# else
+    for (std::size_t i = 0; i < I; i++) {
+        proxy_linear(i, mt1, mt2, simil_tri,
+                     square1, center1, square2, center2,
+                     method, rank, limit, symm, drop0, use_nan);
+    }
+# endif
 
     return to_matrix(simil_tri, ncol1, ncol2, symm);
 }

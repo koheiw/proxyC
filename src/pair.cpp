@@ -1,5 +1,3 @@
-#define ARMA_NO_DEBUG
-#include "armadillo.h"
 #include "proxyc.h"
 #include "dev.h"
 using namespace proxyc;
@@ -133,138 +131,116 @@ double dist_minkowski(colvec& col_i, colvec& col_j, double p = 1) {
     return pow(accu(pow(abs(col_i - col_j), p)), 1 / p);
 }
 
-struct pairWorker : public Worker {
+void proxy_pair(const uword i,
+                const sp_mat& mt1, const sp_mat& mt2, Triplets& simil_tri,
+                const int method,
+                const unsigned int rank, const double limit, const bool symm,
+                const bool diag, const double weight, const double smooth,
+                const bool drop0, const bool use_nan) {
 
-    const sp_mat& mt1; // input
-    const sp_mat& mt2; // input
-    Triplets& simil_tri; // output
-    const int method;
-    const unsigned int rank;
-    const double limit;
-    const bool symm;
-    const bool diag;
-    const double weight;
-    const double smooth;
-    const bool drop0;
-    const bool use_nan;
+    arma::uword nrow = mt1.n_rows;
+    arma::uword ncol = mt1.n_cols;
 
-    pairWorker(const sp_mat& mt1_, const sp_mat& mt2_, Triplets& simil_tri_,
-               const int method_,
-               const unsigned int rank_, const double limit_, const bool symm_,
-               const bool diag_, const double weight_, const double smooth_,
-               const bool drop0_, const bool use_nan_) :
-               mt1(mt1_), mt2(mt2_), simil_tri(simil_tri_),
-               method(method_), rank(rank_), limit(limit_), symm(symm_), diag(diag_),
-               weight(weight_), smooth(smooth_), drop0(drop0_), use_nan(use_nan_) {}
-
-    void operator()(std::size_t begin, std::size_t end) {
-
-        arma::uword nrow = mt1.n_rows;
-        arma::uword ncol = mt1.n_cols;
-
-        colvec col_i(nrow);
-        colvec col_j(nrow);
-        double simil = 0;
-        std::vector<double> simils;
-        for (uword i = begin; i < end; i++) {
-            col_i = mt2.col(i);
+    colvec col_i(nrow);
+    colvec col_j(nrow);
+    double simil = 0;
+    std::vector<double> simils;
+    col_i = mt2.col(i);
+    if (diag) {
+        simils.reserve(1);
+    } else {
+        simils.reserve(ncol);
+    }
+    for (uword j = 0; j < ncol; j++) {
+        if (diag && j != i) continue;
+        if (symm && j > i) continue;
+        col_j = mt1.col(j);
+        switch (method) {
+        case 1:
+            simil = simil_cosine(col_i, col_j);
+            break;
+        case 2:
+            simil = simil_correlation(col_i, col_j);
+            simil = replace_inf(simil);
+            break;
+        case 3:
+            simil = simil_ejaccard(col_i, col_j, weight);
+            break;
+        case 4:
+            simil = simil_edice(col_i, col_j, weight);
+            break;
+        case 5:
+            simil = simil_hamann(col_i, col_j);
+            break;
+        case 6:
+            simil = simil_matching(col_i, col_j);
+            break;
+        case 7:
+            simil = simil_faith(col_i, col_j);
+            break;
+        case 8:
+            simil = dist_euclidean(col_i, col_j);
+            break;
+        case 9:
+            simil = dist_chisquare(col_i, col_j, smooth);
+            break;
+        case 10:
+            simil = dist_kullback(col_i, col_j, smooth);
+            break;
+        case 11:
+            simil = dist_manhattan(col_i, col_j);
+            break;
+        case 12:
+            simil = dist_maximum(col_i, col_j);
+            break;
+        case 13:
+            simil = dist_canberra(col_i, col_j);
+            break;
+        case 14:
+            simil = dist_minkowski(col_i, col_j, weight);
+            break;
+        case 15:
+            simil = dist_hamming(col_i, col_j);
+            break;
+        case 16:
+            simil = dist_jeffreys(col_i, col_j, smooth);
+            break;
+        case 17:
+            simil = dist_jensen(col_i, col_j, smooth);
+            break;
+        case 18:
+            simil = simil_fjaccard(col_i, col_j);
+            break;
+        }
+        //Rcout << "simil=" << simil << "\n";
+        simils.push_back(simil);
+    }
+    double l = get_limit(simils, rank, limit);
+    for (std::size_t k = 0; k < simils.size(); k++) {
+        if (drop0 && simils[k] == 0) continue;
+        if (simils[k] >= l || (use_nan && std::isnan(simils[k]))) {
             if (diag) {
-                simils.reserve(1);
+                simil_tri.push_back(std::make_tuple(i, i, simils[k]));
             } else {
-                simils.reserve(ncol);
+                simil_tri.push_back(std::make_tuple(k, i, simils[k]));
             }
-            for (uword j = 0; j < ncol; j++) {
-                if (diag && j != i) continue;
-                if (symm && j > i) continue;
-                col_j = mt1.col(j);
-                switch (method) {
-                case 1:
-                    simil = simil_cosine(col_i, col_j);
-                    break;
-                case 2:
-                    simil = simil_correlation(col_i, col_j);
-                    simil = replace_inf(simil);
-                    break;
-                case 3:
-                    simil = simil_ejaccard(col_i, col_j, weight);
-                    break;
-                case 4:
-                    simil = simil_edice(col_i, col_j, weight);
-                    break;
-                case 5:
-                    simil = simil_hamann(col_i, col_j);
-                    break;
-                case 6:
-                    simil = simil_matching(col_i, col_j);
-                    break;
-                case 7:
-                    simil = simil_faith(col_i, col_j);
-                    break;
-                case 8:
-                    simil = dist_euclidean(col_i, col_j);
-                    break;
-                case 9:
-                    simil = dist_chisquare(col_i, col_j, smooth);
-                    break;
-                case 10:
-                    simil = dist_kullback(col_i, col_j, smooth);
-                    break;
-                case 11:
-                    simil = dist_manhattan(col_i, col_j);
-                    break;
-                case 12:
-                    simil = dist_maximum(col_i, col_j);
-                    break;
-                case 13:
-                    simil = dist_canberra(col_i, col_j);
-                    break;
-                case 14:
-                    simil = dist_minkowski(col_i, col_j, weight);
-                    break;
-                case 15:
-                    simil = dist_hamming(col_i, col_j);
-                    break;
-                case 16:
-                    simil = dist_jeffreys(col_i, col_j, smooth);
-                    break;
-                case 17:
-                    simil = dist_jensen(col_i, col_j, smooth);
-                    break;
-                case 18:
-                    simil = simil_fjaccard(col_i, col_j);
-                    break;
-                }
-                //Rcout << "simil=" << simil << "\n";
-                simils.push_back(simil);
-            }
-            double l = get_limit(simils, rank, limit);
-            for (std::size_t k = 0; k < simils.size(); k++) {
-                if (drop0 && simils[k] == 0) continue;
-                if (simils[k] >= l || (use_nan && std::isnan(simils[k]))) {
-                    if (diag) {
-                        simil_tri.push_back(std::make_tuple(i, i, simils[k]));
-                    } else {
-                        simil_tri.push_back(std::make_tuple(k, i, simils[k]));
-                    }
-                }
-            }
-            simils.clear();
         }
     }
-};
+}
 
 // [[Rcpp::export]]
 S4 cpp_pair(arma::sp_mat& mt1,
             arma::sp_mat& mt2,
             const int method,
             unsigned int rank,
-            double limit = -1.0,
-            double weight = 1.0,
-            double smooth = 0,
+            const double limit = -1.0,
+            const double weight = 1.0,
+            const double smooth = 0,
             bool symm = false,
-            bool diag = false,
-            bool drop0 = false,
-            bool use_nan = false) {
+            const bool diag = false,
+            const bool drop0 = false,
+            const bool use_nan = false,
+            const int thread = -1) {
 
     if (mt1.n_rows != mt2.n_rows)
         throw std::range_error("Invalid matrix objects");
@@ -274,13 +250,24 @@ S4 cpp_pair(arma::sp_mat& mt1,
     if (rank < 1) rank = 1;
     symm = symm && method != 10 && rank == ncol2; // exception for kullback
 
-    //dev::Timer timer;
-    //dev::start_timer("Compute similarity", timer);
     Triplets simil_tri;
-    pairWorker proxy_pair(mt1, mt2, simil_tri, method, rank, limit, symm, diag,
-                          weight, smooth, drop0, use_nan);
-    parallelFor(0, ncol2, proxy_pair);
-    //dev::stop_timer("Compute similarity", timer);
+    std::size_t I = ncol2;
+#if PROXYC_USE_TBB
+    tbb::task_arena arena(thread);
+    arena.execute([&]{
+        tbb::parallel_for(tbb::blocked_range<int>(0, I), [&](tbb::blocked_range<int> r) {
+            for (int i = r.begin(); i < r.end(); i++) {
+                proxy_pair(i, mt1, mt2, simil_tri, method, rank, limit, symm,
+                           diag, weight, smooth, drop0, use_nan);
+            }
+        });
+    });
+#else
+    for (std::size_t i = 0; i < I; i++) {
+        proxy_pair(i, mt1, mt2, simil_tri, method, rank, limit, symm,
+                   diag, weight, smooth, drop0, use_nan);
+    }
+# endif
 
     return to_matrix(simil_tri, ncol1, ncol2, symm);
 

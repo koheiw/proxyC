@@ -2,9 +2,9 @@
 #'
 #' Fast similarity/distance computation function for large sparse matrices. You
 #' can floor small similarity value to to save computation time and storage
-#' space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}).
-#' Please increase the number of threads for better performance using
-#' \code{\link[RcppParallel]{setThreadOptions}}.
+#' space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}). You
+#' can specify the number of threads for parallel computing via
+#' `options(proxyC.threads)`.
 #'
 #' @param x \link{matrix} or \link{Matrix} object. Dense matrices are covered to
 #'   the \link{CsparseMatrix-class} internally.
@@ -22,17 +22,19 @@
 #' @param diag if \code{TRUE}, only compute diagonal elements of the
 #'   similarity/distance matrix; useful when comparing corresponding rows or
 #'   columns of `x` and `y`.
-#' @param use_nan if `TRUE`, return `NaN` if the standard deviation of a
-#'   vector is zero when `method` is "correlation"; if all the values are zero
-#'   in a vector when `method` is "cosine", "chisquared", "kullback", "jeffreys"
-#'   or "jensen". Note that use of `NaN` makes the similarity/distance matrix
+#' @param use_nan if `TRUE`, return `NaN` if the standard deviation of a vector
+#'   is zero when `method` is "correlation"; if all the values are zero in a
+#'   vector when `method` is "cosine", "chisquared", "kullback", "jeffreys" or
+#'   "jensen". Note that use of `NaN` makes the similarity/distance matrix
 #'   denser and therefore larger in RAM. If `FALSE`, return zero in same use
-#'   situations as above. If `NULL`, will also return zero but also generate
-#'   a warning (default).
+#'   situations as above. If `NULL`, will also return zero but also generate a
+#'   warning (default).
 #' @param digits determines rounding of small values towards zero. Use primarily
 #'   to correct rounding errors in C++. See \link{zapsmall}.
 #' @details
-#' Available methods for similarity:
+#'   ## Available Methods
+#'
+#'   Similarity:
 #' \itemize{
 #'   \item `cosine`: cosine similarity
 #'   \item `correlation`: Pearson's correlation
@@ -45,7 +47,7 @@
 #'   \item `faith`: Faith similarity
 #'   \item `simple matching`: the percentage of common elements
 #' }
-#' Available methods for distance:
+#'   Distance:
 #' \itemize{
 #'   \item `euclidean`: Euclidean distance
 #'   \item `chisquared`: chi-squared distance
@@ -58,10 +60,20 @@
 #'   \item `minkowski`: Minkowski distance
 #'   \item `hamming`: Hamming distance
 #' }
-#' See the vignette for how the similarity and distance are computed:
-#' `vignette("measures", package = "proxyC")`
+#'   See the vignette for how the similarity and distance are computed:
+#'   `vignette("measures", package = "proxyC")`
+#'
+#'   ## Parallel Computing
+#'
+#'   It performs parallel computing using Intel oneAPI Threads Building Blocks.
+#'   The number of threads for parallel computing should be specified via
+#'   `options(proxyC.threads)` before calling the functions. If the value is -1,
+#'   all the available threads will be used. Unless the option is used, the
+#'   number of threads will be limited by the environmental variables
+#'   (`OMP_THREAD_LIMIT` or `RCPP_PARALLEL_NUM_THREADS`) to comply with CRAN
+#'   policy and offer backward compatibility.
+#'
 #' @import methods Matrix
-#' @importFrom RcppParallel RcppParallelLibs
 #' @seealso zapsmall
 #' @export
 #' @examples
@@ -189,7 +201,8 @@ proxy <- function(x, y = NULL, margin = 1,
             limit = min_proxy,
             symm = symm,
             drop0 = drop0,
-            use_nan = use_nan
+            use_nan = use_nan,
+            thread = getThreads()
         )
     } else {
         result <- cpp_pair(
@@ -207,7 +220,8 @@ proxy <- function(x, y = NULL, margin = 1,
             symm = symm,
             diag = diag,
             drop0 = drop0,
-            use_nan = use_nan
+            use_nan = use_nan,
+            thread = getThreads()
         )
     }
     if (diag)
@@ -268,3 +282,19 @@ rowZeros <- function(x) {
     names(result) <- rownames(x)
     return(result)
 }
+
+getThreads <- function() {
+
+    # respect other settings
+    default <- c("tbb" = as.integer(Sys.getenv("RCPP_PARALLEL_NUM_THREADS")),
+                 "omp" = as.integer(Sys.getenv("OMP_THREAD_LIMIT")),
+                 "max" = cpp_get_max_thread())
+    default <- unname(min(default, na.rm = TRUE))
+
+    value <- as.integer(getOption("proxyC.threads", default))
+    if (length(value) != 1 || is.na(value)) {
+        stop("proxyC.threads must be an integer")
+    }
+    return(value)
+}
+

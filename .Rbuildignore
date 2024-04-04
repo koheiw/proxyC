@@ -5,6 +5,4 @@
 ^README_files/*
 ^LICENSE$
 ^cran-comments\.md$
-\.travis\.yml
-appveyor\.yml
 ^\.github$

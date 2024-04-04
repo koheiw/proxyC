@@ -1,27 +1,25 @@
-#include <Rcpp.h>
-#include <RcppParallel.h>
-
-// [[Rcpp::plugins(cpp11)]]
-using namespace Rcpp;
-// [[Rcpp::depends(RcppParallel)]]
-using namespace RcppParallel;
-using namespace std;
-
 #ifndef PROXYC // prevent redefining
 #define PROXYC
 
-#define CLANG_VERSION (__clang_major__ * 10000 + __clang_minor__ * 100 + __clang_patchlevel__)
+#define ARMA_NO_DEBUG
+#include <RcppArmadillo.h>
+#ifdef TBB
+#include <tbb/tbb.h>
+#ifdef ONETBB_SPEC_VERSION
+using namespace oneapi; // only Windows R 4.3.x or later
+#endif
+#define PROXYC_USE_TBB true
+#else
+#define PROXYC_USE_TBB false
+#endif
+
+// [[Rcpp::plugins(cpp11)]]
+using namespace Rcpp;
+using namespace std;
 
 // setting for unordered_map and unordered_set
 const float GLOBAL_PATTERNS_MAX_LOAD_FACTOR = 0.1;
 const float GLOBAL_NGRAMS_MAX_LOAD_FACTOR = 0.5;
-
-// compiler has to be newer than clang 3.30 or gcc 4.8.1
-#if RCPP_PARALLEL_USE_TBB && (CLANG_VERSION >= 30300 || GCC_VERSION >= 40801)
-#define PROXYC_USE_TBB true // tbb.h is loaded automatically by RcppParallel.h
-#else
-#define PROXYC_USE_TBB false
-#endif
 
 namespace proxyc{
 
@@ -97,4 +95,5 @@ namespace proxyc{
         return arma::conv_to< std::vector<double> >::from(v);
     }
 }
+
 #endif

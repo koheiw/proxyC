@@ -57,13 +57,13 @@ recorded.}
 similarity/distance matrix; useful when comparing corresponding rows or
 columns of \code{x} and \code{y}.}
 
-\item{use_nan}{if \code{TRUE}, return \code{NaN} if the standard deviation of a
-vector is zero when \code{method} is "correlation"; if all the values are zero
-in a vector when \code{method} is "cosine", "chisquared", "kullback", "jeffreys"
-or "jensen". Note that use of \code{NaN} makes the similarity/distance matrix
+\item{use_nan}{if \code{TRUE}, return \code{NaN} if the standard deviation of a vector
+is zero when \code{method} is "correlation"; if all the values are zero in a
+vector when \code{method} is "cosine", "chisquared", "kullback", "jeffreys" or
+"jensen". Note that use of \code{NaN} makes the similarity/distance matrix
 denser and therefore larger in RAM. If \code{FALSE}, return zero in same use
-situations as above. If \code{NULL}, will also return zero but also generate
-a warning (default).}
+situations as above. If \code{NULL}, will also return zero but also generate a
+warning (default).}
 
 \item{digits}{determines rounding of small values towards zero. Use primarily
 to correct rounding errors in C++. See \link{zapsmall}.}
@@ -76,12 +76,14 @@ Only used when \code{method} is "chisquared", "kullback", "jeffreys" or "jensen"
 \description{
 Fast similarity/distance computation function for large sparse matrices. You
 can floor small similarity value to to save computation time and storage
-space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}).
-Please increase the number of threads for better performance using
-\code{\link[RcppParallel]{setThreadOptions}}.
+space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}). You
+can specify the number of threads for parallel computing via
+\code{options(proxyC.threads)}.
 }
 \details{
-Available methods for similarity:
+\subsection{Available Methods}{
+
+Similarity:
 \itemize{
 \item \code{cosine}: cosine similarity
 \item \code{correlation}: Pearson's correlation
@@ -94,7 +96,7 @@ Available methods for similarity:
 \item \code{faith}: Faith similarity
 \item \verb{simple matching}: the percentage of common elements
 }
-Available methods for distance:
+Distance:
 \itemize{
 \item \code{euclidean}: Euclidean distance
 \item \code{chisquared}: chi-squared distance
@@ -109,6 +111,18 @@ Available methods for distance:
 }
 See the vignette for how the similarity and distance are computed:
 \code{vignette("measures", package = "proxyC")}
+}
+
+\subsection{Parallel Computing}{
+
+It performs parallel computing using Intel oneAPI Threads Building Blocks.
+The number of threads for parallel computing should be specified via
+\code{options(proxyC.threads)} before calling the functions. If the value is -1,
+all the available threads will be used. Unless the option is used, the
+number of threads will be limited by the environmental variables
+(\code{OMP_THREAD_LIMIT} or \code{RCPP_PARALLEL_NUM_THREADS}) to comply with CRAN
+policy and offer backward compatibility.
+}
 }
 \examples{
 mt <- Matrix::rsparsematrix(100, 100, 0.01)
