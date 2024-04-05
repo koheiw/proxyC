@@ -188,7 +188,6 @@ test_that("functions works with different matrices", {
 
 test_that("options are working", {
 
-    smat <- rsparsematrix(50, 50, 0.5)
     options("proxyC.threads" = "abc")
     expect_error(
         suppressWarnings(proxyC:::proxy(smat)),
