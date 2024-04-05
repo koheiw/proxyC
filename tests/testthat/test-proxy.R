@@ -200,6 +200,12 @@ test_that("options are working", {
         "proxyC.threads must be an integer"
     )
     options("proxyC.threads" = NULL) # reset
+
+    Sys.setenv("OMP_THREAD_LIMIT" = 2)
+    options("proxyC.threads" = 8)
+    expect_equal(proxyC:::getThreads(), 8)
+    Sys.unsetenv("OMP_THREAD_LIMIT")
+    options("proxyC.threads" = NULL)
 })
 
 test_that("C++ utility functions are working", {
