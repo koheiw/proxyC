@@ -25,7 +25,7 @@ TBBLIBS=
 
 # If tbb.h is found, define TBB
 AC_CHECK_HEADER([tbb/tbb.h],
-   [TBBFLAG=-DTBB;TBBLIBS=-ltbb],
+   [TBBFLAGS=-DTBB;TBBLIBS=-ltbb],
    [AC_MSG_WARN([parallel computing is disabled because tbb/tbb.h (Intel TBB) is not found])])
 
 # Now substitute these variables in src/Makevars.in to create src/Makevars
