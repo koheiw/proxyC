@@ -28,15 +28,17 @@ scientific purposes.
 ## Install
 
 Since **proxyC** v0.4.0, it requires the Intel oneAPI Threading Building
-Blocks for parallel computing. Windows and Mac users can download binary
-packages from CRAN, but Linux users must install the library manually
-before installing using the commands below:
+Blocks for parallel computing. Windows and Mac users can download a
+binary package from CRAN, but Linux users must install the library by
+executing the commands below:
 
-    # Fedora, CentOS, RHEL
-    sudo yum install tbb-devel
+``` bash
+# Fedora, CentOS, RHEL
+sudo yum install tbb-devel
 
-    # Debian and Ubuntu
-    sudo apt install libtbb-dev
+# Debian and Ubuntu
+sudo apt install libtbb-dev
+```
 
 ``` r
 install.packages("proxyC")
@@ -82,7 +84,7 @@ bm1 <- microbenchmark(
 autoplot(bm1)
 ```
 
-![](man/images/unnamed-chunk-4-1.png)<!-- -->
+![](man/images/unnamed-chunk-5-1.png)<!-- -->
 
 ## Cosine similarity greater than 0.9
 
@@ -98,7 +100,7 @@ bm2 <- microbenchmark(
 autoplot(bm2)
 ```
 
-![](man/images/unnamed-chunk-5-1.png)<!-- -->
+![](man/images/unnamed-chunk-6-1.png)<!-- -->
 
 Flooring by `min_simil` makes the resulting object much smaller.
 
@@ -126,4 +128,4 @@ bm3 <- microbenchmark(
 autoplot(bm3)
 ```
 
-![](man/images/unnamed-chunk-7-1.png)<!-- -->
+![](man/images/unnamed-chunk-8-1.png)<!-- -->
