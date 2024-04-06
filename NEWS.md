@@ -1,3 +1,9 @@
+# proxyC 0.4.1
+
+## Bug fixes
+
+- Make detection of Intel oneAPI Threads Building Blocks (TBB) library more reliable.
+
 # proxyC 0.4.0
 
 ## New features and improvements
