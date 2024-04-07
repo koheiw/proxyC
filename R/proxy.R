@@ -290,8 +290,9 @@ getThreads <- function() {
                  "omp" = as.integer(Sys.getenv("OMP_THREAD_LIMIT")),
                  "max" = cpp_get_max_thread())
     default <- unname(min(default, na.rm = TRUE))
-
+    suppressWarnings({
     value <- as.integer(getOption("proxyC.threads", default))
+    })
     if (length(value) != 1 || is.na(value)) {
         stop("proxyC.threads must be an integer")
     }
