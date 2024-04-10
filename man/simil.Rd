@@ -66,7 +66,8 @@ situations as above. If \code{NULL}, will also return zero but also generate a
 warning (default).}
 
 \item{digits}{determines rounding of small values towards zero. Use primarily
-to correct rounding errors in C++. See \link{zapsmall}.}
+to correct floating point errors. Rounding is performed in C++ in a similar
+way as \link{zapsmall}.}
 
 \item{p}{weight for Minkowski distance}
 
@@ -118,10 +119,10 @@ See the vignette for how the similarity and distance are computed:
 It performs parallel computing using Intel oneAPI Threads Building Blocks.
 The number of threads for parallel computing should be specified via
 \code{options(proxyC.threads)} before calling the functions. If the value is -1,
-all the available threads will be used. Unless the option is used, the
-number of threads will be limited by the environmental variables
-(\code{OMP_THREAD_LIMIT} or \code{RCPP_PARALLEL_NUM_THREADS}) to comply with CRAN
-policy and offer backward compatibility.
+all the available threads will be used. Unless the option is used, the number
+of threads will be limited by the environmental variables (\code{OMP_THREAD_LIMIT}
+or \code{RCPP_PARALLEL_NUM_THREADS}) to comply with CRAN policy and offer backward
+compatibility.
 }
 }
 \examples{

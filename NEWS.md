@@ -1,3 +1,9 @@
+# proxyC 0.4.2
+
+## New features and improvements
+
+- Reduce the execution time by improving the efficiency in rounding numbers and creating Rcpp vectors.
+
 # proxyC 0.4.1
 
 ## Bug fixes
