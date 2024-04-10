@@ -202,6 +202,7 @@ proxy <- function(x, y = NULL, margin = 1,
             symm = symm,
             drop0 = drop0,
             use_nan = use_nan,
+            digits = digits,
             thread = getThreads()
         )
     } else {
@@ -221,13 +222,12 @@ proxy <- function(x, y = NULL, margin = 1,
             diag = diag,
             drop0 = drop0,
             use_nan = use_nan,
+            digits = digits,
             thread = getThreads()
         )
     }
     if (diag)
         result <- as(as(result, "diagonalMatrix"), "ddiMatrix")
-    if (is.null(min_proxy) && is.null(rank))
-        result@x <- zapsmall(result@x, digits)
     dimnames(result) <- list(colnames(x), colnames(y))
     return(result)
 }
