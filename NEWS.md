@@ -2,7 +2,7 @@
 
 ## New features and improvements
 
-- Reduce the execution time by improving the efficiency in rounding numbers and creating Rcpp vectors.
+- Reduce the overhead for dense similarity matrices by improving rounding numbers and conversion to Rcpp vectors.
 
 # proxyC 0.4.1
 
