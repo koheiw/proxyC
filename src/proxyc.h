@@ -39,9 +39,10 @@ namespace proxyc{
         NumericVector x_(l);
 
         for (std::size_t k = 0; k < tri.size(); k++) {
-            i_[k] = std::get<0>(tri[k]);
-            j_[k] = std::get<1>(tri[k]);
-            x_[k] = std::get<2>(tri[k]);
+            Triplet t = tri[k];
+            i_[k] = std::get<0>(t);
+            j_[k] = std::get<1>(t);
+            x_[k] = std::get<2>(t);
         }
         if (symmetric) {
             S4 simil_("dsTMatrix");
