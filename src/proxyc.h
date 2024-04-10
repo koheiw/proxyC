@@ -34,30 +34,41 @@ namespace proxyc{
     inline S4 to_matrix(Triplets& tri, int nrow, int ncol, bool symmetric) {
 
         std::size_t l = tri.size();
-        IntegerVector dim_ = IntegerVector::create(nrow, ncol);
-        IntegerVector i_(l), j_(l);
-        NumericVector x_(l);
+        std::vector<int> i(l), j(l);
+        std::vector<double> x(l);
 
-        std::size_t k = 0;
+#if PROXYC_USE_TBB
+        std::atomic<int> p(0);
+        tbb::parallel_for_each(tri.begin(), tri.end(), [&](Triplet &t) {
+            int q = p.fetch_add(1);
+            i[q] = std::get<0>(t);
+            j[q] = std::get<1>(t);
+            x[q] = std::get<2>(t);
+        });
+#else
+        int q = 0;
         for (Triplet t : tri) {
-            i_[k] = std::get<0>(t);
-            j_[k] = std::get<1>(t);
-            x_[k] = std::get<2>(t);
-            k++;
+            i[q] = std::get<0>(t);
+            j[q] = std::get<1>(t);
+            x[q] = std::get<2>(t);
+            q++;
         }
+#endif
+        tri.clear();
+        IntegerVector dim_ = IntegerVector::create(nrow, ncol);
         if (symmetric) {
             S4 simil_("dsTMatrix");
-            simil_.slot("i") = i_;
-            simil_.slot("j") = j_;
-            simil_.slot("x") = x_;
+            simil_.slot("i") = Rcpp::wrap(i);
+            simil_.slot("j") = Rcpp::wrap(j);
+            simil_.slot("x") = Rcpp::wrap(x);
             simil_.slot("Dim") = dim_;
             simil_.slot("uplo") = "U";
             return simil_;
         } else {
             S4 simil_("dgTMatrix");
-            simil_.slot("i") = i_;
-            simil_.slot("j") = j_;
-            simil_.slot("x") = x_;
+            simil_.slot("i") = Rcpp::wrap(i);
+            simil_.slot("j") = Rcpp::wrap(j);
+            simil_.slot("x") = Rcpp::wrap(x);
             simil_.slot("Dim") = dim_;
             return simil_;
         }
