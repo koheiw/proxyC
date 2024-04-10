@@ -62,7 +62,8 @@ namespace proxyc{
         }
     }
 
-    inline double get_limit(std::vector<double> simils, const unsigned int rank, double limit) {
+    inline double get_limit(std::vector<double> simils, const unsigned int rank,
+                            double limit) {
 
         if (simils.size() > rank) {
             std::nth_element(simils.begin(), simils.begin() + rank - 1, simils.end(),
@@ -71,6 +72,14 @@ namespace proxyc{
                 limit = simils[rank - 1];
         }
         return limit;
+    }
+
+    inline std::vector<double> round(std::vector<double> simils, const int digits) {
+        double shift = std::pow(10, digits);
+        for (auto it = simils.begin() ; it != simils.end(); ++it) {
+            *it = std::round(*it * shift) / shift;
+        }
+        return simils;
     }
 
     inline std::vector<double> replace_inf(std::vector<double> simils) {

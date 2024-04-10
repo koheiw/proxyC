@@ -140,7 +140,6 @@ void proxy_pair(const uword i,
 
     arma::uword nrow = mt1.n_rows;
     arma::uword ncol = mt1.n_cols;
-    double shift = std::pow(10, digits);
 
     colvec col_i(nrow);
     colvec col_j(nrow);
@@ -216,15 +215,16 @@ void proxy_pair(const uword i,
         //Rcout << "simil=" << simil << "\n";
         simils.push_back(simil);
     }
+    simils = round(simils, digits);
     double l = get_limit(simils, rank, limit);
     for (std::size_t k = 0; k < simils.size(); k++) {
-        simils[k] = round(simils[k] * shift) / shift; // round small values
-        if (drop0 && simils[k] == 0) continue;
-        if (simils[k] >= l || (use_nan && std::isnan(simils[k]))) {
+        double s = simils[k];
+        if (drop0 && s == 0) continue;
+        if (s >= l || (use_nan && std::isnan(s))) {
             if (diag) {
-                simil_tri.push_back(std::make_tuple(i, i, simils[k]));
+                simil_tri.push_back(std::make_tuple(i, i, s));
             } else {
-                simil_tri.push_back(std::make_tuple(k, i, simils[k]));
+                simil_tri.push_back(std::make_tuple(k, i, s));
             }
         }
     }

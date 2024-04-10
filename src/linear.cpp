@@ -40,7 +40,6 @@ void proxy_linear(const uword i,
 
     uword nrow = mt1t.n_rows;
     uword ncol = mt1t.n_cols;
-    double shift = std::pow(10, digits);
 
     rowvec v1, v2;
     std::vector<double> simils(nrow);
@@ -59,13 +58,14 @@ void proxy_linear(const uword i,
             simils = to_vector(sqrt(trans(mt1t * mt2.col(i)) * -2 + square1 + square2[i]));
             break;
         }
+        simils = round(simils, digits);
         double l = get_limit(simils, rank, limit);
         for (std::size_t k = 0; k < simils.size(); k++) {
+            double s = simils[k];
             if (symm && k > i) continue;
-            simils[k] = round(simils[k] * shift) / shift; // round small values
             if (drop0 && simils[k] == 0) continue;
-            if (simils[k] >= l || (use_nan && std::isnan(simils[k])))
-                simil_tri.push_back(std::make_tuple(k, i, simils[k]));
+            if (s >= l || (use_nan && std::isnan(s)))
+                simil_tri.push_back(std::make_tuple(k, i, s));
         }
     //}
 }
