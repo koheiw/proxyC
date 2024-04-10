@@ -226,7 +226,8 @@ proxy <- function(x, y = NULL, margin = 1,
     }
     if (diag)
         result <- as(as(result, "diagonalMatrix"), "ddiMatrix")
-    result@x <- zapsmall(result@x, digits)
+    if (is.null(min_proxy) && is.null(rank))
+        result@x <- zapsmall(result@x, digits)
     dimnames(result) <- list(colnames(x), colnames(y))
     return(result)
 }
