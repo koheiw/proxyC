@@ -31,35 +31,60 @@ namespace proxyc{
     typedef std::vector<Triplet> Triplets;
 #endif
 
-    inline S4 to_matrix(Triplets& tri, int nrow, int ncol, bool symmetric) {
+    inline S4 to_matrix(Triplets& tri, int nrow, int ncol, bool symmetric,
+                        bool sparse = true) {
 
         std::size_t l = tri.size();
         IntegerVector dim_ = IntegerVector::create(nrow, ncol);
-        IntegerVector i_(l), j_(l);
-        NumericVector x_(l);
-
-        std::size_t k = 0;
-        for (Triplet t : tri) {
-            i_[k] = std::get<0>(t);
-            j_[k] = std::get<1>(t);
-            x_[k] = std::get<2>(t);
-            k++;
-        }
-        if (symmetric) {
-            S4 simil_("dsTMatrix");
-            simil_.slot("i") = i_;
-            simil_.slot("j") = j_;
-            simil_.slot("x") = x_;
-            simil_.slot("Dim") = dim_;
-            simil_.slot("uplo") = "U";
-            return simil_;
+        if (!sparse) {
+            NumericVector x_(l, 0);
+            if (symmetric) {
+                for (Triplet t : tri) {
+                    std::size_t k = std::get<0>(t) + ((std::get<1>(t) * (std::get<1>(t) + 1)) / 2);
+                    x_[k] = std::get<2>(t);
+                }
+                S4 simil_("dspMatrix");
+                simil_.slot("x") = x_;
+                simil_.slot("Dim") = dim_;
+                simil_.slot("uplo") = "U";
+                return simil_;
+            } else {
+                for (Triplet t : tri) {
+                    std::size_t k = std::get<0>(t) + (std::get<1>(t) * nrow);
+                    x_[k] = std::get<2>(t);
+                }
+                S4 simil_("dgeMatrix");
+                simil_.slot("x") = x_;
+                simil_.slot("Dim") = dim_;
+                return simil_;
+            }
         } else {
-            S4 simil_("dgTMatrix");
-            simil_.slot("i") = i_;
-            simil_.slot("j") = j_;
-            simil_.slot("x") = x_;
-            simil_.slot("Dim") = dim_;
-            return simil_;
+            NumericVector x_(l, 0);
+            IntegerVector i_(l), j_(l);
+            std::size_t k = 0;
+            for (Triplet t : tri) {
+                i_[k] = std::get<0>(t);
+                j_[k] = std::get<1>(t);
+                x_[k] = std::get<2>(t);
+                k++;
+            }
+            if (symmetric) {
+                S4 simil_("dsTMatrix");
+                simil_.slot("i") = i_;
+                simil_.slot("j") = j_;
+                simil_.slot("x") = x_;
+                simil_.slot("Dim") = dim_;
+                simil_.slot("uplo") = "U";
+                return simil_;
+
+            } else {
+                S4 simil_("dgTMatrix");
+                simil_.slot("i") = i_;
+                simil_.slot("j") = j_;
+                simil_.slot("x") = x_;
+                simil_.slot("Dim") = dim_;
+                return simil_;
+            }
         }
     }
 

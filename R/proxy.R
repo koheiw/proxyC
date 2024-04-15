@@ -83,12 +83,12 @@ simil <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard", "fjaccard",
                              "dice", "edice", "hamann", "faith", "simple matching"),
                   min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE,
-                  use_nan = NULL, digits = 14) {
+                  use_nan = NULL, sparse = TRUE, digits = 14) {
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
     proxy(x, y, margin, method, min_proxy = min_simil, rank = rank, drop0 = drop0,
-          diag = diag, use_nan = use_nan, digits = digits)
+          diag = diag, use_nan = use_nan, sparse = sparse, digits = digits)
 
 }
 
@@ -118,7 +118,7 @@ proxy <- function(x, y = NULL, margin = 1,
                              "euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                              "manhattan", "maximum", "canberra", "minkowski", "hamming"),
                   p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE,
-                  diag = FALSE, use_nan = NULL, digits = 14) {
+                  diag = FALSE, use_nan = NULL, sparse = TRUE, digits = 14) {
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
@@ -202,6 +202,7 @@ proxy <- function(x, y = NULL, margin = 1,
             symm = symm,
             drop0 = drop0,
             use_nan = use_nan,
+            sparse = sparse,
             digits = digits,
             thread = getThreads()
         )
@@ -222,6 +223,7 @@ proxy <- function(x, y = NULL, margin = 1,
             diag = diag,
             drop0 = drop0,
             use_nan = use_nan,
+            sparse = sparse,
             digits = digits,
             thread = getThreads()
         )
