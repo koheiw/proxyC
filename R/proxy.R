@@ -105,11 +105,12 @@ simil <- function(x, y = NULL, margin = 1,
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                             "manhattan", "maximum", "canberra", "minkowski", "hamming"),
-                 p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, use_nan = NULL, digits = 14) {
+                 p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, use_nan = NULL,
+                 sparse = TRUE, digits = 14) {
 
     method <- match.arg(method)
     proxy(x, y, margin, method, p = p, smooth = smooth, drop0 = drop0,
-          diag = diag, use_nan = use_nan, digits = digits)
+          diag = diag, use_nan = use_nan, sparse = sparse, digits = digits)
 }
 
 #' @import Rcpp
