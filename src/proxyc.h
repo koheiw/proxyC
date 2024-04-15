@@ -31,14 +31,13 @@ namespace proxyc{
     typedef std::vector<Triplet> Triplets;
 #endif
 
-    inline S4 to_matrix(Triplets& tri, int nrow, int ncol, bool symmetric,
-                        bool sparse = true) {
+    inline S4 to_matrix(Triplets& tri, int nrow, int ncol, bool symmetric, bool sparse) {
 
-        std::size_t l = tri.size();
         IntegerVector dim_ = IntegerVector::create(nrow, ncol);
         if (!sparse) {
-            NumericVector x_(l, 0);
             if (symmetric) {
+                std::size_t l = nrow * (nrow - 1);
+                NumericVector x_(l, 0);
                 for (Triplet t : tri) {
                     std::size_t k = std::get<0>(t) + ((std::get<1>(t) * (std::get<1>(t) + 1)) / 2);
                     x_[k] = std::get<2>(t);
@@ -49,6 +48,8 @@ namespace proxyc{
                 simil_.slot("uplo") = "U";
                 return simil_;
             } else {
+                std::size_t l = nrow * ncol;
+                NumericVector x_(l, 0);
                 for (Triplet t : tri) {
                     std::size_t k = std::get<0>(t) + (std::get<1>(t) * nrow);
                     x_[k] = std::get<2>(t);
@@ -59,6 +60,7 @@ namespace proxyc{
                 return simil_;
             }
         } else {
+            std::size_t l = tri.size();
             NumericVector x_(l, 0);
             IntegerVector i_(l), j_(l);
             std::size_t k = 0;
