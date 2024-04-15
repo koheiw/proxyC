@@ -31,6 +31,7 @@ dist(
   drop0 = FALSE,
   diag = FALSE,
   use_nan = NULL,
+  sparse = TRUE,
   digits = 14
 )
 }
