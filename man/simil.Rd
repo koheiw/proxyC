@@ -9,13 +9,13 @@ simil(
   x,
   y = NULL,
   margin = 1,
-  method = c("cosine", "correlation", "jaccard", "ejaccard", "dice", "edice", "hamann",
-    "faith", "simple matching"),
+  method = c("cosine", "correlation", "jaccard", "ejaccard", "fjaccard", "dice", "edice",
+    "hamann", "faith", "simple matching"),
   min_simil = NULL,
   rank = NULL,
   drop0 = FALSE,
   diag = FALSE,
-  use_nan = FALSE,
+  use_nan = NULL,
   digits = 14
 )
 
@@ -29,7 +29,7 @@ dist(
   smooth = 0,
   drop0 = FALSE,
   diag = FALSE,
-  use_nan = FALSE,
+  use_nan = NULL,
   digits = 14
 )
 }
@@ -55,54 +55,74 @@ recorded.}
 
 \item{diag}{if \code{TRUE}, only compute diagonal elements of the
 similarity/distance matrix; useful when comparing corresponding rows or
-columns of `x` and `y`.}
+columns of \code{x} and \code{y}.}
 
-\item{use_nan}{if \code{TRUE}, return `NaN` if the standard deviation of a
-vector is zero when `method` is "correlation"; if all the values are zero
-in a vector when `method` is "cosine", "chisquared", "kullback", "jeffreys"
-or "jensen". Note that use of `NaN` makes the similarity/distance matrix
-denser and therefore larger in RAM.}
+\item{use_nan}{if \code{TRUE}, return \code{NaN} if the standard deviation of a vector
+is zero when \code{method} is "correlation"; if all the values are zero in a
+vector when \code{method} is "cosine", "chisquared", "kullback", "jeffreys" or
+"jensen". Note that use of \code{NaN} makes the similarity/distance matrix
+denser and therefore larger in RAM. If \code{FALSE}, return zero in same use
+situations as above. If \code{NULL}, will also return zero but also generate a
+warning (default).}
 
 \item{digits}{determines rounding of small values towards zero. Use primarily
-to correct rounding errors in C++. See \link{zapsmall}.}
+to correct floating point errors. Rounding is performed in C++ in a similar
+way as \link{zapsmall}.}
 
 \item{p}{weight for Minkowski distance}
 
 \item{smooth}{adds a  fixed value to all the cells to avoid division by zero.
-Only used when `method` is "chisquared", "kullback" or "jeffreys".}
+Only used when \code{method} is "chisquared", "kullback", "jeffreys" or "jensen".}
 }
 \description{
 Fast similarity/distance computation function for large sparse matrices. You
 can floor small similarity value to to save computation time and storage
-space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}).
-Please increase the number of threads for better performance using
-\code{\link[RcppParallel]{setThreadOptions}}.
+space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}). You
+can specify the number of threads for parallel computing via
+\code{options(proxyC.threads)}.
 }
 \details{
-Available methods for similarity:
+\subsection{Available Methods}{
+
+Similarity:
 \itemize{
-  \item `cosine`: cosine similarity
-  \item `correlation`: Pearson's correlation
-  \item `jaccard`: Jaccard coefficient
-  \item `ejaccard`: the real value version of `jaccard`
-  \item `dice`: Dice coefficient
-  \item `edice`: the real value version of `dice`
-  \item `hamann`: Hamann similarity
-  \item `faith`: Faith similarity
-  \item `simple matching`: the percentage of common elements
+\item \code{cosine}: cosine similarity
+\item \code{correlation}: Pearson's correlation
+\item \code{jaccard}: Jaccard coefficient
+\item \code{ejaccard}: the real value version of \code{jaccard}
+\item \code{fjaccard}: Fuzzy Jaccard coefficient
+\item \code{dice}: Dice coefficient
+\item \code{edice}: the real value version of \code{dice}
+\item \code{hamann}: Hamann similarity
+\item \code{faith}: Faith similarity
+\item \verb{simple matching}: the percentage of common elements
 }
-Available methods for distance:
+Distance:
 \itemize{
-  \item `euclidean`: Euclidean distance
-  \item `chisquared`: chi-squared distance
-  \item `kullback`: Kullback–Leibler divergence
-  \item `jeffreys`: Jeffreys divergence
-  \item `jensen`: Jensen–Shannon divergence
-  \item `manhattan`: Manhattan distance
-  \item `maximum`: the largest difference between values
-  \item `canberra`: Canberra distance
-  \item `minkowski`: Minkowski distance
-  \item `hamming`: Hamming distance
+\item \code{euclidean}: Euclidean distance
+\item \code{chisquared}: chi-squared distance
+\item \code{kullback}: Kullback–Leibler divergence
+\item \code{jeffreys}: Jeffreys divergence
+\item \code{jensen}: Jensen–Shannon divergence
+\item \code{manhattan}: Manhattan distance
+\item \code{maximum}: the largest difference between values
+\item \code{canberra}: Canberra distance
+\item \code{minkowski}: Minkowski distance
+\item \code{hamming}: Hamming distance
+}
+See the vignette for how the similarity and distance are computed:
+\code{vignette("measures", package = "proxyC")}
+}
+
+\subsection{Parallel Computing}{
+
+It performs parallel computing using Intel oneAPI Threads Building Blocks.
+The number of threads for parallel computing should be specified via
+\code{options(proxyC.threads)} before calling the functions. If the value is -1,
+all the available threads will be used. Unless the option is used, the number
+of threads will be limited by the environmental variables (\code{OMP_THREAD_LIMIT}
+or \code{RCPP_PARALLEL_NUM_THREADS}) to comply with CRAN policy and offer backward
+compatibility.
 }
 }
 \examples{

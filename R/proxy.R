@@ -2,9 +2,9 @@
 #'
 #' Fast similarity/distance computation function for large sparse matrices. You
 #' can floor small similarity value to to save computation time and storage
-#' space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}).
-#' Please increase the number of threads for better performance using
-#' \code{\link[RcppParallel]{setThreadOptions}}.
+#' space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}). You
+#' can specify the number of threads for parallel computing via
+#' `options(proxyC.threads)`.
 #'
 #' @param x \link{matrix} or \link{Matrix} object. Dense matrices are covered to
 #'   the \link{CsparseMatrix-class} internally.
@@ -22,27 +22,32 @@
 #' @param diag if \code{TRUE}, only compute diagonal elements of the
 #'   similarity/distance matrix; useful when comparing corresponding rows or
 #'   columns of `x` and `y`.
-#' @param use_nan if \code{TRUE}, return `NaN` if the standard deviation of a
-#'   vector is zero when `method` is "correlation"; if all the values are zero
-#'   in a vector when `method` is "cosine", "chisquared", "kullback", "jeffreys"
-#'   or "jensen". Note that use of `NaN` makes the similarity/distance matrix
-#'   denser and therefore larger in RAM.
+#' @param use_nan if `TRUE`, return `NaN` if the standard deviation of a vector
+#'   is zero when `method` is "correlation"; if all the values are zero in a
+#'   vector when `method` is "cosine", "chisquared", "kullback", "jeffreys" or
+#'   "jensen". Note that use of `NaN` makes the similarity/distance matrix
+#'   denser and therefore larger in RAM. If `FALSE`, return zero in same use
+#'   situations as above. If `NULL`, will also return zero but also generate a
+#'   warning (default).
 #' @param digits determines rounding of small values towards zero. Use primarily
-#'   to correct rounding errors in C++. See \link{zapsmall}.
-#' @details
-#' Available methods for similarity:
+#'   to correct floating point errors. Rounding is performed in C++ in a similar
+#'   way as \link{zapsmall}.
+#' @details ## Available Methods
+#'
+#' Similarity:
 #' \itemize{
 #'   \item `cosine`: cosine similarity
 #'   \item `correlation`: Pearson's correlation
 #'   \item `jaccard`: Jaccard coefficient
 #'   \item `ejaccard`: the real value version of `jaccard`
+#'   \item `fjaccard`: Fuzzy Jaccard coefficient
 #'   \item `dice`: Dice coefficient
 #'   \item `edice`: the real value version of `dice`
 #'   \item `hamann`: Hamann similarity
 #'   \item `faith`: Faith similarity
 #'   \item `simple matching`: the percentage of common elements
 #' }
-#' Available methods for distance:
+#' Distance:
 #' \itemize{
 #'   \item `euclidean`: Euclidean distance
 #'   \item `chisquared`: chi-squared distance
@@ -55,18 +60,30 @@
 #'   \item `minkowski`: Minkowski distance
 #'   \item `hamming`: Hamming distance
 #' }
+#' See the vignette for how the similarity and distance are computed:
+#' `vignette("measures", package = "proxyC")`
+#'
+#' ## Parallel Computing
+#'
+#' It performs parallel computing using Intel oneAPI Threads Building Blocks.
+#' The number of threads for parallel computing should be specified via
+#' `options(proxyC.threads)` before calling the functions. If the value is -1,
+#' all the available threads will be used. Unless the option is used, the number
+#' of threads will be limited by the environmental variables (`OMP_THREAD_LIMIT`
+#' or `RCPP_PARALLEL_NUM_THREADS`) to comply with CRAN policy and offer backward
+#' compatibility.
+#'
 #' @import methods Matrix
-#' @importFrom RcppParallel RcppParallelLibs
 #' @seealso zapsmall
 #' @export
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' simil(mt, method = "cosine")[1:5, 1:5]
 simil <- function(x, y = NULL, margin = 1,
-                  method = c("cosine", "correlation", "jaccard", "ejaccard",
+                  method = c("cosine", "correlation", "jaccard", "ejaccard", "fjaccard",
                              "dice", "edice", "hamann", "faith", "simple matching"),
                   min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE,
-                  use_nan = FALSE, digits = 14) {
+                  use_nan = NULL, digits = 14) {
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
@@ -77,7 +94,7 @@ simil <- function(x, y = NULL, margin = 1,
 
 #' @rdname simil
 #' @param smooth adds a  fixed value to all the cells to avoid division by zero.
-#'   Only used when `method` is "chisquared", "kullback" or "jeffreys".
+#'   Only used when `method` is "chisquared", "kullback", "jeffreys" or "jensen".
 
 #' @export
 #' @examples
@@ -86,7 +103,7 @@ simil <- function(x, y = NULL, margin = 1,
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                             "manhattan", "maximum", "canberra", "minkowski", "hamming"),
-                 p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, use_nan = FALSE, digits = 14) {
+                 p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, use_nan = NULL, digits = 14) {
 
     method <- match.arg(method)
     proxy(x, y, margin, method, p = p, smooth = smooth, drop0 = drop0,
@@ -96,12 +113,12 @@ dist <- function(x, y = NULL, margin = 1,
 #' @import Rcpp
 #' @useDynLib proxyC
 proxy <- function(x, y = NULL, margin = 1,
-                  method = c("cosine", "correlation", "jaccard", "ejaccard",
+                  method = c("cosine", "correlation", "jaccard", "ejaccard", "fjaccard",
                              "dice", "edice", "hamann", "simple matching", "faith",
                              "euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                              "manhattan", "maximum", "canberra", "minkowski", "hamming"),
                   p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE,
-                  diag = FALSE, use_nan = FALSE, digits = 14) {
+                  diag = FALSE, use_nan = NULL, digits = 14) {
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
@@ -132,14 +149,21 @@ proxy <- function(x, y = NULL, margin = 1,
         rank <- ncol(x)
     if (rank < 1)
         stop("rank must be great than or equal to 1")
-    if (!use_nan) {
-        if (method == "correlation") {
-            if (any(colSds(x) == 0) || any(colSds(y) == 0))
-                warning("x or y has vectors with zero standard deviation; consider setting use_nan = TRUE", call. = FALSE)
-        } else if (method %in% c("cosine", "kullback", "chisquared", "jeffreys", "jensen")) {
-            if (any(colZeros(x) == nrow(x)) || any(colZeros(y) == nrow(y)))
-                warning("x or y has vectors with all zero; consider setting use_nan = TRUE", call. = FALSE)
+    if (is.null(use_nan)) {
+        if (method == "correlation" && (any(colSds(x) == 0) || any(colSds(y) == 0))) {
+            warning(paste0(
+                "x or y has vectors with zero standard deviation; ",
+                "consider setting use_nan = TRUE to set these values to NaN ",
+                "or use_nan = FALSE to suppress this warning"), call. = FALSE)
+        } else if (
+            method %in% c("cosine", "kullback", "chisquared", "jeffreys", "jensen") &&
+            (any(colZeros(x) == nrow(x)) || any(colZeros(y) == nrow(y)))) {
+            warning(paste0(
+                "x or y has vectors with all zero; ",
+                "consider setting use_nan = TRUE to set these values to NaN ",
+                "or use_nan = FALSE to suppress this warning"), call. = FALSE)
         }
+        use_nan <- FALSE
     }
     boolean <- FALSE
     weight <- 1
@@ -177,7 +201,9 @@ proxy <- function(x, y = NULL, margin = 1,
             limit = min_proxy,
             symm = symm,
             drop0 = drop0,
-            use_nan = use_nan
+            use_nan = use_nan,
+            digits = digits,
+            thread = getThreads()
         )
     } else {
         result <- cpp_pair(
@@ -187,7 +213,7 @@ proxy <- function(x, y = NULL, margin = 1,
                                      "hamann", "simple matching", "faith",
                                      "euclidean", "chisquared", "kullback", "manhattan",
                                      "maximum", "canberra", "minkowski", "hamming",
-                                     "jeffreys", "jensen")),
+                                     "jeffreys", "jensen", "fjaccard")),
             rank = rank,
             limit = min_proxy,
             weight = weight,
@@ -195,7 +221,9 @@ proxy <- function(x, y = NULL, margin = 1,
             symm = symm,
             diag = diag,
             drop0 = drop0,
-            use_nan = use_nan
+            use_nan = use_nan,
+            digits = digits,
+            thread = getThreads()
         )
     }
     if (!drop0 && min_proxy == -1 && rank == ncol(x)) {
@@ -207,7 +235,6 @@ proxy <- function(x, y = NULL, margin = 1,
     }
     if (diag)
         result <- as(as(result, "diagonalMatrix"), "ddiMatrix")
-    result@x <- zapsmall(result@x, digits)
     dimnames(result) <- list(colnames(x), colnames(y))
     return(result)
 }
@@ -263,3 +290,20 @@ rowZeros <- function(x) {
     names(result) <- rownames(x)
     return(result)
 }
+
+getThreads <- function() {
+
+    # respect other settings
+    default <- c("tbb" = as.integer(Sys.getenv("RCPP_PARALLEL_NUM_THREADS")),
+                 "omp" = as.integer(Sys.getenv("OMP_THREAD_LIMIT")),
+                 "max" = cpp_get_max_thread())
+    default <- unname(min(default, na.rm = TRUE))
+    suppressWarnings({
+    value <- as.integer(getOption("proxyC.threads", default))
+    })
+    if (length(value) != 1 || is.na(value)) {
+        stop("proxyC.threads must be an integer")
+    }
+    return(value)
+}
+

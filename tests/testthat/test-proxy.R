@@ -192,4 +192,33 @@ test_that("functions works with different matrices", {
     expect_silent(colZeros(forceSymmetric(emat)))
 })
 
+test_that("options are working", {
+
+    smat <- rsparsematrix(50, 50, 0.5)
+    options("proxyC.threads" = "abc")
+    expect_error(
+        suppressWarnings(proxyC:::proxy(smat)),
+        "proxyC.threads must be an integer"
+    )
+    options("proxyC.threads" = NA)
+    expect_error(
+        suppressWarnings(proxyC:::proxy(smat)),
+        "proxyC.threads must be an integer"
+    )
+    options("proxyC.threads" = NULL) # reset
+
+    Sys.setenv("OMP_THREAD_LIMIT" = 2)
+    options("proxyC.threads" = 8)
+    expect_equal(proxyC:::getThreads(), 8)
+    Sys.unsetenv("OMP_THREAD_LIMIT")
+    options("proxyC.threads" = NULL)
+})
+
+test_that("C++ utility functions are working", {
+
+    expect_type(proxyC:::cpp_tbb_enabled(), "logical")
+    expect_type(proxyC:::cpp_get_max_thread(), "integer")
+    expect_length(proxyC:::cpp_get_max_thread(), 1)
+
+})
 

@@ -1,3 +1,40 @@
+# proxyC 0.4.2
+
+## New features and improvements
+
+- Reduce the overhead for dense similarity matrices by improving rounding numbers and conversion to Rcpp vectors.
+
+# proxyC 0.4.1
+
+## Bug fixes
+
+- Make detection of Intel oneAPI Threads Building Blocks (TBB) library more reliable.
+
+# proxyC 0.4.0
+
+## New features and improvements
+
+- Use more recent Intel oneAPI Threads Building Blocks (TBB) library to improve the stability in parallel computing.
+- Add `options(proxyC.threads)` to control the number of threads in parallel computing (but `RCPP_PARALLEL_NUM_THREADS` still has effect).
+
+## New system requirements
+
+- The RcppParallel package is no longer required as the TBB library in the operating system (Linux and MacOS) or Rtools (Windows) is used.
+- Linux and MacOS must have the TBB library to enable parallel computing before installing this package from the source.
+
+# proxyC 0.3.4
+
+## New features and improvements
+
+- Add "fjaccard" to `simil()` for Fuzzy Jaccard similarity (#42).
+
+# proxyC 0.3.3
+
+## New features and improvements
+
+- Explicitly setting `use_nan = FALSE` will suppress warnings in `simil()` and `dist()`.
+- Add vignettes to explain how the similarity and distance measures are computed.  
+
 # proxyC 0.3.2
 
 ## Bug fixes

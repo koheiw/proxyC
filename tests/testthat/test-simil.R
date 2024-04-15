@@ -47,6 +47,20 @@ test_that("test ejaccard similarity", {
     test_simil(mat_test[-1,], "ejaccard", margin = 2)
 })
 
+test_that("test fjaccard similarity", {
+    skip_if_not_installed("proxy")
+    # proxy::simil(method = "fjaccard") returns wrong scores
+    mat_prob <- rsparsematrix(100, 50, 0.5, rand.x = runif)
+
+    s1 <- as.matrix(simil(mat_prob, margin = 1, method = "fjaccard"))
+    s2 <- 1 - as.matrix(proxy::dist(as.matrix(mat_prob), method = "fjaccard", by_raw = TRUE))
+    expect_equal(as.numeric(s1), as.numeric(s2), tolerance = 0.001)
+
+    s3 <- as.matrix(simil(mat_prob, margin = 2, method = "fjaccard"))
+    s4 <- 1 - as.matrix(proxy::dist(as.matrix(mat_prob), method = "fjaccard", by_raw = FALSE))
+    expect_equal(as.numeric(s1), as.numeric(s2), tolerance = 0.001)
+})
+
 test_that("test dice similarity", {
     skip_if_not_installed("proxy")
     # proxy::simil(method = "dice") wrongly returns 1 for all0 or sd0 vector
@@ -87,11 +101,12 @@ test_that("use_nan is working", {
     mat3 <- Matrix::Matrix(rep(1, 4), nrow = 1, sparse = TRUE)
     mat4 <- Matrix::Matrix(rep(0, 4), nrow = 1, sparse = TRUE)
 
-    expect_warning(proxyC::simil(mat1, mat2, method = "correlation", use_nan = FALSE),
+    expect_warning(proxyC::simil(mat1, mat2, method = "correlation"),
                    "x or y has vectors with zero standard deviation; consider setting use_nan = TRUE")
-    expect_warning(proxyC::simil(mat1, mat4, method = "cosine", use_nan = FALSE),
+    expect_warning(proxyC::simil(mat1, mat4, method = "cosine"),
                    "x or y has vectors with all zero; consider setting use_nan = TRUE")
-    suppressWarnings({
+
+    expect_silent({
         expect_equal(proxyC::simil(mat1, mat2, method = "correlation", use_nan = FALSE)[1,1], 0)
         expect_equal(proxyC::simil(mat1, mat3, method = "correlation", use_nan = FALSE)[1,1], 0)
         expect_equal(proxyC::simil(mat1, mat4, method = "correlation", use_nan = FALSE)[1,1], 0)
@@ -105,42 +120,41 @@ test_that("use_nan is working", {
         expect_equal(proxyC::simil(mat2, mat1, method = "correlation", use_nan = FALSE, diag = TRUE)[1,1], 0)
         expect_equal(proxyC::simil(mat3, mat1, method = "correlation", use_nan = FALSE, diag = TRUE)[1,1], 0)
         expect_equal(proxyC::simil(mat4, mat1, method = "correlation", use_nan = FALSE, diag = TRUE)[1,1], 0)
-    })
 
-    expect_true(is.nan(proxyC::simil(mat1, mat2, method = "correlation", use_nan = TRUE)[1,1]))
-    expect_true(is.nan(proxyC::simil(mat1, mat3, method = "correlation", use_nan = TRUE)[1,1]))
-    expect_true(is.nan(proxyC::simil(mat1, mat4, method = "correlation", use_nan = TRUE)[1,1]))
-    expect_true(is.nan(proxyC::simil(mat2, mat1, method = "correlation", use_nan = TRUE)[1,1]))
-    expect_true(is.nan(proxyC::simil(mat3, mat1, method = "correlation", use_nan = TRUE)[1,1]))
-    expect_true(is.nan(proxyC::simil(mat4, mat1, method = "correlation", use_nan = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat1, mat2, method = "correlation", use_nan = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat1, mat3, method = "correlation", use_nan = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat1, mat4, method = "correlation", use_nan = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat2, mat1, method = "correlation", use_nan = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat3, mat1, method = "correlation", use_nan = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat4, mat1, method = "correlation", use_nan = TRUE)[1,1]))
 
-    expect_true(is.nan(proxyC::simil(mat1, mat2, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1]))
-    expect_true(is.nan(proxyC::simil(mat1, mat3, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1]))
-    expect_true(is.nan(proxyC::simil(mat1, mat4, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1]))
-    expect_true(is.nan(proxyC::simil(mat2, mat1, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1]))
-    expect_true(is.nan(proxyC::simil(mat3, mat1, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1]))
-    expect_true(is.nan(proxyC::simil(mat4, mat1, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat1, mat2, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat1, mat3, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat1, mat4, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat2, mat1, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat3, mat1, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat4, mat1, method = "correlation", use_nan = TRUE, diag = TRUE)[1,1]))
 
-    suppressWarnings({
         expect_equal(proxyC::simil(mat1, mat4, method = "cosine", use_nan = FALSE)[1,1], 0)
         expect_equal(proxyC::simil(mat4, mat1, method = "cosine", use_nan = FALSE)[1,1], 0)
 
         expect_equal(proxyC::simil(mat1, mat4, method = "cosine", use_nan = FALSE, diag = TRUE)[1,1], 0)
         expect_equal(proxyC::simil(mat4, mat1, method = "cosine", use_nan = FALSE, diag = TRUE)[1,1], 0)
-    })
-    expect_false(is.nan(proxyC::simil(mat1, mat2, method = "cosine", use_nan = TRUE)[1,1]))
-    expect_false(is.nan(proxyC::simil(mat1, mat3, method = "cosine", use_nan = TRUE)[1,1]))
-    expect_true(is.nan(proxyC::simil(mat1, mat4, method = "cosine", use_nan = TRUE)[1,1]))
-    expect_false(is.nan(proxyC::simil(mat2, mat1, method = "cosine", use_nan = TRUE)[1,1]))
-    expect_false(is.nan(proxyC::simil(mat3, mat1, method = "cosine", use_nan = TRUE)[1,1]))
-    expect_true(is.nan(proxyC::simil(mat4, mat1, method = "cosine", use_nan = TRUE)[1,1]))
 
-    expect_false(is.nan(proxyC::simil(mat1, mat2, method = "cosine", use_nan = TRUE, diag = TRUE)[1,1]))
-    expect_false(is.nan(proxyC::simil(mat1, mat3, method = "cosine", use_nan = TRUE, diag = TRUE)[1,1]))
-    expect_true(is.nan(proxyC::simil(mat1, mat4, method = "cosine", use_nan = TRUE, diag = TRUE)[1,1]))
-    expect_false(is.nan(proxyC::simil(mat2, mat1, method = "cosine", use_nan = TRUE, diag = TRUE)[1,1]))
-    expect_false(is.nan(proxyC::simil(mat3, mat1, method = "cosine", use_nan = TRUE, diag = TRUE)[1,1]))
-    expect_true(is.nan(proxyC::simil(mat4, mat1, method = "cosine", use_nan = TRUE, diag = TRUE)[1,1]))
+        expect_false(is.nan(proxyC::simil(mat1, mat2, method = "cosine", use_nan = TRUE)[1,1]))
+        expect_false(is.nan(proxyC::simil(mat1, mat3, method = "cosine", use_nan = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat1, mat4, method = "cosine", use_nan = TRUE)[1,1]))
+        expect_false(is.nan(proxyC::simil(mat2, mat1, method = "cosine", use_nan = TRUE)[1,1]))
+        expect_false(is.nan(proxyC::simil(mat3, mat1, method = "cosine", use_nan = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat4, mat1, method = "cosine", use_nan = TRUE)[1,1]))
+
+        expect_false(is.nan(proxyC::simil(mat1, mat2, method = "cosine", use_nan = TRUE, diag = TRUE)[1,1]))
+        expect_false(is.nan(proxyC::simil(mat1, mat3, method = "cosine", use_nan = TRUE, diag = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat1, mat4, method = "cosine", use_nan = TRUE, diag = TRUE)[1,1]))
+        expect_false(is.nan(proxyC::simil(mat2, mat1, method = "cosine", use_nan = TRUE, diag = TRUE)[1,1]))
+        expect_false(is.nan(proxyC::simil(mat3, mat1, method = "cosine", use_nan = TRUE, diag = TRUE)[1,1]))
+        expect_true(is.nan(proxyC::simil(mat4, mat1, method = "cosine", use_nan = TRUE, diag = TRUE)[1,1]))
+    })
 
 })
 
@@ -242,6 +256,29 @@ test_that("simil returns zero or NaN correctly", {
     )
     expect_false(
         any(is.nan(as.numeric(proxyC::simil(mat, method = "faith", margin = 2, use_nan = TRUE))))
+    )
+
+    mat2 <- Matrix::Matrix(matrix(c(-0.1, -0.1, -0.1,
+                                    0.1, 0.1, 0.1,
+                                    0.1, 0.5, 0.2,
+                                    0.2, 0.3, 0.4), byrow = TRUE, nrow = 4), sparse = TRUE)
+    mat3 <- Matrix::Matrix(matrix(c(1.1, 1.1, 1.1,
+                                    0.1, 0.1, 0.1,
+                                    0.1, 0.5, 0.2,
+                                    0.2, 0.3, 0.4), byrow = TRUE, nrow = 4), sparse = TRUE)
+
+    # fjaccard
+    expect_true(
+        any(is.nan(as.numeric(proxyC::simil(mat2, method = "fjaccard", margin = 1, use_nan = TRUE))))
+    )
+    expect_true(
+        any(is.nan(as.numeric(proxyC::simil(mat2, method = "fjaccard", margin = 2, use_nan = TRUE))))
+    )
+    expect_true(
+        any(is.nan(as.numeric(proxyC::simil(mat3, method = "fjaccard", margin = 1, use_nan = TRUE))))
+    )
+    expect_true(
+        any(is.nan(as.numeric(proxyC::simil(mat3, method = "fjaccard", margin = 2, use_nan = TRUE))))
     )
 
 })
