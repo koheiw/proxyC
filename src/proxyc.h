@@ -36,10 +36,10 @@ namespace proxyc{
         IntegerVector dim_ = IntegerVector::create(nrow, ncol);
         if (!sparse) {
             if (symmetric) {
-                std::size_t l = nrow * (nrow - 1);
+                std::size_t l = nrow * (nrow + 1) / 2;
                 NumericVector x_(l, 0);
                 for (Triplet t : tri) {
-                    std::size_t k = std::get<0>(t) + ((std::get<1>(t) * (std::get<1>(t) + 1)) / 2);
+                    std::size_t k = std::get<0>(t) + (std::get<1>(t) * (std::get<1>(t) + 1) / 2);
                     x_[k] = std::get<2>(t);
                 }
                 S4 simil_("dspMatrix");
