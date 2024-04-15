@@ -16,6 +16,7 @@ simil(
   drop0 = FALSE,
   diag = FALSE,
   use_nan = NULL,
+  sparse = TRUE,
   digits = 14
 )
 
@@ -64,6 +65,9 @@ vector when \code{method} is "cosine", "chisquared", "kullback", "jeffreys" or
 denser and therefore larger in RAM. If \code{FALSE}, return zero in same use
 situations as above. If \code{NULL}, will also return zero but also generate a
 warning (default).}
+
+\item{sparse}{if \code{TRUE}, returns \link{sparseMatrix} object. When neither
+\code{min_simil} nor \code{rank} is used, dense matrices require less space in RAM.}
 
 \item{digits}{determines rounding of small values towards zero. Use primarily
 to correct floating point errors. Rounding is performed in C++ in a similar

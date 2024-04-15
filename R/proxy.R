@@ -29,6 +29,8 @@
 #'   denser and therefore larger in RAM. If `FALSE`, return zero in same use
 #'   situations as above. If `NULL`, will also return zero but also generate a
 #'   warning (default).
+#' @param sparse if `TRUE`, returns \link{sparseMatrix} object. When neither
+#'   `min_simil` nor `rank` is used, dense matrices require less space in RAM.
 #' @param digits determines rounding of small values towards zero. Use primarily
 #'   to correct floating point errors. Rounding is performed in C++ in a similar
 #'   way as \link{zapsmall}.
