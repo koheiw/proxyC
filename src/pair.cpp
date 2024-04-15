@@ -136,7 +136,7 @@ void proxy_pair(const uword i,
                 const int method,
                 const unsigned int rank, const double limit, const bool symm,
                 const bool diag, const double weight, const double smooth,
-                const bool drop0, const bool use_nan) {
+                const bool drop0, const bool use_nan, const int digits) {
 
     arma::uword nrow = mt1.n_rows;
     arma::uword ncol = mt1.n_cols;
@@ -215,14 +215,16 @@ void proxy_pair(const uword i,
         //Rcout << "simil=" << simil << "\n";
         simils.push_back(simil);
     }
+    simils = round(simils, digits);
     double l = get_limit(simils, rank, limit);
     for (std::size_t k = 0; k < simils.size(); k++) {
-        if (drop0 && simils[k] == 0) continue;
-        if (simils[k] >= l || (use_nan && std::isnan(simils[k]))) {
+        double s = simils[k];
+        if (drop0 && s == 0) continue;
+        if (s >= l || (use_nan && std::isnan(s))) {
             if (diag) {
-                simil_tri.push_back(std::make_tuple(i, i, simils[k]));
+                simil_tri.push_back(std::make_tuple(i, i, s));
             } else {
-                simil_tri.push_back(std::make_tuple(k, i, simils[k]));
+                simil_tri.push_back(std::make_tuple(k, i, s));
             }
         }
     }
@@ -240,6 +242,7 @@ S4 cpp_pair(arma::sp_mat& mt1,
             const bool diag = false,
             const bool drop0 = false,
             const bool use_nan = false,
+            const int digits = 14,
             const int thread = -1) {
 
     if (mt1.n_rows != mt2.n_rows)
@@ -258,14 +261,14 @@ S4 cpp_pair(arma::sp_mat& mt1,
         tbb::parallel_for(tbb::blocked_range<int>(0, I), [&](tbb::blocked_range<int> r) {
             for (int i = r.begin(); i < r.end(); i++) {
                 proxy_pair(i, mt1, mt2, simil_tri, method, rank, limit, symm,
-                           diag, weight, smooth, drop0, use_nan);
+                           diag, weight, smooth, drop0, use_nan, digits);
             }
         });
     });
 #else
     for (std::size_t i = 0; i < I; i++) {
         proxy_pair(i, mt1, mt2, simil_tri, method, rank, limit, symm,
-                   diag, weight, smooth, drop0, use_nan);
+                   diag, weight, smooth, drop0, use_nan, digits);
     }
 # endif
 

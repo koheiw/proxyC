@@ -30,11 +30,11 @@
 #'   situations as above. If `NULL`, will also return zero but also generate a
 #'   warning (default).
 #' @param digits determines rounding of small values towards zero. Use primarily
-#'   to correct rounding errors in C++. See \link{zapsmall}.
-#' @details
-#'   ## Available Methods
+#'   to correct floating point errors. Rounding is performed in C++ in a similar
+#'   way as \link{zapsmall}.
+#' @details ## Available Methods
 #'
-#'   Similarity:
+#' Similarity:
 #' \itemize{
 #'   \item `cosine`: cosine similarity
 #'   \item `correlation`: Pearson's correlation
@@ -47,7 +47,7 @@
 #'   \item `faith`: Faith similarity
 #'   \item `simple matching`: the percentage of common elements
 #' }
-#'   Distance:
+#' Distance:
 #' \itemize{
 #'   \item `euclidean`: Euclidean distance
 #'   \item `chisquared`: chi-squared distance
@@ -60,18 +60,18 @@
 #'   \item `minkowski`: Minkowski distance
 #'   \item `hamming`: Hamming distance
 #' }
-#'   See the vignette for how the similarity and distance are computed:
-#'   `vignette("measures", package = "proxyC")`
+#' See the vignette for how the similarity and distance are computed:
+#' `vignette("measures", package = "proxyC")`
 #'
-#'   ## Parallel Computing
+#' ## Parallel Computing
 #'
-#'   It performs parallel computing using Intel oneAPI Threads Building Blocks.
-#'   The number of threads for parallel computing should be specified via
-#'   `options(proxyC.threads)` before calling the functions. If the value is -1,
-#'   all the available threads will be used. Unless the option is used, the
-#'   number of threads will be limited by the environmental variables
-#'   (`OMP_THREAD_LIMIT` or `RCPP_PARALLEL_NUM_THREADS`) to comply with CRAN
-#'   policy and offer backward compatibility.
+#' It performs parallel computing using Intel oneAPI Threads Building Blocks.
+#' The number of threads for parallel computing should be specified via
+#' `options(proxyC.threads)` before calling the functions. If the value is -1,
+#' all the available threads will be used. Unless the option is used, the number
+#' of threads will be limited by the environmental variables (`OMP_THREAD_LIMIT`
+#' or `RCPP_PARALLEL_NUM_THREADS`) to comply with CRAN policy and offer backward
+#' compatibility.
 #'
 #' @import methods Matrix
 #' @seealso zapsmall
@@ -202,6 +202,7 @@ proxy <- function(x, y = NULL, margin = 1,
             symm = symm,
             drop0 = drop0,
             use_nan = use_nan,
+            digits = digits,
             thread = getThreads()
         )
     } else {
@@ -221,12 +222,12 @@ proxy <- function(x, y = NULL, margin = 1,
             diag = diag,
             drop0 = drop0,
             use_nan = use_nan,
+            digits = digits,
             thread = getThreads()
         )
     }
     if (diag)
         result <- as(as(result, "diagonalMatrix"), "ddiMatrix")
-    result@x <- zapsmall(result@x, digits)
     dimnames(result) <- list(colnames(x), colnames(y))
     return(result)
 }
