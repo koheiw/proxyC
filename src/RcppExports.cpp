@@ -12,8 +12,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // cpp_linear
-S4 cpp_linear(arma::sp_mat& mt1, arma::sp_mat& mt2, const int method, unsigned int rank, const double limit, bool symm, const bool drop0, const bool use_nan, const int digits, const int thread);
-RcppExport SEXP _proxyC_cpp_linear(SEXP mt1SEXP, SEXP mt2SEXP, SEXP methodSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP symmSEXP, SEXP drop0SEXP, SEXP use_nanSEXP, SEXP digitsSEXP, SEXP threadSEXP) {
+S4 cpp_linear(arma::sp_mat& mt1, arma::sp_mat& mt2, const int method, unsigned int rank, const double limit, bool symm, const bool drop0, const bool use_nan, const bool sparse, const int digits, const int thread);
+RcppExport SEXP _proxyC_cpp_linear(SEXP mt1SEXP, SEXP mt2SEXP, SEXP methodSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP symmSEXP, SEXP drop0SEXP, SEXP use_nanSEXP, SEXP sparseSEXP, SEXP digitsSEXP, SEXP threadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -25,9 +25,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type symm(symmSEXP);
     Rcpp::traits::input_parameter< const bool >::type drop0(drop0SEXP);
     Rcpp::traits::input_parameter< const bool >::type use_nan(use_nanSEXP);
+    Rcpp::traits::input_parameter< const bool >::type sparse(sparseSEXP);
     Rcpp::traits::input_parameter< const int >::type digits(digitsSEXP);
     Rcpp::traits::input_parameter< const int >::type thread(threadSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_linear(mt1, mt2, method, rank, limit, symm, drop0, use_nan, digits, thread));
+    rcpp_result_gen = Rcpp::wrap(cpp_linear(mt1, mt2, method, rank, limit, symm, drop0, use_nan, sparse, digits, thread));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -54,8 +55,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_pair
-S4 cpp_pair(arma::sp_mat& mt1, arma::sp_mat& mt2, const int method, unsigned int rank, const double limit, const double weight, const double smooth, bool symm, const bool diag, const bool drop0, const bool use_nan, const int digits, const int thread);
-RcppExport SEXP _proxyC_cpp_pair(SEXP mt1SEXP, SEXP mt2SEXP, SEXP methodSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP weightSEXP, SEXP smoothSEXP, SEXP symmSEXP, SEXP diagSEXP, SEXP drop0SEXP, SEXP use_nanSEXP, SEXP digitsSEXP, SEXP threadSEXP) {
+S4 cpp_pair(arma::sp_mat& mt1, arma::sp_mat& mt2, const int method, unsigned int rank, const double limit, const double weight, const double smooth, bool symm, const bool diag, const bool drop0, const bool use_nan, const bool sparse, const int digits, const int thread);
+RcppExport SEXP _proxyC_cpp_pair(SEXP mt1SEXP, SEXP mt2SEXP, SEXP methodSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP weightSEXP, SEXP smoothSEXP, SEXP symmSEXP, SEXP diagSEXP, SEXP drop0SEXP, SEXP use_nanSEXP, SEXP sparseSEXP, SEXP digitsSEXP, SEXP threadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -70,9 +71,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const bool >::type diag(diagSEXP);
     Rcpp::traits::input_parameter< const bool >::type drop0(drop0SEXP);
     Rcpp::traits::input_parameter< const bool >::type use_nan(use_nanSEXP);
+    Rcpp::traits::input_parameter< const bool >::type sparse(sparseSEXP);
     Rcpp::traits::input_parameter< const int >::type digits(digitsSEXP);
     Rcpp::traits::input_parameter< const int >::type thread(threadSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_pair(mt1, mt2, method, rank, limit, weight, smooth, symm, diag, drop0, use_nan, digits, thread));
+    rcpp_result_gen = Rcpp::wrap(cpp_pair(mt1, mt2, method, rank, limit, weight, smooth, symm, diag, drop0, use_nan, sparse, digits, thread));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -98,10 +100,10 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_proxyC_cpp_linear", (DL_FUNC) &_proxyC_cpp_linear, 10},
+    {"_proxyC_cpp_linear", (DL_FUNC) &_proxyC_cpp_linear, 11},
     {"_proxyC_cpp_sd", (DL_FUNC) &_proxyC_cpp_sd, 1},
     {"_proxyC_cpp_nz", (DL_FUNC) &_proxyC_cpp_nz, 1},
-    {"_proxyC_cpp_pair", (DL_FUNC) &_proxyC_cpp_pair, 13},
+    {"_proxyC_cpp_pair", (DL_FUNC) &_proxyC_cpp_pair, 14},
     {"_proxyC_cpp_get_max_thread", (DL_FUNC) &_proxyC_cpp_get_max_thread, 0},
     {"_proxyC_cpp_tbb_enabled", (DL_FUNC) &_proxyC_cpp_tbb_enabled, 0},
     {NULL, NULL, 0}
