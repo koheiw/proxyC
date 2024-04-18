@@ -17,12 +17,12 @@
 #' @param rank an integer value specifying top-n most similarity values to be
 #'   recorded.
 #' @param p weight for Minkowski distance
-#' @param drop0 if \code{TRUE}, zero values are removed regardless of
-#'   \code{min_simil} or \code{rank}.
+#' @param drop0 if \code{TRUE}, removes zero values to make the
+#'   similarity/distance matrix sparse. It has no effect when `dense = TRUE`.
 #' @param diag if \code{TRUE}, only compute diagonal elements of the
 #'   similarity/distance matrix; useful when comparing corresponding rows or
 #'   columns of `x` and `y`.
-#' @param use_nan if `TRUE`, return `NaN` if the standard deviation of a vector
+#' @param use_nan if `TRUE`, returns `NaN` if the standard deviation of a vector
 #'   is zero when `method` is "correlation"; if all the values are zero in a
 #'   vector when `method` is "cosine", "chisquared", "kullback", "jeffreys" or
 #'   "jensen". Note that use of `NaN` makes the similarity/distance matrix
@@ -36,7 +36,7 @@
 #'   way as \link{zapsmall}.
 #' @details ## Available Methods
 #'
-#' Similarity:
+#'   Similarity:
 #' \itemize{
 #'   \item `cosine`: cosine similarity
 #'   \item `correlation`: Pearson's correlation
@@ -49,7 +49,7 @@
 #'   \item `faith`: Faith similarity
 #'   \item `simple matching`: the percentage of common elements
 #' }
-#' Distance:
+#'   Distance:
 #' \itemize{
 #'   \item `euclidean`: Euclidean distance
 #'   \item `chisquared`: chi-squared distance
@@ -62,18 +62,18 @@
 #'   \item `minkowski`: Minkowski distance
 #'   \item `hamming`: Hamming distance
 #' }
-#' See the vignette for how the similarity and distance are computed:
-#' `vignette("measures", package = "proxyC")`
+#'   See the vignette for how the similarity and distance are computed:
+#'   `vignette("measures", package = "proxyC")`
 #'
-#' ## Parallel Computing
+#'   ## Parallel Computing
 #'
-#' It performs parallel computing using Intel oneAPI Threads Building Blocks.
-#' The number of threads for parallel computing should be specified via
-#' `options(proxyC.threads)` before calling the functions. If the value is -1,
-#' all the available threads will be used. Unless the option is used, the number
-#' of threads will be limited by the environmental variables (`OMP_THREAD_LIMIT`
-#' or `RCPP_PARALLEL_NUM_THREADS`) to comply with CRAN policy and offer backward
-#' compatibility.
+#'   It performs parallel computing using Intel oneAPI Threads Building Blocks.
+#'   The number of threads for parallel computing should be specified via
+#'   `options(proxyC.threads)` before calling the functions. If the value is -1,
+#'   all the available threads will be used. Unless the option is used, the
+#'   number of threads will be limited by the environmental variables
+#'   (`OMP_THREAD_LIMIT` or `RCPP_PARALLEL_NUM_THREADS`) to comply with CRAN
+#'   policy and offer backward compatibility.
 #'
 #' @import methods Matrix
 #' @seealso zapsmall
