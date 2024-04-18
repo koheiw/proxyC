@@ -321,3 +321,45 @@ test_that("dist works with dense matrices", {
     expect_error(proxyC::dist(forceSymmetric(emat), forceSymmetric(emat)))
 
 })
+
+
+test_that("sparse = FALSE and sparse = TRUE produce the same result", {
+
+    mat <- rsparsematrix(100, 100, 0.5)
+
+    equivalent_matrix(
+        dist(mat, sparse = TRUE),
+        dist(mat, sparse = FALSE)
+    )
+
+    equivalent_matrix(
+        dist(mat, sparse = TRUE)[,1:5],
+        dist(mat, sparse = FALSE)[,1:5]
+    )
+    equivalent_matrix(
+        dist(mat, sparse = TRUE)[1:5,],
+        dist(mat, sparse = FALSE)[1:5,]
+    )
+    equivalent_matrix(
+        dist(mat, mat[1:10,], sparse = TRUE),
+        dist(mat, mat[1:10,], sparse = FALSE)
+    )
+    equivalent_matrix(
+        dist(mat, margin = 2, sparse = TRUE),
+        dist(mat, margin = 2, sparse = FALSE)
+    )
+    equivalent_matrix(
+        dist(mat, margin = 2, sparse = TRUE)[,1:5],
+        dist(mat, margin = 2, sparse = FALSE)[,1:5]
+    )
+    equivalent_matrix(
+        dist(mat, margin = 2, sparse = TRUE)[1:5,],
+        dist(mat, margin = 2, sparse = FALSE)[1:5,]
+    )
+    equivalent_matrix(
+        dist(mat, mat[,1:10], margin = 2, sparse = TRUE),
+        dist(mat, mat[,1:10], margin = 2, sparse = FALSE)
+    )
+
+})
+

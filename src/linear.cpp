@@ -79,6 +79,7 @@ S4 cpp_linear(arma::sp_mat& mt1,
               bool symm = false,
               const bool drop0 = false,
               const bool use_nan = false,
+              const bool sparse = true,
               const int digits = 14,
               const int thread = -1) {
 
@@ -135,7 +136,7 @@ S4 cpp_linear(arma::sp_mat& mt1,
     }
 # endif
 
-    return to_matrix(simil_tri, ncol1, ncol2, symm);
+    return to_matrix(simil_tri, ncol1, ncol2, symm, sparse);
 }
 
 // [[Rcpp::export]]

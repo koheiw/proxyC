@@ -11,7 +11,7 @@ Authors@R: c(
 Description: 
     Computes proximity between rows or columns of large matrices efficiently in C++.
     Functions are optimised for large sparse matrices using the Armadillo and Intel TBB libraries.
-    Among several built-in similarity/distance measures, computation of correlation,
+    Among various built-in similarity/distance measures, computation of correlation,
     cosine similarity and Euclidean distance is particularly fast.
 URL: https://github.com/koheiw/proxyC
 BugReports: https://github.com/koheiw/proxyC/issues

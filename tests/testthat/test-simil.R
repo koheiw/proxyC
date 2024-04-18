@@ -283,3 +283,43 @@ test_that("simil returns zero or NaN correctly", {
 
 })
 
+
+test_that("sparse = FALSE and sparse = TRUE produce the same result", {
+
+    mat <- rsparsematrix(100, 100, 0.5)
+
+    equivalent_matrix(
+        simil(mat, sparse = TRUE),
+        simil(mat, sparse = FALSE)
+    )
+
+    equivalent_matrix(
+        simil(mat, sparse = TRUE)[,1:5],
+        simil(mat, sparse = FALSE)[,1:5]
+    )
+    equivalent_matrix(
+        simil(mat, sparse = TRUE)[1:5,],
+        simil(mat, sparse = FALSE)[1:5,]
+    )
+    equivalent_matrix(
+        simil(mat, mat[1:10,], sparse = TRUE),
+        simil(mat, mat[1:10,], sparse = FALSE)
+    )
+    equivalent_matrix(
+        simil(mat, margin = 2, sparse = TRUE),
+        simil(mat, margin = 2, sparse = FALSE)
+    )
+    equivalent_matrix(
+        simil(mat, margin = 2, sparse = TRUE)[,1:5],
+        simil(mat, margin = 2, sparse = FALSE)[,1:5]
+    )
+    equivalent_matrix(
+        simil(mat, margin = 2, sparse = TRUE)[1:5,],
+        simil(mat, margin = 2, sparse = FALSE)[1:5,]
+    )
+    equivalent_matrix(
+        simil(mat, mat[,1:10], margin = 2, sparse = TRUE),
+        simil(mat, mat[,1:10], margin = 2, sparse = FALSE)
+    )
+
+})

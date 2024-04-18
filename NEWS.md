@@ -3,6 +3,7 @@
 ## New features and improvements
 
 - Reduce the overhead for dense similarity matrices by improving rounding numbers and conversion to Rcpp vectors.
+- Return a dense matrix if `sparse = FALSE` to save space in RAM.
 
 # proxyC 0.4.1
 

@@ -154,3 +154,9 @@ test_dist <- function(x, method, margin, ignore_upper = FALSE, ...) {
     expect_equal(as.numeric(s5), as.numeric(s6), tolerance = 0.001)
 }
 
+equivalent_matrix <- function(x, y) {
+    expect_true(all(x == y))
+}
+
+
+

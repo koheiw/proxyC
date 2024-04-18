@@ -27,12 +27,29 @@ test_that("sparse objects are of expected class and occur when expected", {
 
     expect_is(proxyC:::proxy(mat_test),
               "dsTMatrix")
+    expect_is(proxyC:::proxy(mat_test, mat_test[1:10,]),
+              "dgTMatrix")
     expect_is(proxyC:::proxy(mat_test, min_proxy = 10),
               "dsTMatrix")
     expect_is(proxyC:::proxy(mat_test, rank = 2),
               "dgTMatrix")
     expect_is(proxyC:::proxy(mat_test, method = "kullback"),
               "dgTMatrix")
+
+})
+
+test_that("dense objects are of expected class and occur when expected", {
+
+    expect_is(proxyC:::proxy(mat_test, sparse = FALSE),
+              "dspMatrix")
+    expect_is(proxyC:::proxy(mat_test, mat_test[1:10,], sparse = FALSE),
+              "dgeMatrix")
+    expect_is(proxyC:::proxy(mat_test, min_proxy = 10, sparse = FALSE),
+              "dspMatrix")
+    expect_is(proxyC:::proxy(mat_test, rank = 2, sparse = FALSE),
+              "dgeMatrix")
+    expect_is(proxyC:::proxy(mat_test, method = "kullback", sparse = FALSE),
+              "dgeMatrix")
 
 })
 
