@@ -35,8 +35,8 @@ void proxy_linear(const uword i,
                   const rowvec& square1, const rowvec& center1,
                   const rowvec& square2, const rowvec& center2,
                   const int method,
-                  const unsigned int rank, const double limit,
-                  const bool symm, const bool drop0, const bool use_nan) {
+                  const unsigned int rank, const double limit, const bool symm,
+                  const bool drop0, const bool use_nan, const int digits) {
 
     uword nrow = mt1t.n_rows;
     uword ncol = mt1t.n_cols;
@@ -61,12 +61,14 @@ void proxy_linear(const uword i,
             simils = to_vector(sqrt(trans(mt1t * mt2.col(i)) * -2 + square1 + square2[i]));
             break;
         }
+        simils = round(simils, digits);
         double l = get_limit(simils, rank, limit);
         for (std::size_t k = 0; k < simils.size(); k++) {
+            double s = simils[k];
             if (symm && k > i) continue;
             if (drop0 && simils[k] == 0) continue;
-            if (simils[k] >= l || (use_nan && std::isnan(simils[k])))
-                simil_tri.push_back(std::make_tuple(k, i, simils[k]));
+            if (s >= l || (use_nan && std::isnan(s)))
+                simil_tri.push_back(std::make_tuple(k, i, s));
         }
     //}
 }
@@ -80,6 +82,8 @@ S4 cpp_linear(arma::sp_mat& mt1,
               bool symm = false,
               const bool drop0 = false,
               const bool use_nan = false,
+              const bool sparse = true,
+              const int digits = 14,
               const int thread = -1) {
 
     if (mt1.n_rows != mt2.n_rows)
@@ -123,7 +127,7 @@ S4 cpp_linear(arma::sp_mat& mt1,
             for (int i = r.begin(); i < r.end(); i++) {
                 proxy_linear(i, mt1, mt2, simil_tri,
                              square1, center1, square2, center2,
-                             method, rank, limit, symm, drop0, use_nan);
+                             method, rank, limit, symm, drop0, use_nan, digits);
             }
         });
     });
@@ -131,11 +135,11 @@ S4 cpp_linear(arma::sp_mat& mt1,
     for (std::size_t i = 0; i < I; i++) {
         proxy_linear(i, mt1, mt2, simil_tri,
                      square1, center1, square2, center2,
-                     method, rank, limit, symm, drop0, use_nan);
+                     method, rank, limit, symm, drop0, use_nan, digits);
     }
 # endif
 
-    return to_matrix(simil_tri, ncol1, ncol2, symm);
+    return to_matrix(simil_tri, ncol1, ncol2, symm, sparse);
 }
 
 // [[Rcpp::export]]

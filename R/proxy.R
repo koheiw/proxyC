@@ -17,22 +17,24 @@
 #' @param rank an integer value specifying top-n most similarity values to be
 #'   recorded.
 #' @param p weight for Minkowski distance
-#' @param drop0 if \code{TRUE}, zero values are removed regardless of
-#'   \code{min_simil} or \code{rank}.
+#' @param drop0 if \code{TRUE}, removes zero values to make the
+#'   similarity/distance matrix sparse. It has no effect when `dense = TRUE`.
 #' @param diag if \code{TRUE}, only compute diagonal elements of the
 #'   similarity/distance matrix; useful when comparing corresponding rows or
 #'   columns of `x` and `y`.
-#' @param use_nan if `TRUE`, return `NaN` if the standard deviation of a vector
+#' @param use_nan if `TRUE`, returns `NaN` if the standard deviation of a vector
 #'   is zero when `method` is "correlation"; if all the values are zero in a
 #'   vector when `method` is "cosine", "chisquared", "kullback", "jeffreys" or
 #'   "jensen". Note that use of `NaN` makes the similarity/distance matrix
 #'   denser and therefore larger in RAM. If `FALSE`, return zero in same use
 #'   situations as above. If `NULL`, will also return zero but also generate a
 #'   warning (default).
+#' @param sparse if `TRUE`, returns \link{sparseMatrix} object. When neither
+#'   `min_simil` nor `rank` is used, dense matrices require less space in RAM.
 #' @param digits determines rounding of small values towards zero. Use primarily
-#'   to correct rounding errors in C++. See \link{zapsmall}.
-#' @details
-#'   ## Available Methods
+#'   to correct floating point errors. Rounding is performed in C++ in a similar
+#'   way as \link{zapsmall}.
+#' @details ## Available Methods
 #'
 #'   Similarity:
 #' \itemize{
@@ -84,12 +86,12 @@ simil <- function(x, y = NULL, margin = 1,
                              "jaccard", "ejaccard", "fjaccard",
                              "dice", "edice", "hamann", "faith", "simple matching"),
                   min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE,
-                  use_nan = NULL, digits = 14) {
+                  use_nan = NULL, sparse = TRUE, digits = 14) {
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
     proxy(x, y, margin, method, min_proxy = min_simil, rank = rank, drop0 = drop0,
-          diag = diag, use_nan = use_nan, digits = digits)
+          diag = diag, use_nan = use_nan, sparse = sparse, digits = digits)
 
 }
 
@@ -104,11 +106,12 @@ simil <- function(x, y = NULL, margin = 1,
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                             "manhattan", "maximum", "canberra", "minkowski", "hamming"),
-                 p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, use_nan = NULL, digits = 14) {
+                 p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, use_nan = NULL,
+                 sparse = TRUE, digits = 14) {
 
     method <- match.arg(method)
     proxy(x, y, margin, method, p = p, smooth = smooth, drop0 = drop0,
-          diag = diag, use_nan = use_nan, digits = digits)
+          diag = diag, use_nan = use_nan, sparse = sparse, digits = digits)
 }
 
 #' @import Rcpp
@@ -119,7 +122,7 @@ proxy <- function(x, y = NULL, margin = 1,
                              "euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                              "manhattan", "maximum", "canberra", "minkowski", "hamming"),
                   p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE,
-                  diag = FALSE, use_nan = NULL, digits = 14) {
+                  diag = FALSE, use_nan = NULL, sparse = TRUE, digits = 14) {
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
@@ -203,6 +206,8 @@ proxy <- function(x, y = NULL, margin = 1,
             symm = symm,
             drop0 = drop0,
             use_nan = use_nan,
+            sparse = sparse,
+            digits = digits,
             thread = getThreads()
         )
     } else {
@@ -222,12 +227,13 @@ proxy <- function(x, y = NULL, margin = 1,
             diag = diag,
             drop0 = drop0,
             use_nan = use_nan,
+            sparse = sparse,
+            digits = digits,
             thread = getThreads()
         )
     }
     if (diag)
         result <- as(as(result, "diagonalMatrix"), "ddiMatrix")
-    result@x <- zapsmall(result@x, digits)
     dimnames(result) <- list(colnames(x), colnames(y))
     return(result)
 }
