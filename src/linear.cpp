@@ -54,7 +54,10 @@ void proxy_linear(const uword i,
             simils = to_vector(((v1 - v2) / ncol) / (square1 * square2[i]));
             simils = replace_inf(simils);
             break;
-        case 3: // euclidean distance
+        case 3: // inner product
+            simils = to_vector(trans(mt1t * mt2.col(i)));
+            break;
+        case 4: // euclidean distance
             simils = to_vector(sqrt(trans(mt1t * mt2.col(i)) * -2 + square1 + square2[i]));
             break;
         }
