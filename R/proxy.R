@@ -196,11 +196,11 @@ proxy <- function(x, y = NULL, margin = 1,
         x <- as(as(x, "lMatrix"), "dMatrix")
         y <- as(as(y, "lMatrix"), "dMatrix")
     }
-    if (method %in% c("cosine", "correlation", "product", "euclidean") && !diag) {
+    if (method %in% c("cosine", "correlation", "euclidean", "product") && !diag) {
         result <- cpp_linear(
             mt1 = x,
             mt2 = y,
-            method = match(method, c("cosine", "correlation", "euclidean")),
+            method = match(method, c("cosine", "correlation", "euclidean", "product")),
             rank = rank,
             limit = min_proxy,
             symm = symm,
