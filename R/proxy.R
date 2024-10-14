@@ -200,7 +200,7 @@ proxy <- function(x, y = NULL, margin = 1,
         result <- cpp_linear(
             mt1 = x,
             mt2 = y,
-            method = match(method, c("cosine", "correlation", "euclidean")),
+            method = match(method, c("cosine", "correlation", "product", "euclidean")),
             rank = rank,
             limit = min_proxy,
             symm = symm,
