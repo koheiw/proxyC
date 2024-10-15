@@ -18,7 +18,7 @@ This vignette explains how **proxyC** compute the similarity and distance measur
 ## Notation
 
 $$
-\vec{x} = [x_i, x_{i + 1}, \dots, x_n] \\
+\vec{x} = [x_i, x_{i + 1}, \dots, x_n] \\\\
 \vec{y} = [y_i, y_{i + 1}, \dots, y_n]
 $$
 The length of the vector $n = ||\vec{x}||$, while $|\vec{x}|$ is the absolute values of the elements.
