@@ -108,7 +108,7 @@
 <span>    times <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bm1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="docs/images/unnamed-chunk-5-1.png"><!-- --></p>
+<p><img src="reference/figures/unnamed-chunk-5-1.png"><!-- --></p>
 </div>
 <div class="section level2">
 <h2 id="cosine-similarity-greater-than-09">Cosine similarity greater than 0.9<a class="anchor" aria-label="anchor" href="#cosine-similarity-greater-than-09"></a>
@@ -121,13 +121,13 @@
 <span>    times <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bm2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="docs/images/unnamed-chunk-6-1.png"><!-- --></p>
+<p><img src="reference/figures/unnamed-chunk-6-1.png"><!-- --></p>
 <p>Flooring by <code>min_simil</code> makes the resulting object much smaller.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">proxyC</span><span class="fu">::</span><span class="fu"><a href="reference/simil.html">simil</a></span><span class="op">(</span><span class="va">sm10k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"MB"</span><span class="op">)</span></span>
-<span><span class="co">## 762.9 Mb</span></span>
+<span><span class="co">## 763 Mb</span></span>
 <span><span class="fu">proxyC</span><span class="fu">::</span><span class="fu"><a href="reference/simil.html">simil</a></span><span class="op">(</span><span class="va">sm10k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span>, min_simil <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"MB"</span><span class="op">)</span></span>
@@ -144,7 +144,7 @@
 <span>    times <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bm3</span><span class="op">)</span></span></code></pre></div>
-<p><img src="docs/images/unnamed-chunk-8-1.png"><!-- --></p>
+<p><img src="reference/figures/unnamed-chunk-8-1.png"><!-- --></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
