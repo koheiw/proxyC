@@ -150,7 +150,7 @@ $$
 $$
 \begin{gather}
 p = \text{user-provided parameter} \\
-dist = \Bigl( \sum{|\vec{x} - \vec{y}| ^ p} \Bigr) ^ \frac{1}{p}
+dist = \left( \sum{|\vec{x} - \vec{y}| ^ p} \right) ^ \frac{1}{p}
 \end{gather}
 $$
 
