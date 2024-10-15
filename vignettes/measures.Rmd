@@ -18,10 +18,10 @@ This vignette explains how **proxyC** compute the similarity and distance measur
 ## Notation
 
 $$
-\begin{aligned}
-\vec{x} &= [x_i, x_{i + 1}, \dots, x_n] \\
-\vec{y} &= [y_i, y_{i + 1}, \dots, y_n]
-\end{aligned}
+\begin{gather}
+\vec{x} = [x_i, x_{i + 1}, \dots, x_n] \\
+\vec{y} = [y_i, y_{i + 1}, \dots, y_n]
+\end{gather}
 $$
 
 The length of the vector $n = ||\vec{x}||$, while $|\vec{x}|$ is the absolute values of the elements.
@@ -29,10 +29,10 @@ The length of the vector $n = ||\vec{x}||$, while $|\vec{x}|$ is the absolute va
 Operations on vectors are element-wise:
 
 $$
-\begin{aligned}
-\vec{z} &= \vec{x}\vec{y} \\
-n &= ||\vec{x}|| = ||\vec{y}|| =||\vec{z}||
-\end{aligned}
+\begin{gather}
+\vec{z} = \vec{x}\vec{y} \\
+n = ||\vec{x}|| = ||\vec{y}|| =||\vec{z}||
+\end{gather}
 $$
 
 Summation of the elements of vectors is written using sigma without specifying the range:
@@ -68,11 +68,11 @@ $$
 The values of $x$ and $y$ are Boolean for "jaccard".
 
 $$
-\begin{aligned}
-e &= \sum{\vec{x} \vec{y}} \\
-w &= \text{user-provided weight} \\
-simil &= \frac{e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w} - e}
-\end{aligned}
+\begin{gather}
+e = \sum{\vec{x} \vec{y}} \\
+w = \text{user-provided weight} \\
+simil = \frac{e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w} - e}
+\end{gather}
 $$
 
 ### Fuzzy Jaccard similarity ("fjaccard")
@@ -98,21 +98,23 @@ $$
 ### Hamann similarity ("hamann")
 
 $$
-\begin{aligned}
-e &= \sum{\vec{x} \vec{y}} \\
-n &= ||\vec{x}|| = ||\vec{y}|| \\
-u &= n - e \\
-simil &= \frac{e - u}{e + u}
-\end{aligned}
+\begin{gather}
+e = \sum{\vec{x} \vec{y}} \\
+n = ||\vec{x}|| = ||\vec{y}|| \\
+u = n - e \\
+simil = \frac{e - u}{e + u}
+\end{gather}
 $$
 
 ### Faith similarity ("faith")
 
 $$
+\begin{gather}
 t = \sum{[\vec{x} = 1][\vec{y} = 1]} \\
 f = \sum{[\vec{x} = 0][\vec{y} = 0]} \\
 n = ||\vec{x}|| = ||\vec{y}|| \\
 simil = \frac{t + 0.5 f}{n}
+\end{gather}
 $$
 
 ### Simple matching ("matching")
@@ -146,8 +148,10 @@ $$
 ### Minkowski distance ("minkowski")
 
 $$
+\begin{gather}
 p = \text{user-provided parameter} \\
 dist = \Bigl( \sum{|\vec{x} - \vec{y}| ^ p} \Bigr) ^ \frac{1}{p}
+\end{gather}
 $$
 
 ### Hamming distance ("hamming")
@@ -165,36 +169,44 @@ $$
 ### Chi-squared divergence ("chisquared")
 
 $$
+\begin{gather}
 O_{ij} = \text{augmented matrix from } \vec{x} \text{ and } \vec{y} \\
 E_{ij} = \text{matrix of expected count for } O_{ij} \\
-dist = \sum{\frac{(O_{ij} - E_{ij}) ^ 2}{ E_{ij}}} \\
+dist = \sum{\frac{(O_{ij} - E_{ij}) ^ 2}{ E_{ij}}}
+\end{gather}
 $$
 
 ### Kullback--Leibler divergence ("kullback")
 
 $$
+\begin{gather}
 \vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
 \vec{q} = \frac{\vec{y}}{\sum{\vec{y}}} \\
 dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}}
+\end{gather}
 $$
 
 ### Jeffreys divergence ("jeffreys")
 
 $$
+\begin{gather}
 \vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
 \vec{q} = \frac{\vec{y}}{\sum{\vec{y}}} \\
 dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}} + 
        \sum{\vec{p} \log_2{\frac{\vec{p}}{\vec{q}}}}
+\end{gather}
 $$
 
 ### Jensen-Shannon divergence ("jensen")
 
 $$
+\begin{gather}
 \vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
 \vec{q} = \frac{\vec{y}}{\sum{\vec{y}}} \\
 \vec{m} = \frac{1}{2} (\vec{p} + \vec{q}) \\
 dist = \frac{1}{2} \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{m}}}} + 
        \frac{1}{2} \sum{\vec{p} \log_2{\frac{\vec{p}}{\vec{m}}}}
+\end{gather}
 $$
 
 ## References
