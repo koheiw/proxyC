@@ -73,11 +73,11 @@ similarity and distance measures.</p>
 <div class="section level2">
 <h2 id="notation">Notation<a class="anchor" aria-label="anchor" href="#notation"></a>
 </h2>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mover><mi>x</mi><mo accent="true">→</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>x</mi><mi>i</mi></msub><mo>,</mo><msub><mi>x</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mover><mi>y</mi><mo accent="true">→</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>y</mi><mi>i</mi></msub><mo>,</mo><msub><mi>y</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
-\begin{aligned}
-\vec{x} &amp;= [x_i, x_{i + 1}, \dots, x_n] \\
-\vec{y} &amp;= [y_i, y_{i + 1}, \dots, y_n]
-\end{aligned}
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>x</mi><mo accent="true">→</mo></mover><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>x</mi><mi>i</mi></msub><mo>,</mo><msub><mi>x</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>y</mi><mo accent="true">→</mo></mover><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>y</mi><mi>i</mi></msub><mo>,</mo><msub><mi>y</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{gather}
+\vec{x} = [x_i, x_{i + 1}, \dots, x_n] \\
+\vec{y} = [y_i, y_{i + 1}, \dots, y_n]
+\end{gather}
 </annotation></semantics></math></p>
 <p>The length of the vector
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow></mrow><annotation encoding="application/x-tex">n = ||\vec{x}||</annotation></semantics></math>,
@@ -85,11 +85,11 @@ while
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">|</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">|</mo></mrow><annotation encoding="application/x-tex">|\vec{x}|</annotation></semantics></math>
 is the absolute values of the elements.</p>
 <p>Operations on vectors are element-wise:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mover><mi>z</mi><mo accent="true">→</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mover><mi>y</mi><mo accent="true">→</mo></mover></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>n</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>y</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>z</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
-\begin{aligned}
-\vec{z} &amp;= \vec{x}\vec{y} \\
-n &amp;= ||\vec{x}|| = ||\vec{y}|| =||\vec{z}||
-\end{aligned}
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>z</mi><mo accent="true">→</mo></mover><mo>=</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mover><mi>y</mi><mo accent="true">→</mo></mover></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>n</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>y</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>z</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{gather}
+\vec{z} = \vec{x}\vec{y} \\
+n = ||\vec{x}|| = ||\vec{y}|| =||\vec{z}||
+\end{gather}
 </annotation></semantics></math></p>
 <p>Summation of the elements of vectors is written using sigma without
 specifying the range:</p>
@@ -130,12 +130,12 @@ simil = \frac{Cov(\vec{x},\vec{y})}{Var(\vec{x}) Var(\vec{y})}
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
 are Boolean for “jaccard”.</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>e</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mo>∑</mo><mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>w</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mtext mathvariant="normal">user-provided weight</mtext></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>s</mi><mi>i</mi><mi>m</mi><mi>i</mi><mi>l</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mfrac><mi>e</mi><mrow><mo>∑</mo><msup><mover><mi>x</mi><mo accent="true">→</mo></mover><mi>w</mi></msup><mo>+</mo><mo>∑</mo><msup><mover><mi>y</mi><mo accent="true">→</mo></mover><mi>w</mi></msup><mo>−</mo><mi>e</mi></mrow></mfrac></mtd></mtr></mtable><annotation encoding="application/x-tex">
-\begin{aligned}
-e &amp;= \sum{\vec{x} \vec{y}} \\
-w &amp;= \text{user-provided weight} \\
-simil &amp;= \frac{e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w} - e}
-\end{aligned}
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>e</mi><mo>=</mo><mo>∑</mo><mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>w</mi><mo>=</mo><mtext mathvariant="normal">user-provided weight</mtext></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>s</mi><mi>i</mi><mi>m</mi><mi>i</mi><mi>l</mi><mo>=</mo><mfrac><mi>e</mi><mrow><mo>∑</mo><msup><mover><mi>x</mi><mo accent="true">→</mo></mover><mi>w</mi></msup><mo>+</mo><mo>∑</mo><msup><mover><mi>y</mi><mo accent="true">→</mo></mover><mi>w</mi></msup><mo>−</mo><mi>e</mi></mrow></mfrac></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{gather}
+e = \sum{\vec{x} \vec{y}} \\
+w = \text{user-provided weight} \\
+simil = \frac{e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w} - e}
+\end{gather}
 </annotation></semantics></math></p>
 </div>
 <div class="section level3">
@@ -168,24 +168,26 @@ simil = \frac{2 e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w}}
 <div class="section level3">
 <h3 id="hamann-similarity-hamann">Hamann similarity (“hamann”)<a class="anchor" aria-label="anchor" href="#hamann-similarity-hamann"></a>
 </h3>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>e</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mo>∑</mo><mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>n</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>y</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>u</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>n</mi><mo>−</mo><mi>e</mi></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>s</mi><mi>i</mi><mi>m</mi><mi>i</mi><mi>l</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mfrac><mrow><mi>e</mi><mo>−</mo><mi>u</mi></mrow><mrow><mi>e</mi><mo>+</mo><mi>u</mi></mrow></mfrac></mtd></mtr></mtable><annotation encoding="application/x-tex">
-\begin{aligned}
-e &amp;= \sum{\vec{x} \vec{y}} \\
-n &amp;= ||\vec{x}|| = ||\vec{y}|| \\
-u &amp;= n - e \\
-simil &amp;= \frac{e - u}{e + u}
-\end{aligned}
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>e</mi><mo>=</mo><mo>∑</mo><mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>n</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>y</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>u</mi><mo>=</mo><mi>n</mi><mo>−</mo><mi>e</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>s</mi><mi>i</mi><mi>m</mi><mi>i</mi><mi>l</mi><mo>=</mo><mfrac><mrow><mi>e</mi><mo>−</mo><mi>u</mi></mrow><mrow><mi>e</mi><mo>+</mo><mi>u</mi></mrow></mfrac></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{gather}
+e = \sum{\vec{x} \vec{y}} \\
+n = ||\vec{x}|| = ||\vec{y}|| \\
+u = n - e \\
+simil = \frac{e - u}{e + u}
+\end{gather}
 </annotation></semantics></math></p>
 </div>
 <div class="section level3">
 <h3 id="faith-similarity-faith">Faith similarity (“faith”)<a class="anchor" aria-label="anchor" href="#faith-similarity-faith"></a>
 </h3>
-<p><span class="math display">$$
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>t</mi><mo>=</mo><mo>∑</mo><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mover><mi>y</mi><mo accent="true">→</mo></mover><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow></mrow></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>f</mi><mo>=</mo><mo>∑</mo><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mover><mi>y</mi><mo accent="true">→</mo></mover><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">]</mo></mrow></mrow></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>n</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>y</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>s</mi><mi>i</mi><mi>m</mi><mi>i</mi><mi>l</mi><mo>=</mo><mfrac><mrow><mi>t</mi><mo>+</mo><mn>0.5</mn><mi>f</mi></mrow><mi>n</mi></mfrac></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{gather}
 t = \sum{[\vec{x} = 1][\vec{y} = 1]} \\
 f = \sum{[\vec{x} = 0][\vec{y} = 0]} \\
 n = ||\vec{x}|| = ||\vec{y}|| \\
 simil = \frac{t + 0.5 f}{n}
-$$</span></p>
+\end{gather}
+</annotation></semantics></math></p>
 </div>
 <div class="section level3">
 <h3 id="simple-matching-matching">Simple matching (“matching”)<a class="anchor" aria-label="anchor" href="#simple-matching-matching"></a>
@@ -230,8 +232,10 @@ dist = \sum{\sqrt{\vec{x}^2 + \vec{y}^2}}
 <h3 id="minkowski-distance-minkowski">Minkowski distance (“minkowski”)<a class="anchor" aria-label="anchor" href="#minkowski-distance-minkowski"></a>
 </h3>
 <p><span class="math display">$$
+\begin{gather}
 p = \text{user-provided parameter} \\
 dist = \Bigl( \sum{|\vec{x} - \vec{y}| ^ p} \Bigr) ^ \frac{1}{p}
+\end{gather}
 $$</span></p>
 </div>
 <div class="section level3">
@@ -251,41 +255,49 @@ dist = \max{\vec{x} - \vec{y}}
 <div class="section level3">
 <h3 id="chi-squared-divergence-chisquared">Chi-squared divergence (“chisquared”)<a class="anchor" aria-label="anchor" href="#chi-squared-divergence-chisquared"></a>
 </h3>
-<p><span class="math display">$$
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mrow><mtext mathvariant="normal">augmented matrix from </mtext><mspace width="0.333em"></mspace></mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><mover><mi>y</mi><mo accent="true">→</mo></mover></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>E</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mrow><mtext mathvariant="normal">matrix of expected count for </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo>=</mo><mo>∑</mo><mfrac><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>−</mo><msub><mi>E</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><msub><mi>E</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mfrac></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{gather}
 O_{ij} = \text{augmented matrix from } \vec{x} \text{ and } \vec{y} \\
 E_{ij} = \text{matrix of expected count for } O_{ij} \\
-dist = \sum{\frac{(O_{ij} - E_{ij}) ^ 2}{ E_{ij}}} \\
-$$</span></p>
+dist = \sum{\frac{(O_{ij} - E_{ij}) ^ 2}{ E_{ij}}}
+\end{gather}
+</annotation></semantics></math></p>
 </div>
 <div class="section level3">
 <h3 id="kullbackleibler-divergence-kullback">Kullback–Leibler divergence (“kullback”)<a class="anchor" aria-label="anchor" href="#kullbackleibler-divergence-kullback"></a>
 </h3>
-<p><span class="math display">$$
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>p</mi><mo accent="true">→</mo></mover><mo>=</mo><mfrac><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo>∑</mo><mover><mi>x</mi><mo accent="true">→</mo></mover></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>q</mi><mo accent="true">→</mo></mover><mo>=</mo><mfrac><mover><mi>y</mi><mo accent="true">→</mo></mover><mrow><mo>∑</mo><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo>=</mo><mo>∑</mo><mrow><mover><mi>q</mi><mo accent="true">→</mo></mover><msub><mo>log</mo><mn>2</mn></msub><mfrac><mover><mi>q</mi><mo accent="true">→</mo></mover><mover><mi>p</mi><mo accent="true">→</mo></mover></mfrac></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{gather}
 \vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
 \vec{q} = \frac{\vec{y}}{\sum{\vec{y}}} \\
 dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}}
-$$</span></p>
+\end{gather}
+</annotation></semantics></math></p>
 </div>
 <div class="section level3">
 <h3 id="jeffreys-divergence-jeffreys">Jeffreys divergence (“jeffreys”)<a class="anchor" aria-label="anchor" href="#jeffreys-divergence-jeffreys"></a>
 </h3>
-<p><span class="math display">$$
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>p</mi><mo accent="true">→</mo></mover><mo>=</mo><mfrac><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo>∑</mo><mover><mi>x</mi><mo accent="true">→</mo></mover></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>q</mi><mo accent="true">→</mo></mover><mo>=</mo><mfrac><mover><mi>y</mi><mo accent="true">→</mo></mover><mrow><mo>∑</mo><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo>=</mo><mo>∑</mo><mrow><mover><mi>q</mi><mo accent="true">→</mo></mover><msub><mo>log</mo><mn>2</mn></msub><mfrac><mover><mi>q</mi><mo accent="true">→</mo></mover><mover><mi>p</mi><mo accent="true">→</mo></mover></mfrac></mrow><mo>+</mo><mo>∑</mo><mrow><mover><mi>p</mi><mo accent="true">→</mo></mover><msub><mo>log</mo><mn>2</mn></msub><mfrac><mover><mi>p</mi><mo accent="true">→</mo></mover><mover><mi>q</mi><mo accent="true">→</mo></mover></mfrac></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{gather}
 \vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
 \vec{q} = \frac{\vec{y}}{\sum{\vec{y}}} \\
-dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}} +
+dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}} + 
        \sum{\vec{p} \log_2{\frac{\vec{p}}{\vec{q}}}}
-$$</span></p>
+\end{gather}
+</annotation></semantics></math></p>
 </div>
 <div class="section level3">
 <h3 id="jensen-shannon-divergence-jensen">Jensen-Shannon divergence (“jensen”)<a class="anchor" aria-label="anchor" href="#jensen-shannon-divergence-jensen"></a>
 </h3>
-<p><span class="math display">$$
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>p</mi><mo accent="true">→</mo></mover><mo>=</mo><mfrac><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo>∑</mo><mover><mi>x</mi><mo accent="true">→</mo></mover></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>q</mi><mo accent="true">→</mo></mover><mo>=</mo><mfrac><mover><mi>y</mi><mo accent="true">→</mo></mover><mrow><mo>∑</mo><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>m</mi><mo accent="true">→</mo></mover><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>p</mi><mo accent="true">→</mo></mover><mo>+</mo><mover><mi>q</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>∑</mo><mrow><mover><mi>q</mi><mo accent="true">→</mo></mover><msub><mo>log</mo><mn>2</mn></msub><mfrac><mover><mi>q</mi><mo accent="true">→</mo></mover><mover><mi>m</mi><mo accent="true">→</mo></mover></mfrac></mrow><mo>+</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>∑</mo><mrow><mover><mi>p</mi><mo accent="true">→</mo></mover><msub><mo>log</mo><mn>2</mn></msub><mfrac><mover><mi>p</mi><mo accent="true">→</mo></mover><mover><mi>m</mi><mo accent="true">→</mo></mover></mfrac></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{gather}
 \vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
 \vec{q} = \frac{\vec{y}}{\sum{\vec{y}}} \\
 \vec{m} = \frac{1}{2} (\vec{p} + \vec{q}) \\
-dist = \frac{1}{2} \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{m}}}} +
+dist = \frac{1}{2} \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{m}}}} + 
        \frac{1}{2} \sum{\vec{p} \log_2{\frac{\vec{p}}{\vec{m}}}}
-$$</span></p>
+\end{gather}
+</annotation></semantics></math></p>
 </div>
 </div>
 <div class="section level2">
