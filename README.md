@@ -84,7 +84,7 @@ bm1 <- microbenchmark(
 autoplot(bm1)
 ```
 
-![](docs/images/unnamed-chunk-5-1.png)<!-- -->
+![](man/figures/unnamed-chunk-5-1.png)<!-- -->
 
 ## Cosine similarity greater than 0.9
 
@@ -100,7 +100,7 @@ bm2 <- microbenchmark(
 autoplot(bm2)
 ```
 
-![](docs/images/unnamed-chunk-6-1.png)<!-- -->
+![](man/figures/unnamed-chunk-6-1.png)<!-- -->
 
 Flooring by `min_simil` makes the resulting object much smaller.
 
@@ -108,7 +108,7 @@ Flooring by `min_simil` makes the resulting object much smaller.
 proxyC::simil(sm10k, margin = 2, method = "cosine") %>% 
   object.size() %>% 
   print(units = "MB")
-## 762.9 Mb
+## 763 Mb
 proxyC::simil(sm10k, margin = 2, method = "cosine", min_simil = 0.9) %>% 
   object.size() %>% 
   print(units = "MB")
@@ -128,4 +128,4 @@ bm3 <- microbenchmark(
 autoplot(bm3)
 ```
 
-![](docs/images/unnamed-chunk-8-1.png)<!-- -->
+![](man/figures/unnamed-chunk-8-1.png)<!-- -->
