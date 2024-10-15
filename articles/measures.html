@@ -73,21 +73,24 @@ similarity and distance measures.</p>
 <div class="section level2">
 <h2 id="notation">Notation<a class="anchor" aria-label="anchor" href="#notation"></a>
 </h2>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mover><mi>x</mi><mo accent="true">→</mo></mover><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>x</mi><mi>i</mi></msub><mo>,</mo><msub><mi>x</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mover><mi>y</mi><mo accent="true">→</mo></mover><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>y</mi><mi>i</mi></msub><mo>,</mo><msub><mi>y</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mover><mi>x</mi><mo accent="true">→</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>x</mi><mi>i</mi></msub><mo>,</mo><msub><mi>x</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mover><mi>y</mi><mo accent="true">→</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>y</mi><mi>i</mi></msub><mo>,</mo><msub><mi>y</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{aligned}
-\vec{x} = [x_i, x_{i + 1}, \dots, x_n] \\
-\vec{y} = [y_i, y_{i + 1}, \dots, y_n]
+\vec{x} &amp;= [x_i, x_{i + 1}, \dots, x_n] \\
+\vec{y} &amp;= [y_i, y_{i + 1}, \dots, y_n]
 \end{aligned}
-</annotation></semantics></math> The length of the vector
+</annotation></semantics></math></p>
+<p>The length of the vector
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow></mrow><annotation encoding="application/x-tex">n = ||\vec{x}||</annotation></semantics></math>,
 while
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">|</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">|</mo></mrow><annotation encoding="application/x-tex">|\vec{x}|</annotation></semantics></math>
 is the absolute values of the elements.</p>
 <p>Operations on vectors are element-wise:</p>
-<p><span class="math display">$$
-\vec{z} = \vec{x}\vec{y} \\
-n = ||\vec{x}|| = ||\vec{y}|| =||\vec{z}||
-$$</span></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mover><mi>z</mi><mo accent="true">→</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mover><mi>y</mi><mo accent="true">→</mo></mover></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>n</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>y</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>z</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+\vec{z} &amp;= \vec{x}\vec{y} \\
+n &amp;= ||\vec{x}|| = ||\vec{y}|| =||\vec{z}||
+\end{aligned}
+</annotation></semantics></math></p>
 <p>Summation of the elements of vectors is written using sigma without
 specifying the range:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">
@@ -127,11 +130,13 @@ simil = \frac{Cov(\vec{x},\vec{y})}{Var(\vec{x}) Var(\vec{y})}
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
 are Boolean for “jaccard”.</p>
-<p><span class="math display">$$
-e = \sum{\vec{x} \vec{y}} \\
-w = \text{user-provided weight} \\
-simil = \frac{e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w} - e}
-$$</span></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>e</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mo>∑</mo><mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>w</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mtext mathvariant="normal">user-provided weight</mtext></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>s</mi><mi>i</mi><mi>m</mi><mi>i</mi><mi>l</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mfrac><mi>e</mi><mrow><mo>∑</mo><msup><mover><mi>x</mi><mo accent="true">→</mo></mover><mi>w</mi></msup><mo>+</mo><mo>∑</mo><msup><mover><mi>y</mi><mo accent="true">→</mo></mover><mi>w</mi></msup><mo>−</mo><mi>e</mi></mrow></mfrac></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+e &amp;= \sum{\vec{x} \vec{y}} \\
+w &amp;= \text{user-provided weight} \\
+simil &amp;= \frac{e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w} - e}
+\end{aligned}
+</annotation></semantics></math></p>
 </div>
 <div class="section level3">
 <h3 id="fuzzy-jaccard-similarity-fjaccard">Fuzzy Jaccard similarity (“fjaccard”)<a class="anchor" aria-label="anchor" href="#fuzzy-jaccard-similarity-fjaccard"></a>
@@ -152,21 +157,25 @@ simil = \frac{\sum{min(\vec{x}, \vec{y})}}{\sum{max(\vec{x}, \vec{y})}}
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
 are Boolean for “dice”.</p>
-<p><span class="math display">$$
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>e</mi><mo>=</mo><mo>∑</mo><mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>w</mi><mo>=</mo><mtext mathvariant="normal">user-provided weight</mtext></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>s</mi><mi>i</mi><mi>m</mi><mi>i</mi><mi>l</mi><mo>=</mo><mfrac><mrow><mn>2</mn><mi>e</mi></mrow><mrow><mo>∑</mo><msup><mover><mi>x</mi><mo accent="true">→</mo></mover><mi>w</mi></msup><mo>+</mo><mo>∑</mo><msup><mover><mi>y</mi><mo accent="true">→</mo></mover><mi>w</mi></msup></mrow></mfrac></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{gather}
 e = \sum{\vec{x} \vec{y}} \\
 w = \text{user-provided weight} \\
 simil = \frac{2 e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w}}
-$$</span></p>
+\end{gather}
+</annotation></semantics></math></p>
 </div>
 <div class="section level3">
 <h3 id="hamann-similarity-hamann">Hamann similarity (“hamann”)<a class="anchor" aria-label="anchor" href="#hamann-similarity-hamann"></a>
 </h3>
-<p><span class="math display">$$
-e = \sum{\vec{x} \vec{y}} \\
-n = ||\vec{x}|| = ||\vec{y}|| \\
-u = n - e \\
-simil = \frac{e - u}{e + u}
-$$</span></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>e</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mo>∑</mo><mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>n</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>y</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>u</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>n</mi><mo>−</mo><mi>e</mi></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>s</mi><mi>i</mi><mi>m</mi><mi>i</mi><mi>l</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mfrac><mrow><mi>e</mi><mo>−</mo><mi>u</mi></mrow><mrow><mi>e</mi><mo>+</mo><mi>u</mi></mrow></mfrac></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+e &amp;= \sum{\vec{x} \vec{y}} \\
+n &amp;= ||\vec{x}|| = ||\vec{y}|| \\
+u &amp;= n - e \\
+simil &amp;= \frac{e - u}{e + u}
+\end{aligned}
+</annotation></semantics></math></p>
 </div>
 <div class="section level3">
 <h3 id="faith-similarity-faith">Faith similarity (“faith”)<a class="anchor" aria-label="anchor" href="#faith-similarity-faith"></a>
