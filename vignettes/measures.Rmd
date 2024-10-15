@@ -19,17 +19,20 @@ This vignette explains how **proxyC** compute the similarity and distance measur
 
 $$
 \begin{aligned}
-\vec{x} = [x_i, x_{i + 1}, \dots, x_n] \\
-\vec{y} = [y_i, y_{i + 1}, \dots, y_n]
+\vec{x} &= [x_i, x_{i + 1}, \dots, x_n] \\
+\vec{y} &= [y_i, y_{i + 1}, \dots, y_n]
 \end{aligned}
 $$
+
 The length of the vector $n = ||\vec{x}||$, while $|\vec{x}|$ is the absolute values of the elements.
 
 Operations on vectors are element-wise:
 
 $$
-\vec{z} = \vec{x}\vec{y} \\
-n = ||\vec{x}|| = ||\vec{y}|| =||\vec{z}||
+\begin{aligned}
+\vec{z} &= \vec{x}\vec{y} \\
+n &= ||\vec{x}|| = ||\vec{y}|| =||\vec{z}||
+\end{aligned}
 $$
 
 Summation of the elements of vectors is written using sigma without specifying the range:
@@ -65,9 +68,11 @@ $$
 The values of $x$ and $y$ are Boolean for "jaccard".
 
 $$
-e = \sum{\vec{x} \vec{y}} \\
-w = \text{user-provided weight} \\
-simil = \frac{e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w} - e}
+\begin{aligned}
+e &= \sum{\vec{x} \vec{y}} \\
+w &= \text{user-provided weight} \\
+simil &= \frac{e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w} - e}
+\end{aligned}
 $$
 
 ### Fuzzy Jaccard similarity ("fjaccard")
@@ -83,18 +88,22 @@ $$
 The values of $x$ and $y$ are Boolean for "dice".
 
 $$
+\begin{gather}
 e = \sum{\vec{x} \vec{y}} \\
 w = \text{user-provided weight} \\
 simil = \frac{2 e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w}}
+\end{gather}
 $$
 
 ### Hamann similarity ("hamann")
 
 $$
-e = \sum{\vec{x} \vec{y}} \\
-n = ||\vec{x}|| = ||\vec{y}|| \\
-u = n - e \\
-simil = \frac{e - u}{e + u}
+\begin{aligned}
+e &= \sum{\vec{x} \vec{y}} \\
+n &= ||\vec{x}|| = ||\vec{y}|| \\
+u &= n - e \\
+simil &= \frac{e - u}{e + u}
+\end{aligned}
 $$
 
 ### Faith similarity ("faith")
