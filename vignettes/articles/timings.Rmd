@@ -38,7 +38,7 @@ compute_timings_for_euclidean <- function(
 
   microbenchmark(
     # Disabled due to long execution times
-    # "proxy::dist" = proxy::dist(dense_mat, method = "euclidean"),
+    # "proxy::dist" = proxy::dist(dense_mat, method = "euclidean", diag = TRUE),
     "proxyC::dist" = proxyC::dist(sparse_mat, method = "euclidean", diag = TRUE),
     "Rfast::Dist" = Rfast::Dist(dense_mat, method = "euclidean"),
     "stats::dist" = dist(dense_mat, method = "euclidean"),
@@ -97,7 +97,7 @@ compute_timings_for_correlation <- function(
     "stats::cor" = cor(dense_mat, method = "pearson"),
     "Rfast::cora" = Rfast::cora(dense_mat, large = TRUE),
     # Disabled due to long execution times
-    # "proxy::simil" = proxy::simil(dense_mat, margin = 2, method = "correlation"),
+    # "proxy::simil" = proxy::simil(dense_mat, margin = 2, method = "correlation", diag = TRUE),
     "proxyC::simil" = proxyC::simil(sparse_mat, margin = 2, method = "correlation", diag = TRUE),
     times = times
   )
