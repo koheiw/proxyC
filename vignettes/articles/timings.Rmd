@@ -1,0 +1,129 @@
+---
+title: Comparison of Execution Times
+author: Robrecht Cannoodt
+date: "`r Sys.Date()`"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+proxyC is optimized for computing proximity between rows or columns of large sparse matrices.
+
+In this vignette, we compare the execution types of proxyC with other R packages for a variable
+sparsity level.
+
+## Euclidean
+
+```{r}
+require(Matrix, quietly = TRUE)
+require(microbenchmark, quietly = TRUE)
+require(ggplot2, quietly = TRUE)
+
+n_rows <- 1000L
+n_cols <- 1000L
+
+# helper function to compute timings
+compute_timings_for_euclidean <- function(
+  n_rows = 1000L,
+  n_cols = 1000L,
+  density = 0.1,
+  times = 10L
+) {
+  sparse_mat <- rsparsematrix(n_rows, n_cols, density)
+  dense_mat <- as.matrix(sparse_mat)
+
+  microbenchmark(
+    # Disabled due to long execution times
+    # "proxy::dist" = proxy::dist(dense_mat, method = "euclidean"),
+    "proxyC::dist" = proxyC::dist(sparse_mat, method = "euclidean"),
+    "Rfast::Dist" = Rfast::Dist(dense_mat, method = "euclidean"),
+    "stats::dist" = dist(dense_mat, method = "euclidean"),
+    "parallelDist::parDist" = parallelDist::parDist(dense_mat, method = "euclidean"),
+    # Force conversion to matrix because distances::distances uses lazy evaluation
+    "distances::distances" = as.matrix(distances::distances(dense_mat)),
+    times = times
+  )
+}
+
+```
+
+
+### `r n_rows` rows, `r n_cols` columns, 95% sparsity
+
+```{r euclSparsity95, fig.width=7, fig.height=4}
+bm <- compute_timings_for_euclidean(n_rows = n_rows, n_cols = n_cols, density = 0.05)
+
+autoplot(bm)
+```
+
+### `r n_rows` rows, `r n_cols` columns, 50% sparsity
+
+```{r euclSparsity50, fig.width=7, fig.height=4}
+bm <- compute_timings_for_euclidean(n_rows = n_rows, n_cols = n_cols, density = 0.5)
+
+autoplot(bm)
+```
+
+### `r n_rows` rows, `r n_cols` columns, 5% sparsity
+
+```{r euclSparsity5, fig.width=7, fig.height=4}
+bm <- compute_timings_for_euclidean(n_rows = n_rows, n_cols = n_cols, density = 0.95)
+
+autoplot(bm)
+```
+
+## Pearson correlation
+
+```{r}
+n_rows <- 1000L
+n_cols <- 1000L
+
+# helper function to compute timings
+compute_timings_for_correlation <- function(
+  n_rows = 1000L,
+  n_cols = 1000L,
+  density = 0.1,
+  times = 10L
+) {
+  sparse_mat <- rsparsematrix(n_rows, n_cols, density)
+  dense_mat <- as.matrix(sparse_mat)
+
+  microbenchmark(
+    "coop::pcor" = coop::pcor(dense_mat),
+    "stats::cor" = cor(dense_mat, method = "pearson"),
+    "Rfast::cora" = Rfast::cora(dense_mat, large = TRUE),
+    # Disabled due to long execution times
+    # "proxy::simil" = proxy::simil(dense_mat, margin = 2, method = "correlation"),
+    "proxyC::simil" = proxyC::simil(sparse_mat, margin = 2, method = "correlation"),
+    times = times
+  )
+}
+```
+
+### `r n_rows` rows, `r n_cols` columns, 95% sparsity
+
+```{r corSparsity95, fig.width=7, fig.height=4}
+bm <- compute_timings_for_correlation(n_rows = n_rows, n_cols = n_cols, density = 0.05)
+
+autoplot(bm)
+```
+
+### `r n_rows` rows, `r n_cols` columns, 50% sparsity
+
+```{r corSparsity50, fig.width=7, fig.height=4}
+bm <- compute_timings_for_correlation(n_rows = n_rows, n_cols = n_cols, density = 0.5)
+
+autoplot(bm)
+```
+
+### `r n_rows` rows, `r n_cols` columns, 5% sparsity
+
+```{r corSparsity5, fig.width=7, fig.height=4}
+bm <- compute_timings_for_correlation(n_rows = n_rows, n_cols = n_cols, density = 0.95)
+
+autoplot(bm)
+```
