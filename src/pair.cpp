@@ -153,7 +153,9 @@ void proxy_pair(const uword i,
     } else {
         simils.reserve(ncol);
     }
+    arma::sp_vec m = mask.col(i);
     for (uword j = 0; j < ncol; j++) {
+        if (use_mask && m[j] == 0) continue;
         if (diag && j != i) continue;
         if (symm && j > i) continue;
         col_j = mt1.col(j);
@@ -217,8 +219,6 @@ void proxy_pair(const uword i,
         //Rcout << "simil=" << simil << "\n";
         simils.push_back(simil);
     }
-    if (use_mask)
-        simils = keep_masked(simils, mask.col(i));
     simils = round(simils, digits);
     double l = get_limit(simils, rank, limit);
     for (std::size_t k = 0; k < simils.size(); k++) {

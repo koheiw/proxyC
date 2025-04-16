@@ -112,10 +112,10 @@ namespace proxyc{
 
     inline std::vector<double> keep_masked(std::vector<double> simils,
                                            arma::sp_vec mask) {
-        std::size_t i = 0;
+        std::size_t j = 0;
         for (auto it = simils.begin() ; it != simils.end(); ++it) {
-            if (mask[i] == 0) *it = 0;
-            i++;
+            if (mask[j] == 0) *it = 0;
+            j++;
         }
         return simils;
     }
