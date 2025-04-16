@@ -13,6 +13,8 @@
 #' @param margin integer indicating margin of similarity/distance computation. 1
 #'   indicates rows or 2 indicates columns.
 #' @param method method to compute similarity or distance
+#' @param mask \link{matrix} or \link{Matrix} object indicating the values to be
+#'   recorded. The shape of the matrix must be the same as the resulting matrix.
 #' @param min_simil the minimum similarity value to be recorded.
 #' @param rank an integer value specifying top-n most similarity values to be
 #'   recorded.
@@ -84,6 +86,7 @@
 simil <- function(x, y = NULL, margin = 1,
                   method = c("cosine", "correlation", "jaccard", "ejaccard", "fjaccard",
                              "dice", "edice", "hamann", "faith", "simple matching"),
+                  mask = NULL,
                   min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE,
                   use_nan = NULL, sparse = TRUE, digits = 14) {
 
@@ -105,6 +108,7 @@ simil <- function(x, y = NULL, margin = 1,
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                             "manhattan", "maximum", "canberra", "minkowski", "hamming"),
+                 mask = NULL,
                  p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, use_nan = NULL,
                  sparse = TRUE, digits = 14) {
 
@@ -120,6 +124,7 @@ proxy <- function(x, y = NULL, margin = 1,
                              "dice", "edice", "hamann", "simple matching", "faith",
                              "euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                              "manhattan", "maximum", "canberra", "minkowski", "hamming"),
+                  mask = NULL,
                   p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE,
                   diag = FALSE, use_nan = NULL, sparse = TRUE, digits = 14) {
 
@@ -145,6 +150,15 @@ proxy <- function(x, y = NULL, margin = 1,
     } else {
         if (nrow(x) != nrow(y))
             stop("x and y must have the same number of rows")
+    }
+    if (is.null(mask)) {
+        mask <- as(Matrix(nrow = 0, ncol = 0, sparse = TRUE), "dMatrix")
+        use_mask <- FALSE
+    } else {
+        mask <- as(as(mask, "lMatrix"), "dMatrix")
+        use_mask <- TRUE
+        if (nrow(mask) != ncol(x) || ncol(mask) != ncol(y))
+            stop(sprintf("The shape of mask must be %d x %d.", ncol(x), ncol(y)))
     }
     if (is.null(min_proxy))
         min_proxy <- -1.0
@@ -199,12 +213,14 @@ proxy <- function(x, y = NULL, margin = 1,
         result <- cpp_linear(
             mt1 = x,
             mt2 = y,
+            mask = mask,
             method = match(method, c("cosine", "correlation", "euclidean")),
             rank = rank,
             limit = min_proxy,
             symm = symm,
             drop0 = drop0,
             use_nan = use_nan,
+            use_mask = use_mask,
             sparse = sparse,
             digits = digits,
             thread = getThreads()
@@ -213,6 +229,7 @@ proxy <- function(x, y = NULL, margin = 1,
         result <- cpp_pair(
             mt1 = x,
             mt2 = y,
+            mask = mask,
             method = match(method, c("cosine", "correlation", "ejaccard", "edice",
                                      "hamann", "simple matching", "faith",
                                      "euclidean", "chisquared", "kullback", "manhattan",
@@ -226,6 +243,7 @@ proxy <- function(x, y = NULL, margin = 1,
             diag = diag,
             drop0 = drop0,
             use_nan = use_nan,
+            use_mask = use_mask,
             sparse = sparse,
             digits = digits,
             thread = getThreads()
