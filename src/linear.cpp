@@ -31,12 +31,14 @@ rowvec mean(const sp_mat& mt) {
 }
 
 void proxy_linear(const uword i,
-                  const sp_mat& mt1t, const sp_mat& mt2, Triplets& simil_tri,
+                  const sp_mat& mt1t, const sp_mat& mt2, const sp_mat& mask,
+                  Triplets& simil_tri,
                   const rowvec& square1, const rowvec& center1,
                   const rowvec& square2, const rowvec& center2,
                   const int method,
                   const unsigned int rank, const double limit, const bool symm,
-                  const bool drop0, const bool use_nan, const int digits) {
+                  const bool drop0, const bool use_nan, const bool use_mask,
+                  const int digits) {
 
     uword nrow = mt1t.n_rows;
     uword ncol = mt1t.n_cols;
@@ -58,6 +60,8 @@ void proxy_linear(const uword i,
             simils = to_vector(sqrt(trans(mt1t * mt2.col(i)) * -2 + square1 + square2[i]));
             break;
         }
+        if (use_mask)
+            simils = keep_masked(simils, mask.col(i));
         simils = round(simils, digits);
         double l = get_limit(simils, rank, limit);
         for (std::size_t k = 0; k < simils.size(); k++) {
@@ -73,18 +77,23 @@ void proxy_linear(const uword i,
 // [[Rcpp::export]]
 S4 cpp_linear(arma::sp_mat& mt1,
               arma::sp_mat& mt2,
+              arma::sp_mat& mask,
               const int method,
               unsigned int rank,
               const double limit = -1.0,
               bool symm = false,
               const bool drop0 = false,
               const bool use_nan = false,
+              const bool use_mask = false,
               const bool sparse = true,
               const int digits = 14,
               const int thread = -1) {
 
     if (mt1.n_rows != mt2.n_rows)
         throw std::range_error("Invalid matrix objects");
+
+    if (use_mask & (mask.n_rows != mt1.n_cols || mask.n_cols != mt2.n_cols))
+        throw std::range_error("Invalid mask object");
 
     uword ncol1 = mt1.n_cols;
     uword ncol2 = mt2.n_cols;
@@ -122,17 +131,17 @@ S4 cpp_linear(arma::sp_mat& mt1,
     arena.execute([&]{
         tbb::parallel_for(tbb::blocked_range<int>(0, I), [&](tbb::blocked_range<int> r) {
             for (int i = r.begin(); i < r.end(); i++) {
-                proxy_linear(i, mt1, mt2, simil_tri,
+                proxy_linear(i, mt1, mt2, mask, simil_tri,
                              square1, center1, square2, center2,
-                             method, rank, limit, symm, drop0, use_nan, digits);
+                             method, rank, limit, symm, drop0, use_nan, use_mask, digits);
             }
         });
     });
 # else
     for (std::size_t i = 0; i < I; i++) {
-        proxy_linear(i, mt1, mt2, simil_tri,
+        proxy_linear(i, mt1, mt2, mask, simil_tri,
                      square1, center1, square2, center2,
-                     method, rank, limit, symm, drop0, use_nan, digits);
+                     method, rank, limit, symm, drop0, use_nan, use_mask, digits);
     }
 # endif
 
@@ -152,9 +161,11 @@ NumericVector cpp_nz(arma::sp_mat& mt) {
 }
 
 /***R
-mt <- Matrix::rsparsematrix(100, 100, 0.01)
+mt1 <- Matrix::rsparsematrix(100, 10, 1)
+mt2 <- Matrix::rsparsematrix(100, 20, 1)
+mask <- Matrix::rsparsematrix(10, 20, 0.1)
 system.time(
-    out <- cpp_linear(mt, mt, 1, 100, symm = TRUE)
+    out <- cpp_linear(mt1, mt2, mask, 1, 100, symm = TRUE, use_mask = TRUE, drop0 = TRUE)
 )
 */
 
