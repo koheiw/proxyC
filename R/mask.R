@@ -16,7 +16,7 @@
 mask <- function(x, y) {
 
     if (!identical(class(x), class(y)))
-        stop("x and y must be the same type of vector")
+        stop("x and y must be the same type of vectors")
     z <- union(x, y)
 
     result <- cpp_mask(match(x, z), match(y, z))

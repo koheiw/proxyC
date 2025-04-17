@@ -112,7 +112,7 @@ dist <- function(x, y = NULL, margin = 1,
                  sparse = TRUE, digits = 14) {
 
     method <- match.arg(method)
-    proxy(x, y, margin, method, p = p, smooth = smooth, drop0 = drop0,
+    proxy(x, y, margin, method, mask = NULL, p = p, smooth = smooth, drop0 = drop0,
           diag = diag, use_nan = use_nan, sparse = sparse, digits = digits)
 }
 
