@@ -151,10 +151,10 @@ proxy <- function(x, y = NULL, margin = 1,
             stop("x and y must have the same number of rows")
     }
     if (is.null(mask)) {
-        mask <- as(Matrix(nrow = 0, ncol = 0, sparse = TRUE), "dMatrix")
+        mask <- as(Matrix(numeric(), nrow = 0, ncol = 0, sparse = TRUE), "CsparseMatrix")
         use_mask <- FALSE
     } else {
-        mask <- as(as(mask, "lMatrix"), "dMatrix")
+        mask <- as(as(as(mask, "CsparseMatrix"), "generalMatrix"), "dMatrix")
         use_mask <- TRUE
         if (nrow(mask) != ncol(x) || ncol(mask) != ncol(y))
             stop(sprintf("The shape of mask must be %d x %d.", ncol(x), ncol(y)))
