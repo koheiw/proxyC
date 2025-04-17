@@ -153,8 +153,14 @@ void proxy_pair(const uword i,
     } else {
         simils.reserve(ncol);
     }
+    colvec mask_i;
+    if (use_mask) {
+        mask_i = mask.col(i);
+    } else {
+        mask_i.ones(nrow);
+    }
     for (uword j = 0; j < ncol; j++) {
-        if (use_mask && mask(j, i) == 0) {
+        if (use_mask && mask_i.at(j) == 0) {
             simils.push_back(0);
             continue;
         };
@@ -298,7 +304,7 @@ mt1 <- Matrix::rsparsematrix(100, 10, 1)
 mt2 <- Matrix::rsparsematrix(100, 20, 1)
 mask <- Matrix::rsparsematrix(10, 20, 0.1)
 system.time(
-    out <- cpp_pair(mt1, mt2, mask, 1, 100, symm = TRUE, use_mask = TRUE, drop0 = TRUE)
+    out <- cpp_pair(mt1, mt2, 1, mask, 100, symm = TRUE, use_mask = TRUE, drop0 = TRUE)
 )
 
 */
