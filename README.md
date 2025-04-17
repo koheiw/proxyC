@@ -84,7 +84,7 @@ bm1 <- microbenchmark(
 autoplot(bm1)
 ```
 
-![](man/images/unnamed-chunk-5-1.png)<!-- -->
+![](man/figures/unnamed-chunk-5-1.png)<!-- -->
 
 ## Cosine similarity greater than 0.9
 
@@ -100,7 +100,7 @@ bm2 <- microbenchmark(
 autoplot(bm2)
 ```
 
-![](man/images/unnamed-chunk-6-1.png)<!-- -->
+![](man/figures/unnamed-chunk-6-1.png)<!-- -->
 
 Flooring by `min_simil` makes the resulting object much smaller.
 
@@ -128,4 +128,4 @@ bm3 <- microbenchmark(
 autoplot(bm3)
 ```
 
-![](man/images/unnamed-chunk-8-1.png)<!-- -->
+![](man/figures/unnamed-chunk-8-1.png)<!-- -->
