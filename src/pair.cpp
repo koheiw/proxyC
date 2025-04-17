@@ -155,7 +155,7 @@ void proxy_pair(const uword i,
     }
     colvec mask_i;
     if (use_mask)
-        mask_i = mask.col(i);
+        mask_i = colvec(mask.col(i));
     for (uword j = 0; j < ncol; j++) {
         if (use_mask && mask_i.at(j) == 0) {
             simils.push_back(0);
@@ -175,49 +175,49 @@ void proxy_pair(const uword i,
         case 3:
             simil = simil_ejaccard(col_i, col_j, weight);
             break;
+        // case 4:
+        //     simil = simil_edice(col_i, col_j, weight);
+        //     break;
         case 4:
-            simil = simil_edice(col_i, col_j, weight);
-            break;
-        case 5:
             simil = simil_hamann(col_i, col_j);
             break;
-        case 6:
+        case 5:
             simil = simil_matching(col_i, col_j);
             break;
-        case 7:
+        case 6:
             simil = simil_faith(col_i, col_j);
             break;
-        case 8:
+        case 7:
             simil = dist_euclidean(col_i, col_j);
             break;
-        case 9:
+        case 8:
             simil = dist_chisquare(col_i, col_j, smooth);
             break;
-        case 10:
+        case 9:
             simil = dist_kullback(col_i, col_j, smooth);
             break;
-        case 11:
+        case 10:
             simil = dist_manhattan(col_i, col_j);
             break;
-        case 12:
+        case 11:
             simil = dist_maximum(col_i, col_j);
             break;
-        case 13:
+        case 12:
             simil = dist_canberra(col_i, col_j);
             break;
-        case 14:
+        case 13:
             simil = dist_minkowski(col_i, col_j, weight);
             break;
-        case 15:
+        case 14:
             simil = dist_hamming(col_i, col_j);
             break;
-        case 16:
+        case 15:
             simil = dist_jeffreys(col_i, col_j, smooth);
             break;
-        case 17:
+        case 16:
             simil = dist_jensen(col_i, col_j, smooth);
             break;
-        case 18:
+        case 17:
             simil = simil_fjaccard(col_i, col_j);
             break;
         }
