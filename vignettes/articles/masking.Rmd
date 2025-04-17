@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-**proxyC** v0.5 introduces masked similarity computation to improve execution time and memory usage. In the toy example, we compute similarity only between column vectors in `mt1` and `mt2` with the alphabetical names. We can achieve this by creating a pattern matrix `msk` using `mask()` and passing it to `simil()`. 
+**proxyC** v0.5 introduces masked similarity computation to improve the execution time and memory usage. In the toy example, we compute similarity only between column vectors in `mt1` and `mt2` with the alphabetical names. We can achieve this by creating a pattern matrix `msk` using `mask()` and passing it to `simil()`. 
 
 ## Example
 
@@ -62,7 +62,7 @@ autoplot(bm)
 
 ### Dice Coefficient
 
-Masking has the greatest impact on execution time in other methods because **proxyC** computes and saves Dice coefficients only for unmasked pairs. We expect to see similar performance improvement in "jaccard", "ejaccard", "fjaccard", "edice", "hamann", "faith" and"simple matching".
+Masking has the greatest impact on the execution time in other methods because **proxyC** computes and saves Dice coefficients only for unmasked pairs. We expect to see similar performance improvement in "jaccard", "ejaccard", "fjaccard", "edice", "hamann", "faith" and"simple matching".
 
 ```{r timeDice, fig.width=7, fig.height=4}
 bm <- microbenchmark(

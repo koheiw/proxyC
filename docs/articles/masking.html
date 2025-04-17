@@ -71,7 +71,7 @@ Watanabe</h4>
     
     
 <p><strong>proxyC</strong> v0.5 introduces masked similarity computation
-to improve execution time and memory usage. In the toy example, we
+to improve the execution time and memory usage. In the toy example, we
 compute similarity only between column vectors in <code>mt1</code> and
 <code>mt2</code> with the alphabetical names. We can achieve this by
 creating a pattern matrix <code>msk</code> using <code><a href="../reference/mask.html">mask()</a></code> and
@@ -142,11 +142,11 @@ all the similarity scores but saves values for only unmasked pairs if
 <div class="section level3">
 <h3 id="dice-coefficient">Dice Coefficient<a class="anchor" aria-label="anchor" href="#dice-coefficient"></a>
 </h3>
-<p>Masking has the greatest impact on execution time in other methods
-because <strong>proxyC</strong> computes and saves Dice coefficients
-only for unmasked pairs. We expect to see similar performance
-improvement in “jaccard”, “ejaccard”, “fjaccard”, “edice”, “hamann”,
-“faith” and”simple matching”.</p>
+<p>Masking has the greatest impact on the execution time in other
+methods because <strong>proxyC</strong> computes and saves Dice
+coefficients only for unmasked pairs. We expect to see similar
+performance improvement in “jaccard”, “ejaccard”, “fjaccard”, “edice”,
+“hamann”, “faith” and”simple matching”.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span>
 <span>    unmasked <span class="op">=</span> <span class="fu"><a href="../reference/simil.html">simil</a></span><span class="op">(</span><span class="va">mt1</span>, <span class="va">mt2</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"dice"</span>, mask <span class="op">=</span> <span class="cn">NULL</span>, drop0 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
