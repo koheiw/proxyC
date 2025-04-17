@@ -120,6 +120,15 @@ namespace proxyc{
         return simils;
     }
 
+    inline std::vector<double> replace_nan(std::vector<double> simils) {
+        for (auto it = simils.begin() ; it != simils.end(); ++it) {
+            if (std::isnan(*it)) {
+                *it = 0;
+            }
+        }
+        return simils;
+    }
+
     inline std::vector<double> replace_inf(std::vector<double> simils) {
         for (auto it = simils.begin() ; it != simils.end(); ++it) {
             if (std::isinf(*it)) {
