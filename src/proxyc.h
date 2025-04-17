@@ -110,7 +110,7 @@ namespace proxyc{
         return simils;
     }
 
-    inline std::vector<double> keep_masked(std::vector<double> simils,
+    inline std::vector<double> drop_masked(std::vector<double> simils,
                                            arma::sp_vec mask) {
         std::size_t j = 0;
         for (auto it = simils.begin() ; it != simils.end(); ++it) {
