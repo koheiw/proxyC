@@ -1,7 +1,9 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://koheiw.github.io/proxyC/404.html</loc></url>
 <url><loc>https://koheiw.github.io/proxyC/articles/index.html</loc></url>
+<url><loc>https://koheiw.github.io/proxyC/articles/masking.html</loc></url>
 <url><loc>https://koheiw.github.io/proxyC/articles/measures.html</loc></url>
+<url><loc>https://koheiw.github.io/proxyC/articles/timings.html</loc></url>
 <url><loc>https://koheiw.github.io/proxyC/authors.html</loc></url>
 <url><loc>https://koheiw.github.io/proxyC/index.html</loc></url>
 <url><loc>https://koheiw.github.io/proxyC/LICENSE-text.html</loc></url>
@@ -9,6 +11,7 @@
 <url><loc>https://koheiw.github.io/proxyC/reference/colSds.html</loc></url>
 <url><loc>https://koheiw.github.io/proxyC/reference/colZeros.html</loc></url>
 <url><loc>https://koheiw.github.io/proxyC/reference/index.html</loc></url>
+<url><loc>https://koheiw.github.io/proxyC/reference/mask.html</loc></url>
 <url><loc>https://koheiw.github.io/proxyC/reference/simil.html</loc></url>
 </urlset>
 

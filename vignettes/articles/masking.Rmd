@@ -62,7 +62,7 @@ autoplot(bm)
 
 ### Dice Coefficient
 
-Masking has the greatest impact on execution time in other methods, because **proxyC** computes and save Dice coefficients only for unmasked pairs. We expect to see similar performance improvement in "jaccard", "ejaccard", "fjaccard", "edice", "hamann", "faith" and"simple matching".
+Masking has the greatest impact on execution time in other methods because **proxyC** computes and saves Dice coefficients only for unmasked pairs. We expect to see similar performance improvement in "jaccard", "ejaccard", "fjaccard", "edice", "hamann", "faith" and"simple matching".
 
 ```{r timeDice, fig.width=7, fig.height=4}
 bm <- microbenchmark(
@@ -75,7 +75,7 @@ autoplot(bm)
 
 ## Object Sizes
 
-Masking also dramatically reduces the the sizes of similarity matrices when `drop0 = TRUE`.
+Masking also dramatically reduces the sizes of similarity matrices when `drop0 = TRUE`.
 
 ```{r objectSize, fig.width=7, fig.height=4}
 sim_um <- simil(mt1, mt2, margin = 2, method = "cosine", mask = NULL, drop0 = TRUE)
