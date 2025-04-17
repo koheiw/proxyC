@@ -155,7 +155,10 @@ void proxy_pair(const uword i,
     }
     arma::sp_vec m = mask.col(i);
     for (uword j = 0; j < ncol; j++) {
-        if (use_mask && m[j] == 0) continue;
+        if (use_mask && m[j] == 0) {
+            simils.push_back(0);
+            continue;
+        };
         if (diag && j != i) continue;
         if (symm && j > i) continue;
         col_j = mt1.col(j);

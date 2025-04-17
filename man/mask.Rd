@@ -13,10 +13,15 @@ mask(x, y)
 a sparse logical matrix with \code{TRUE} for matched pairs.
 }
 \description{
-Create a pattern matrix for \code{simil()} or \code{dist()} to enable masking.
+Create a pattern matrix for \code{simil()} to enable masked similarity computation.
+If the matrix is passed to \code{simil()}, it computes similarity scores only for cells with \code{TRUE}.
 }
 \examples{
-mask(c("a", "b", "c", "d", "e"),
-     c("a", "a", "d", "d", "e", "e"))
+mt1 <- Matrix::rsparsematrix(100, 6, 1.0)
+colnames(mt1) <- c("a", "a", "d", "d", "e", "e")
+mt2 <- Matrix::rsparsematrix(100, 5, 1.0)
+colnames(mt2) <- c("a", "b", "c", "d", "e")
 
+(msk <- mask(colnames(mt1), colnames(mt2)))
+simil(mt1, mt2, margin = 2, mask = msk, drop0 = TRUE)
 }
