@@ -4,10 +4,12 @@
 \alias{mask}
 \title{Create a pattern matrix for masking}
 \usage{
-mask(x, y)
+mask(x, y = NULL)
 }
 \arguments{
-\item{x, y}{a numeric or character vector to match against each other.}
+\item{x}{a numeric or character vector matched against each other.}
+
+\item{y}{a numeric or character vector matched against \code{x} if provided.}
 }
 \value{
 a sparse logical matrix with \code{TRUE} for matched pairs.

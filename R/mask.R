@@ -2,7 +2,8 @@
 #'
 #' Create a pattern matrix for `simil()` to enable masked similarity computation.
 #' If the matrix is passed to `simil()`, it computes similarity scores only for cells with `TRUE`.
-#' @param x,y a numeric or character vector to match against each other.
+#' @param x a numeric or character vector matched against each other.
+#' @param y a numeric or character vector matched against `x` if provided.
 #' @return a sparse logical matrix with `TRUE` for matched pairs.
 #' @export
 #' @examples
@@ -13,8 +14,10 @@
 #'
 #' (msk <- mask(colnames(mt1), colnames(mt2)))
 #' simil(mt1, mt2, margin = 2, mask = msk, drop0 = TRUE)
-mask <- function(x, y) {
+mask <- function(x, y = NULL) {
 
+    if (is.null(y))
+        y <- x
     if (!identical(class(x), class(y)))
         stop("x and y must be the same type of vectors")
     z <- union(x, y)

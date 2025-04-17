@@ -23,6 +23,10 @@ test_that("mask is working", {
         c(0, 0)
     )
 
+    expect_true(
+        isSymmetric(mask(c1))
+    )
+
     expect_error(
         mask(c1, as.factor(c2)),
         "x and y must be the same type of vectors"
@@ -40,6 +44,10 @@ test_that("mask is working", {
     expect_equal(
         dim(mask(numeric(), numeric())),
         c(0, 0)
+    )
+
+    expect_true(
+        isSymmetric(mask(n1))
     )
 
     expect_error(
@@ -69,6 +77,11 @@ test_that("mask works with simil linear", {
     s4 <- simil(mat1_test, mat2_test, margin = 2, min_simil = -0.1, drop0 = TRUE,
                 mask = msk_test)
     expect_true(all(sapply(split(s4@x, rownames(s4)[s4@i + 1]), min) > -0.1))
+
+    # symmetric
+    s5 <- simil(mat1_test, margin = 2, drop0 = TRUE,
+                mask = mask(colnames(mat1_test)))
+    expect_true(isSymmetric(s5))
 
     expect_error(
         simil(mat1_test, mat2_test, margin = 2, mask = msk_test[,-1]),
