@@ -1,14 +1,19 @@
 require(Matrix)
 mat_test <- rsparsematrix(100, 100, 0.5)
+msk_test <- as(Matrix(nrow = 100, ncol = 100, sparse = TRUE), "dMatrix")
 
 test_that("raise error if the number of rows are different",{
     expect_error(
-        proxyC:::cpp_pair(mat_test, mat_test[1:10,], 1, rank = nrow(mat_test)),
+        proxyC:::cpp_pair(mat_test, mat_test[1:10,], 1, mask = msk_test, rank = nrow(mat_test)),
         "Invalid matrix objects"
     )
     expect_error(
-        proxyC:::cpp_linear(mat_test, mat_test[1:10,], 1, rank = nrow(mat_test)),
+        proxyC:::cpp_linear(mat_test, mat_test[1:10,], 1, mask = msk_test, rank = nrow(mat_test)),
         "Invalid matrix objects"
+    )
+    expect_error(
+        proxyC:::cpp_linear(mat_test, mat_test, 1, mask = msk_test[,-1], rank = nrow(mat_test), use_mask = TRUE),
+        "Invalid mask object"
     )
 })
 
