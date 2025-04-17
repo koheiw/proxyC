@@ -153,9 +153,8 @@ void proxy_pair(const uword i,
     } else {
         simils.reserve(ncol);
     }
-    arma::sp_vec m = mask.col(i);
     for (uword j = 0; j < ncol; j++) {
-        if (use_mask && m[j] == 0) {
+        if (use_mask && mask(j, i) == 0) {
             simils.push_back(0);
             continue;
         };
