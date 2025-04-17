@@ -22,7 +22,7 @@ mask <- function(x, y = NULL) {
         stop("x and y must be the same type of vectors")
     z <- union(x, y)
 
-    result <- cpp_mask(match(x, z), match(y, z))
+    result <- cpp_mask(match(x, z), match(y, z), getThreads())
     result <- as(result, "lMatrix")
     if (is.character(x) || is.factor(x))
         rownames(result) <- as.character(x)
