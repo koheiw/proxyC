@@ -1,3 +1,9 @@
+# proxyC 0.5.0
+
+## New features and improvements
+
+- Add `mask()` to create a pattern matrix, which can be passed to `simil()` via `mask` for masked similarity computation.
+
 # proxyC 0.4.2
 
 ## New features and improvements
