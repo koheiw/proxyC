@@ -92,7 +92,7 @@ simil <- function(x, y = NULL, margin = 1,
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
-    proxy(x, y, margin, method, min_proxy = min_simil, rank = rank, drop0 = drop0,
+    proxy(x, y, margin, method, mask = mask, min_proxy = min_simil, rank = rank, drop0 = drop0,
           diag = diag, use_nan = use_nan, sparse = sparse, digits = digits)
 
 }
@@ -113,7 +113,7 @@ dist <- function(x, y = NULL, margin = 1,
                  sparse = TRUE, digits = 14) {
 
     method <- match.arg(method)
-    proxy(x, y, margin, method, p = p, smooth = smooth, drop0 = drop0,
+    proxy(x, y, margin, method, mask = mask, p = p, smooth = smooth, drop0 = drop0,
           diag = diag, use_nan = use_nan, sparse = sparse, digits = digits)
 }
 
