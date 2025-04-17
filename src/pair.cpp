@@ -140,8 +140,8 @@ void proxy_pair(const uword i,
                 const bool drop0, const bool use_nan, const bool use_mask,
                 const int digits) {
 
-    arma::uword nrow = mt1.n_rows;
-    arma::uword ncol = mt1.n_cols;
+    uword nrow = mt1.n_rows;
+    uword ncol = mt1.n_cols;
 
     colvec col_i(nrow);
     colvec col_j(nrow);
@@ -154,11 +154,8 @@ void proxy_pair(const uword i,
         simils.reserve(ncol);
     }
     colvec mask_i;
-    if (use_mask) {
+    if (use_mask)
         mask_i = mask.col(i);
-    } else {
-        mask_i.ones(nrow);
-    }
     for (uword j = 0; j < ncol; j++) {
         if (use_mask && mask_i.at(j) == 0) {
             simils.push_back(0);
