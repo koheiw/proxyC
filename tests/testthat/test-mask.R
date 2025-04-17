@@ -124,9 +124,9 @@ test_that("mask = NULL is the same as all TRUE", {
 
     s2 <- simil(mat1_test, mat2_test, margin = 2,
                 mask = Matrix(TRUE, nrow = 20, ncol = 5))
-    expect_identical(s1, s2)
+    expect_identical(as.matrix(s1), as.matrix(s2))
 
     s3 <- simil(mat1_test, mat2_test, margin = 2,
                 mask = Matrix(1.0, nrow = 20, ncol = 5))
-    expect_identical(s1, s3)
+    expect_identical(as.matrix(s1), as.matrix(s3))
 })
