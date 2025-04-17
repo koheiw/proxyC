@@ -9,6 +9,7 @@ msk_test <- mask(colnames(mat1_test), colnames(mat2_test))
 
 test_that("mask is working", {
 
+    # characeter vectors
     c1 <- rep(c("a", "b", "c", "d", "e"), each = 4)
     c2 <- c("a", "b", "c", "d", "e")
 
@@ -17,11 +18,17 @@ test_that("mask is working", {
     expect_identical(rownames(msk1), c1)
     expect_identical(colnames(msk1), c2)
 
+    expect_equal(
+        dim(mask(character(), character())),
+        c(0, 0)
+    )
+
     expect_error(
         mask(c1, as.factor(c2)),
         "x and y must be the same type of vectors"
     )
 
+    # numeric vectors
     n1 <- rep(1:5, each = 4)
     n2 <- 1:5
 
@@ -29,6 +36,11 @@ test_that("mask is working", {
     expect_equivalent(class(msk2), "lgTMatrix")
     expect_null(rownames(msk2))
     expect_null(colnames(msk2))
+
+    expect_equal(
+        dim(mask(numeric(), numeric())),
+        c(0, 0)
+    )
 
     expect_error(
         mask(n1, as.character(n2)),
