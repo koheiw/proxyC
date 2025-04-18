@@ -62,7 +62,7 @@
                         <h4 data-toc-skip class="author">Kohei
 Watanabe</h4>
             
-            <h4 data-toc-skip class="date">2025-04-17</h4>
+            <h4 data-toc-skip class="date">2025-04-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/koheiw/proxyC/blob/HEAD/vignettes/articles/masking.Rmd" class="external-link"><code>vignettes/articles/masking.Rmd</code></a></small>
       <div class="d-none name"><code>masking.Rmd</code></div>
@@ -97,15 +97,15 @@ passing it to <code><a href="../reference/simil.html">simil()</a></code>.</p>
 <span><span class="co">#&gt; d . . . | .</span></span>
 <span><span class="co">#&gt; e . . . . |</span></span>
 <span><span class="co">#&gt; e . . . . |</span></span>
-<span><span class="op">(</span><span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simil.html">simil</a></span><span class="op">(</span><span class="va">mt1</span>, <span class="va">mt2</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span>, mask <span class="op">=</span> <span class="va">msk</span>, drop0 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simil.html">simil</a></span><span class="op">(</span><span class="va">mt1</span>, <span class="va">mt2</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span>, mask <span class="op">=</span> <span class="va">msk</span>, use_nan <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 6 x 5 sparse Matrix of class "dgTMatrix"</span></span>
-<span><span class="co">#&gt;             a b c           d           e</span></span>
-<span><span class="co">#&gt; a  0.10463988 . .  .           .         </span></span>
-<span><span class="co">#&gt; a -0.09258201 . .  .           .         </span></span>
-<span><span class="co">#&gt; d  .          . . -0.06961173  .         </span></span>
-<span><span class="co">#&gt; d  .          . . -0.07654895  .         </span></span>
-<span><span class="co">#&gt; e  .          . .  .          -0.03211685</span></span>
-<span><span class="co">#&gt; e  .          . .  .           0.07722747</span></span></code></pre></div>
+<span><span class="co">#&gt;             a   b   c           d           e</span></span>
+<span><span class="co">#&gt; a  0.10463988 NaN NaN         NaN         NaN</span></span>
+<span><span class="co">#&gt; a -0.09258201 NaN NaN         NaN         NaN</span></span>
+<span><span class="co">#&gt; d         NaN NaN NaN -0.06961173         NaN</span></span>
+<span><span class="co">#&gt; d         NaN NaN NaN -0.07654895         NaN</span></span>
+<span><span class="co">#&gt; e         NaN NaN NaN         NaN -0.03211685</span></span>
+<span><span class="co">#&gt; e         NaN NaN NaN         NaN  0.07722747</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="execution-times">Execution Times<a class="anchor" aria-label="anchor" href="#execution-times"></a>
@@ -149,8 +149,8 @@ performance improvement in “jaccard”, “ejaccard”, “fjaccard”, “edi
 “hamann”, “faith” and”simple matching”.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span>
-<span>    unmasked <span class="op">=</span> <span class="fu"><a href="../reference/simil.html">simil</a></span><span class="op">(</span><span class="va">mt1</span>, <span class="va">mt2</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"dice"</span>, mask <span class="op">=</span> <span class="cn">NULL</span>, drop0 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    masked <span class="op">=</span> <span class="fu"><a href="../reference/simil.html">simil</a></span><span class="op">(</span><span class="va">mt1</span>, <span class="va">mt2</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"dice"</span>, mask <span class="op">=</span> <span class="va">msk</span>, drop0 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    unmasked <span class="op">=</span> <span class="fu"><a href="../reference/simil.html">simil</a></span><span class="op">(</span><span class="va">mt1</span>, <span class="va">mt2</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"jaccard"</span>, mask <span class="op">=</span> <span class="cn">NULL</span>, drop0 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    masked <span class="op">=</span> <span class="fu"><a href="../reference/simil.html">simil</a></span><span class="op">(</span><span class="va">mt1</span>, <span class="va">mt2</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"jaccard"</span>, mask <span class="op">=</span> <span class="va">msk</span>, drop0 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bm</span><span class="op">)</span></span></code></pre></div>
@@ -161,13 +161,13 @@ performance improvement in “jaccard”, “ejaccard”, “fjaccard”, “edi
 <h2 id="object-sizes">Object Sizes<a class="anchor" aria-label="anchor" href="#object-sizes"></a>
 </h2>
 <p>Masking also dramatically reduces the sizes of similarity matrices
-when <code>drop0 = TRUE</code>.</p>
+when <code>use_nan = FALSE</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sim_um</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simil.html">simil</a></span><span class="op">(</span><span class="va">mt1</span>, <span class="va">mt2</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span>, mask <span class="op">=</span> <span class="cn">NULL</span>, drop0 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">sim_mk</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simil.html">simil</a></span><span class="op">(</span><span class="va">mt1</span>, <span class="va">mt2</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span>, mask <span class="op">=</span> <span class="va">msk</span>, drop0 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">sim_um</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simil.html">simil</a></span><span class="op">(</span><span class="va">mt1</span>, <span class="va">mt2</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span>, mask <span class="op">=</span> <span class="cn">NULL</span>, use_nan <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">sim_mk</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simil.html">simil</a></span><span class="op">(</span><span class="va">mt1</span>, <span class="va">mt2</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span>, mask <span class="op">=</span> <span class="va">msk</span>, use_nan <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="va">sim_um</span><span class="op">)</span>, unit <span class="op">=</span> <span class="st">"KB"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1081.1 Kb</span></span>
+<span><span class="co">#&gt; 1081.2 Kb</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="va">sim_mk</span><span class="op">)</span>, unit <span class="op">=</span> <span class="st">"KB"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 65.5 Kb</span></span></code></pre></div>
 </div>

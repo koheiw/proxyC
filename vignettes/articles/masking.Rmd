@@ -28,7 +28,7 @@ mt2 <- rsparsematrix(100, 5, 1.0)
 colnames(mt2) <- c("a", "b", "c", "d", "e")
 
 (msk <- mask(colnames(mt1), colnames(mt2)))
-(sim <- simil(mt1, mt2, margin = 2, method = "cosine", mask = msk, drop0 = TRUE))
+(sim <- simil(mt1, mt2, margin = 2, method = "cosine", mask = msk, use_nan = TRUE))
 ```
 
 ## Execution Times
@@ -66,8 +66,8 @@ Masking has the greatest impact on the execution time in other methods because *
 
 ```{r timeDice, fig.width=7, fig.height=4}
 bm <- microbenchmark(
-    unmasked = simil(mt1, mt2, margin = 2, method = "dice", mask = NULL, drop0 = TRUE),
-    masked = simil(mt1, mt2, margin = 2, method = "dice", mask = msk, drop0 = TRUE)
+    unmasked = simil(mt1, mt2, margin = 2, method = "jaccard", mask = NULL, drop0 = TRUE),
+    masked = simil(mt1, mt2, margin = 2, method = "jaccard", mask = msk, drop0 = TRUE)
 )
 
 autoplot(bm)
@@ -75,11 +75,11 @@ autoplot(bm)
 
 ## Object Sizes
 
-Masking also dramatically reduces the sizes of similarity matrices when `drop0 = TRUE`.
+Masking also dramatically reduces the sizes of similarity matrices when `use_nan = FALSE`.
 
 ```{r objectSize, fig.width=7, fig.height=4}
-sim_um <- simil(mt1, mt2, margin = 2, method = "cosine", mask = NULL, drop0 = TRUE)
-sim_mk <- simil(mt1, mt2, margin = 2, method = "cosine", mask = msk, drop0 = TRUE)
+sim_um <- simil(mt1, mt2, margin = 2, method = "cosine", mask = NULL, use_nan = FALSE)
+sim_mk <- simil(mt1, mt2, margin = 2, method = "cosine", mask = msk, use_nan = FALSE)
 
 print(object.size(sim_um), unit = "KB")
 print(object.size(sim_mk), unit = "KB")
