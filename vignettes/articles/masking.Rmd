@@ -66,8 +66,8 @@ Masking has the greatest impact on the execution time in other methods because *
 
 ```{r timeDice, fig.width=7, fig.height=4}
 bm <- microbenchmark(
-    unmasked = simil(mt1, mt2, margin = 2, method = "dice", mask = NULL, drop0 = TRUE),
-    masked = simil(mt1, mt2, margin = 2, method = "dice", mask = msk, drop0 = TRUE)
+    unmasked = simil(mt1, mt2, margin = 2, method = "jaccard", mask = NULL, drop0 = TRUE),
+    masked = simil(mt1, mt2, margin = 2, method = "jaccard", mask = msk, drop0 = TRUE)
 )
 
 autoplot(bm)
