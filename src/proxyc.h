@@ -94,10 +94,16 @@ namespace proxyc{
                             double limit) {
 
         if (simils.size() > rank) {
-            std::nth_element(simils.begin(), simils.begin() + rank - 1, simils.end(),
-                             std::greater<double>());
-            if (limit < simils[rank - 1])
-                limit = simils[rank - 1];
+            std::sort(simils.begin(), simils.end(),
+                      [] (auto x, auto y) {
+                          // move nan to the last
+                          if (std::isnan(x)) return false;
+                          if (std::isnan(y)) return true;
+                          return x > y;
+                      });
+            double s = simils[rank - 1];
+            if (limit < s && !std::isnan(s))
+                limit = s;
         }
         return limit;
     }
@@ -110,11 +116,12 @@ namespace proxyc{
         return simils;
     }
 
-    inline std::vector<double> drop_masked(std::vector<double> simils,
+    inline std::vector<double> replace_masked(std::vector<double> simils,
                                            arma::sp_vec mask) {
         std::size_t j = 0;
         for (auto it = simils.begin() ; it != simils.end(); ++it) {
-            if (mask[j] == 0) *it = 0;
+            if (mask[j] == 0)
+                *it = std::numeric_limits<double>::quiet_NaN();
             j++;
         }
         return simils;

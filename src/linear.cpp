@@ -61,7 +61,7 @@ void proxy_linear(const uword i,
             break;
         }
         if (use_mask)
-            simils = drop_masked(simils, mask.col(i));
+            simils = replace_masked(simils, mask.col(i));
         simils = round(simils, digits);
         double l = get_limit(simils, rank, limit);
         for (std::size_t k = 0; k < simils.size(); k++) {

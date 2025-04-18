@@ -158,7 +158,7 @@ void proxy_pair(const uword i,
         mask_i = mask.col(i);
     for (uword j = 0; j < ncol; j++) {
         if (use_mask && mask_i.at(j) == 0) {
-            simils.push_back(0);
+            simils.push_back(std::numeric_limits<double>::quiet_NaN());
             continue;
         };
         if (diag && j != i) continue;
