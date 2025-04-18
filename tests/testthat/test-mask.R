@@ -14,7 +14,7 @@ test_that("mask is working", {
     c2 <- c("a", "b", "c", "d", "e")
 
     msk1 <- mask(c1, c2)
-    expect_equivalent(class(msk1), "lgTMatrix")
+    expect_s4_class(msk1, "lgTMatrix")
     expect_identical(rownames(msk1), c1)
     expect_identical(colnames(msk1), c2)
 
@@ -37,7 +37,7 @@ test_that("mask is working", {
     n2 <- 1:5
 
     msk2 <- mask(n1, n2)
-    expect_equivalent(class(msk2), "lgTMatrix")
+    expect_s4_class(msk2, "lgTMatrix")
     expect_null(rownames(msk2))
     expect_null(colnames(msk2))
 
