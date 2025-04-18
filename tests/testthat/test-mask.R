@@ -60,26 +60,30 @@ test_that("mask works with simil linear", {
 
     # masked dense
     s1 <- simil(mat1_test, mat2_test, margin = 2,
-                mask = msk_test)
-    expect_identical(as.matrix(msk_test != 0), as.matrix(s1 != 0))
+                mask = msk_test, use_nan = TRUE)
+    expect_identical(as.matrix(msk_test != 0), as.matrix(!is.na(s1)))
+    expect_identical(as.matrix(msk_test == 0), as.matrix(is.na(s1)))
 
     # masked ranked
-    s2 <- simil(mat1_test, mat2_test, margin = 2, rank = 1, drop0 = TRUE,
+    s2 <- simil(mat1_test, mat2_test, margin = 2, rank = 1, use_nan = FALSE,
                 mask = msk_test)
+    expect_true(all(colSums(s2 != 0) == 1))
     expect_identical(colSums(s2), sapply(split(s2@x, rownames(s2)[s2@i + 1]), max))
 
     # masked min
-    s3 <- simil(mat1_test, mat2_test, margin = 2, min_simil = 0, drop0 = TRUE,
+    s3 <- simil(mat1_test, mat2_test, margin = 2, min_simil = 0, use_nan = FALSE,
                 mask = msk_test)
+    expect_true(all(colSums(s3 != 0) >= 1))
     expect_true(all(sapply(split(s3@x, rownames(s3)[s3@i + 1]), min) > 0))
 
-    # masked min
-    s4 <- simil(mat1_test, mat2_test, margin = 2, min_simil = -0.1, drop0 = TRUE,
+    # masked min with nan
+    s4 <- simil(mat1_test, mat2_test, margin = 2, min_simil = -0.1, use_nan = TRUE,
                 mask = msk_test)
-    expect_true(all(sapply(split(s4@x, rownames(s4)[s4@i + 1]), min) > -0.1))
+    expect_true(all(colSums(apply(s4, 2, is.na)) >= 1))
+    expect_true(all(sapply(split(s4@x, rownames(s4)[s4@i + 1]), min, na.rm = TRUE) > -0.1))
 
     # symmetric
-    s5 <- simil(mat1_test, margin = 2, drop0 = TRUE,
+    s5 <- simil(mat1_test, margin = 2, use_nan = FALSE,
                 mask = mask(colnames(mat1_test)))
     expect_true(isSymmetric(s5))
 
