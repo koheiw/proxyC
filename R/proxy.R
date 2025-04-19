@@ -84,8 +84,9 @@
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' simil(mt, method = "cosine")[1:5, 1:5]
 simil <- function(x, y = NULL, margin = 1,
-                  method = c("cosine", "correlation", "jaccard", "ejaccard", "fjaccard",
-                             "dice", "edice", "hamann", "faith", "simple matching"),
+                  method = c("cosine", "correlation", "dice", "edice",
+                             "jaccard", "ejaccard", "fjaccard",
+                             "hamann", "faith", "simple matching"),
                   mask = NULL,
                   min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE,
                   use_nan = NULL, sparse = TRUE, digits = 14) {
@@ -190,9 +191,6 @@ proxy <- function(x, y = NULL, margin = 1,
         weight <- 2
     } else if (method == "dice") {
         boolean <- TRUE
-        method <- "edice"
-    } else if (method == "edice") {
-        weight <- 2
     } else if (method == "hamann") {
         boolean <- TRUE
     } else if (method == "faith") {
@@ -208,11 +206,11 @@ proxy <- function(x, y = NULL, margin = 1,
         x <- as(as(x, "lMatrix"), "dMatrix")
         y <- as(as(y, "lMatrix"), "dMatrix")
     }
-    if (method %in% c("cosine", "correlation", "euclidean") && !diag) {
+    if (method %in% c("cosine", "correlation", "euclidean", "dice", "edice") && !diag) {
         result <- cpp_linear(
             mt1 = x,
             mt2 = y,
-            method = match(method, c("cosine", "correlation", "euclidean")),
+            method = match(method, c("cosine", "correlation", "euclidean", "dice", "edice")),
             mask = mask,
             rank = rank,
             limit = min_proxy,
@@ -228,11 +226,12 @@ proxy <- function(x, y = NULL, margin = 1,
         result <- cpp_pair(
             mt1 = x,
             mt2 = y,
-            method = match(method, c("cosine", "correlation", "ejaccard", "edice",
-                                     "hamann", "simple matching", "faith",
-                                     "euclidean", "chisquared", "kullback", "manhattan",
+            method = match(method, c("cosine", "correlation", "euclidean",
+                                     "dice", "edice", "hamann", "simple matching",
+                                     "faith", "ejaccard", "fjaccard",
+                                     "chisquared", "kullback", "manhattan",
                                      "maximum", "canberra", "minkowski", "hamming",
-                                     "jeffreys", "jensen", "fjaccard")),
+                                     "jeffreys", "jensen")),
             mask = mask,
             rank = rank,
             limit = min_proxy,

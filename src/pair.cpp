@@ -38,10 +38,16 @@ double simil_fjaccard(colvec& col_i, colvec& col_j) {
     return accu(min) / accu(max);
 }
 
-double simil_edice(colvec& col_i, colvec& col_j, double weight = 1) {
+double simil_dice(colvec& col_i, colvec& col_j) {
     double e = accu(col_i % col_j);
     if (e == 0) return 0;
-    return (2 * e) / (accu(pow(col_i, weight)) + accu(pow(col_j, weight)));
+    return (2 * e) / (accu(col_i) + accu(col_j));
+}
+
+double simil_edice(colvec& col_i, colvec& col_j) {
+    double e = accu(col_i % col_j);
+    if (e == 0) return 0;
+    return (2 * e) / (accu(square(col_i)) + accu(square(col_j)));
 }
 
 double simil_hamann(colvec& col_i, colvec& col_j) {
@@ -155,7 +161,7 @@ void proxy_pair(const uword i,
     }
     colvec mask_i;
     if (use_mask)
-        mask_i = mask.col(i);
+        mask_i = colvec(mask.col(i));
     for (uword j = 0; j < ncol; j++) {
         if (use_mask && mask_i.at(j) == 0) {
             simils.push_back(std::numeric_limits<double>::quiet_NaN());
@@ -173,52 +179,55 @@ void proxy_pair(const uword i,
             simil = replace_inf(simil);
             break;
         case 3:
-            simil = simil_ejaccard(col_i, col_j, weight);
-            break;
-        case 4:
-            simil = simil_edice(col_i, col_j, weight);
-            break;
-        case 5:
-            simil = simil_hamann(col_i, col_j);
-            break;
-        case 6:
-            simil = simil_matching(col_i, col_j);
-            break;
-        case 7:
-            simil = simil_faith(col_i, col_j);
-            break;
-        case 8:
             simil = dist_euclidean(col_i, col_j);
             break;
+        case 4:
+            simil = simil_dice(col_i, col_j);
+            break;
+        case 5:
+            simil = simil_edice(col_i, col_j);
+            break;
+        case 6:
+            simil = simil_hamann(col_i, col_j);
+            break;
+        case 7:
+            simil = simil_matching(col_i, col_j);
+            break;
+        case 8:
+            simil = simil_faith(col_i, col_j);
+            break;
         case 9:
-            simil = dist_chisquare(col_i, col_j, smooth);
+            simil = simil_ejaccard(col_i, col_j, weight);
             break;
         case 10:
-            simil = dist_kullback(col_i, col_j, smooth);
+            simil = simil_fjaccard(col_i, col_j);
             break;
         case 11:
-            simil = dist_manhattan(col_i, col_j);
+            simil = dist_chisquare(col_i, col_j, smooth);
             break;
         case 12:
-            simil = dist_maximum(col_i, col_j);
+            simil = dist_kullback(col_i, col_j, smooth);
             break;
         case 13:
-            simil = dist_canberra(col_i, col_j);
+            simil = dist_manhattan(col_i, col_j);
             break;
         case 14:
-            simil = dist_minkowski(col_i, col_j, weight);
+            simil = dist_maximum(col_i, col_j);
             break;
         case 15:
-            simil = dist_hamming(col_i, col_j);
+            simil = dist_canberra(col_i, col_j);
             break;
         case 16:
-            simil = dist_jeffreys(col_i, col_j, smooth);
+            simil = dist_minkowski(col_i, col_j, weight);
             break;
         case 17:
-            simil = dist_jensen(col_i, col_j, smooth);
+            simil = dist_hamming(col_i, col_j);
             break;
         case 18:
-            simil = simil_fjaccard(col_i, col_j);
+            simil = dist_jeffreys(col_i, col_j, smooth);
+            break;
+        case 19:
+            simil = dist_jensen(col_i, col_j, smooth);
             break;
         }
         //Rcout << "simil=" << simil << "\n";
@@ -266,7 +275,7 @@ S4 cpp_pair(arma::sp_mat& mt1,
     uword ncol1 = mt1.n_cols;
     uword ncol2 = mt2.n_cols;
     if (rank < 1) rank = 1;
-    symm = symm && method != 10 && rank == ncol2; // exception for kullback
+    symm = symm && method != 12 && rank == ncol2; // exception for kullback
 
     Triplets simil_tri;
     std::size_t I = ncol2;
