@@ -3,6 +3,7 @@
 export(colSds)
 export(colZeros)
 export(dist)
+export(mask)
 export(rowSds)
 export(rowZeros)
 export(simil)

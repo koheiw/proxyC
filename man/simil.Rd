@@ -9,8 +9,9 @@ simil(
   x,
   y = NULL,
   margin = 1,
-  method = c("cosine", "correlation", "jaccard", "ejaccard", "fjaccard", "dice", "edice",
+  method = c("cosine", "correlation", "dice", "edice", "jaccard", "ejaccard", "fjaccard",
     "hamann", "faith", "simple matching"),
+  mask = NULL,
   min_simil = NULL,
   rank = NULL,
   drop0 = FALSE,
@@ -46,6 +47,9 @@ between documents or features in \code{x} and \code{y} is computed.}
 indicates rows or 2 indicates columns.}
 
 \item{method}{method to compute similarity or distance}
+
+\item{mask}{a pattern matrix created using \code{\link[=mask]{mask()}} for masked similarity computation.
+The shape of the matrix must be the same as the resulting matrix.}
 
 \item{min_simil}{the minimum similarity value to be recorded.}
 

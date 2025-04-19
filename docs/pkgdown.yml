@@ -1,9 +1,11 @@
 pandoc: '3.2'
-pkgdown: 2.1.0
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
+  articles/masking: masking.html
   measures: measures.html
-last_built: 2024-10-15T12:41Z
+  articles/timings: timings.html
+last_built: 2025-04-17T08:48Z
 urls:
   reference: https://koheiw.github.io/proxyC/reference
   article: https://koheiw.github.io/proxyC/articles
