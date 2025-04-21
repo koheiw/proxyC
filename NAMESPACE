@@ -2,11 +2,13 @@
 
 export(colSds)
 export(colZeros)
+export(crossprod)
 export(dist)
 export(mask)
 export(rowSds)
 export(rowZeros)
 export(simil)
+export(tcrossprod)
 import(Matrix)
 import(Rcpp)
 import(methods)

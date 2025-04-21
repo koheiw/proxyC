@@ -8,6 +8,7 @@
 - Calculate "dice" and "edice" using Armadillo's linear algebra functions in `simil()`. 
   As a result, computation of these scores became as fast as "cosine", "correlation" 
   and "euclidean".
+- Add `crossprod()` and `tcrossprod()` using the same infrastructure as `simil()` and `dist()`.
 
 # proxyC 0.4.2
 

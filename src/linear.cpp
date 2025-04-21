@@ -59,8 +59,10 @@ void proxy_linear(const uword i,
         case 3: // euclidean distance
             simils = to_vector(sqrt(trans(mt1t * mt2.col(i)) * -2 + square1 + square2[i]));
             break;
-        case 4: // dice coefficient
-        case 5: // edice coefficient
+        case 4: // cross-product
+            simils = to_vector(trans(mt1t * mt2.col(i)));
+        case 5: // dice coefficient
+        case 6: // edice coefficient
             simils = to_vector(trans(mt1t * mt2.col(i) * 2) / (sum1 + sum2[i]));
             simils = replace_nan(simils);
             break;
