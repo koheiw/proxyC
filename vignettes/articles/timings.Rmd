@@ -19,10 +19,10 @@ sparsity level.
 
 ## Euclidean Distance
 
-```{r}
-require(Matrix)
-require(microbenchmark)
-require(ggplot2)
+```{r, message=FALSE, warning=FALSE}
+library(Matrix)
+library(microbenchmark)
+library(ggplot2)
 
 n_rows <- 1000L
 n_cols <- 1000L
