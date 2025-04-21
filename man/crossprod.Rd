@@ -2,9 +2,12 @@
 % Please edit documentation in R/crossprod.R
 \name{crossprod}
 \alias{crossprod}
-\title{Compute the cross product of sparse matrices}
+\alias{tcrossprod}
+\title{Compute the cross product of large sparse matrices}
 \usage{
 crossprod(x, y = NULL, min_prod = NULL, digits = 14)
+
+tcrossprod(x, y = NULL, min_prod = NULL, digits = 14)
 }
 \arguments{
 \item{x}{\link{matrix} or \link{Matrix} object. Dense matrices are covered to
@@ -20,5 +23,6 @@ to correct floating point errors. Rounding is performed in C++ in a similar
 way as \link{zapsmall}.}
 }
 \description{
-Compute the cross product of sparse matrices
+Compute the (transposed) cross product of large sparse matrices using the same
+infrastructure as \code{\link[=simil]{simil()}} and \code{\link[=dist]{dist()}}.
 }
