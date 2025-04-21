@@ -82,7 +82,7 @@
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' simil(mt, method = "cosine")[1:5, 1:5]
 simil <- function(x, y = NULL, margin = 1,
-                  method = c("cosine", "correlation", "product",
+                  method = c("cosine", "correlation",
                              "jaccard", "ejaccard", "fjaccard",
                              "dice", "edice", "hamann", "faith", "simple matching"),
                   min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE,

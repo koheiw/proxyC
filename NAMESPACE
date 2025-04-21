@@ -2,6 +2,7 @@
 
 export(colSds)
 export(colZeros)
+export(crossprod)
 export(dist)
 export(rowSds)
 export(rowZeros)
