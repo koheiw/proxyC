@@ -61,6 +61,7 @@ void proxy_linear(const uword i,
             break;
         case 4: // cross-product
             simils = to_vector(trans(mt1t * mt2.col(i)));
+            break;
         case 5: // dice coefficient
         case 6: // edice coefficient
             simils = to_vector(trans(mt1t * mt2.col(i) * 2) / (sum1 + sum2[i]));
