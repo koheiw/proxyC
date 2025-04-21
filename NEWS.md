@@ -2,13 +2,20 @@
 
 ## New features and improvements
 
+- Enable `simil()` nad `dist()` to perform masked similarity/distance computation. 
+  If a pattern matrix is given via the `mask` argument, it computes scores for selected 
+  pairs of rows or columns. Pattern matrices can be created using newly added `mask()` function.
+- Calculate "dice" and "edice" using Armadillo's linear algebra functions in `simil()`. 
+  As a result, computation of these scores became as fast as "cosine", "correlation" 
+  and "euclidean".
 - Add `crossprod()` and `tcrossprod()` using the same infrastructure as `simil()` and `dist()`.
 
 # proxyC 0.4.2
 
 ## New features and improvements
 
-- Reduce the overhead for dense similarity matrices by improving rounding numbers and conversion to Rcpp vectors.
+- Reduce the overhead for dense similarity matrices by improving rounding numbers 
+  and conversion to Rcpp vectors.
 - Return a dense matrix if `sparse = FALSE` to save space in RAM.
 
 # proxyC 0.4.1
@@ -21,13 +28,17 @@
 
 ## New features and improvements
 
-- Use more recent Intel oneAPI Threads Building Blocks (TBB) library to improve the stability in parallel computing.
-- Add `options(proxyC.threads)` to control the number of threads in parallel computing (but `RCPP_PARALLEL_NUM_THREADS` still has effect).
+- Use more recent Intel oneAPI Threads Building Blocks (TBB) library to improve the 
+  stability in parallel computing.
+- Add `options(proxyC.threads)` to control the number of threads in parallel computing 
+  (but `RCPP_PARALLEL_NUM_THREADS` still has effect).
 
 ## New system requirements
 
-- The RcppParallel package is no longer required as the TBB library in the operating system (Linux and MacOS) or Rtools (Windows) is used.
-- Linux and MacOS must have the TBB library to enable parallel computing before installing this package from the source.
+- The RcppParallel package is no longer required as the TBB library in the operating 
+  system (Linux and MacOS) or Rtools (Windows) is used.
+- Linux and MacOS must have the TBB library to enable parallel computing before installing 
+  this package from the source.
 
 # proxyC 0.3.4
 
@@ -52,20 +63,23 @@
 
 ## New features and improvements
 
-- Add "jensen" to `dist()` for Jensen-Shannon divergence as a symmetric version of Kullback-Leibler divergence.
+- Add "jensen" to `dist()` for Jensen-Shannon divergence as a symmetric version of 
+  Kullback-Leibler divergence.
 - Change how `x` and `y` are coerced to dgCMatrix for Matrix v1.4-2.
 
 # proxyC 0.3.0
 
 ## New features and improvements
 
-- Add "jeffreys" to `dist()` for Jeffreys divergence. It is a symmetric version of Kullback-Leibler divergence (#31).
+- Add "jeffreys" to `dist()` for Jeffreys divergence. It is a symmetric version of 
+  Kullback-Leibler divergence (#31).
 
 # proxyC 0.2.4
 
 ## New features and improvements
 
-- `rowSds()`, `colSds()`, `rowZeros()` and `colZeros()` return row or column names. They also work with both dense and sparse matrices (#28).
+- `rowSds()`, `colSds()`, `rowZeros()` and `colZeros()` return row or column names. 
+   They also work with both dense and sparse matrices (#28).
 
 # proxyC 0.2.3
 

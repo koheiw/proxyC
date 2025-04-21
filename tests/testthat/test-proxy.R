@@ -1,14 +1,19 @@
 require(Matrix)
 mat_test <- rsparsematrix(100, 100, 0.5)
+msk_test <- as(Matrix(nrow = 100, ncol = 100, sparse = TRUE), "dMatrix")
 
 test_that("raise error if the number of rows are different",{
     expect_error(
-        proxyC:::cpp_pair(mat_test, mat_test[1:10,], 1, rank = nrow(mat_test)),
+        proxyC:::cpp_pair(mat_test, mat_test[1:10,], 1, mask = msk_test, rank = nrow(mat_test)),
         "Invalid matrix objects"
     )
     expect_error(
-        proxyC:::cpp_linear(mat_test, mat_test[1:10,], 1, rank = nrow(mat_test)),
+        proxyC:::cpp_linear(mat_test, mat_test[1:10,], 1, mask = msk_test, rank = nrow(mat_test)),
         "Invalid matrix objects"
+    )
+    expect_error(
+        proxyC:::cpp_linear(mat_test, mat_test, 1, mask = msk_test[,-1], rank = nrow(mat_test), use_mask = TRUE),
+        "Invalid mask object"
     )
 })
 
@@ -25,31 +30,31 @@ test_that("raises error when p is smaller than 1", {
 
 test_that("sparse objects are of expected class and occur when expected", {
 
-    expect_is(proxyC:::proxy(mat_test),
-              "dsTMatrix")
-    expect_is(proxyC:::proxy(mat_test, mat_test[1:10,]),
-              "dgTMatrix")
-    expect_is(proxyC:::proxy(mat_test, min_proxy = 10),
-              "dsTMatrix")
-    expect_is(proxyC:::proxy(mat_test, rank = 2),
-              "dgTMatrix")
-    expect_is(proxyC:::proxy(mat_test, method = "kullback"),
-              "dgTMatrix")
+    expect_s4_class(proxyC:::proxy(mat_test),
+                    "dsTMatrix")
+    expect_s4_class(proxyC:::proxy(mat_test, mat_test[1:10,]),
+                    "dgTMatrix")
+    expect_s4_class(proxyC:::proxy(mat_test, min_proxy = 10),
+                    "dsTMatrix")
+    expect_s4_class(proxyC:::proxy(mat_test, rank = 2),
+                    "dgTMatrix")
+    expect_s4_class(proxyC:::proxy(mat_test, method = "kullback"),
+                    "dgTMatrix")
 
 })
 
 test_that("dense objects are of expected class and occur when expected", {
 
-    expect_is(proxyC:::proxy(mat_test, sparse = FALSE),
-              "dspMatrix")
-    expect_is(proxyC:::proxy(mat_test, mat_test[1:10,], sparse = FALSE),
-              "dgeMatrix")
-    expect_is(proxyC:::proxy(mat_test, min_proxy = 10, sparse = FALSE),
-              "dspMatrix")
-    expect_is(proxyC:::proxy(mat_test, rank = 2, sparse = FALSE),
-              "dgeMatrix")
-    expect_is(proxyC:::proxy(mat_test, method = "kullback", sparse = FALSE),
-              "dgeMatrix")
+    expect_s4_class(proxyC:::proxy(mat_test, sparse = FALSE),
+                    "dspMatrix")
+    expect_s4_class(proxyC:::proxy(mat_test, mat_test[1:10,], sparse = FALSE),
+                    "dgeMatrix")
+    expect_s4_class(proxyC:::proxy(mat_test, min_proxy = 10, sparse = FALSE),
+                    "dspMatrix")
+    expect_s4_class(proxyC:::proxy(mat_test, rank = 2, sparse = FALSE),
+                    "dgeMatrix")
+    expect_s4_class(proxyC:::proxy(mat_test, method = "kullback", sparse = FALSE),
+                    "dgeMatrix")
 
 })
 

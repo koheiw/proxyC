@@ -13,6 +13,8 @@
 #' @param margin integer indicating margin of similarity/distance computation. 1
 #'   indicates rows or 2 indicates columns.
 #' @param method method to compute similarity or distance
+#' @param mask a pattern matrix created using [mask()] for masked similarity/distance computation.
+#'  The shape of the matrix must be the same as the resulting matrix.
 #' @param min_simil the minimum similarity value to be recorded.
 #' @param rank an integer value specifying top-n most similarity values to be
 #'   recorded.
@@ -82,15 +84,16 @@
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' simil(mt, method = "cosine")[1:5, 1:5]
 simil <- function(x, y = NULL, margin = 1,
-                  method = c("cosine", "correlation",
+                  method = c("cosine", "correlation", "dice", "edice",
                              "jaccard", "ejaccard", "fjaccard",
-                             "dice", "edice", "hamann", "faith", "simple matching"),
+                             "hamann", "faith", "simple matching"),
+                  mask = NULL,
                   min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE,
                   use_nan = NULL, sparse = TRUE, digits = 14) {
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
-    proxy(x, y, margin, method, min_proxy = min_simil, rank = rank, drop0 = drop0,
+    proxy(x, y, margin, method, mask = mask, min_proxy = min_simil, rank = rank, drop0 = drop0,
           diag = diag, use_nan = use_nan, sparse = sparse, digits = digits)
 
 }
@@ -106,11 +109,12 @@ simil <- function(x, y = NULL, margin = 1,
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                             "manhattan", "maximum", "canberra", "minkowski", "hamming"),
+                 mask = NULL,
                  p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, use_nan = NULL,
                  sparse = TRUE, digits = 14) {
 
     method <- match.arg(method)
-    proxy(x, y, margin, method, p = p, smooth = smooth, drop0 = drop0,
+    proxy(x, y, margin, method, mask = mask, p = p, smooth = smooth, drop0 = drop0,
           diag = diag, use_nan = use_nan, sparse = sparse, digits = digits)
 }
 
@@ -121,6 +125,7 @@ proxy <- function(x, y = NULL, margin = 1,
                              "dice", "edice", "hamann", "simple matching", "faith",
                              "euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                              "manhattan", "maximum", "canberra", "minkowski", "hamming"),
+                  mask = NULL,
                   p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE,
                   diag = FALSE, use_nan = NULL, sparse = TRUE, digits = 14) {
 
@@ -146,6 +151,15 @@ proxy <- function(x, y = NULL, margin = 1,
     } else {
         if (nrow(x) != nrow(y))
             stop("x and y must have the same number of rows")
+    }
+    if (is.null(mask)) {
+        mask <- as(Matrix(numeric(), nrow = 0, ncol = 0, sparse = TRUE), "CsparseMatrix")
+        use_mask <- FALSE
+    } else {
+        mask <- as(as(as(mask, "CsparseMatrix"), "generalMatrix"), "dMatrix")
+        use_mask <- TRUE
+        if (nrow(mask) != ncol(x) || ncol(mask) != ncol(y))
+            stop(sprintf("The shape of mask must be %d x %d.", ncol(x), ncol(y)))
     }
     if (is.null(min_proxy))
         min_proxy <- -1.0
@@ -178,9 +192,6 @@ proxy <- function(x, y = NULL, margin = 1,
         weight <- 2
     } else if (method == "dice") {
         boolean <- TRUE
-        method <- "edice"
-    } else if (method == "edice") {
-        weight <- 2
     } else if (method == "hamann") {
         boolean <- TRUE
     } else if (method == "faith") {
@@ -196,16 +207,18 @@ proxy <- function(x, y = NULL, margin = 1,
         x <- as(as(x, "lMatrix"), "dMatrix")
         y <- as(as(y, "lMatrix"), "dMatrix")
     }
-    if (method %in% c("cosine", "correlation", "euclidean", "product") && !diag) {
+    if (method %in% c("cosine", "correlation", "euclidean", "product", "dice", "edice") && !diag) {
         result <- cpp_linear(
             mt1 = x,
             mt2 = y,
-            method = match(method, c("cosine", "correlation", "euclidean", "product")),
+            method = match(method, c("product", "cosine", "correlation", "euclidean", "dice", "edice")),
+            mask = mask,
             rank = rank,
             limit = min_proxy,
             symm = symm,
             drop0 = drop0,
             use_nan = use_nan,
+            use_mask = use_mask,
             sparse = sparse,
             digits = digits,
             thread = getThreads()
@@ -214,11 +227,13 @@ proxy <- function(x, y = NULL, margin = 1,
         result <- cpp_pair(
             mt1 = x,
             mt2 = y,
-            method = match(method, c("cosine", "correlation", "ejaccard", "edice",
-                                     "hamann", "simple matching", "faith",
-                                     "euclidean", "chisquared", "kullback", "manhattan",
+            method = match(method, c("cosine", "correlation", "euclidean",
+                                     "dice", "edice", "hamann", "simple matching",
+                                     "faith", "ejaccard", "fjaccard",
+                                     "chisquared", "kullback", "manhattan",
                                      "maximum", "canberra", "minkowski", "hamming",
-                                     "jeffreys", "jensen", "fjaccard")),
+                                     "jeffreys", "jensen")),
+            mask = mask,
             rank = rank,
             limit = min_proxy,
             weight = weight,
@@ -227,6 +242,7 @@ proxy <- function(x, y = NULL, margin = 1,
             diag = diag,
             drop0 = drop0,
             use_nan = use_nan,
+            use_mask = use_mask,
             sparse = sparse,
             digits = digits,
             thread = getThreads()

@@ -7,21 +7,22 @@ date: "`r Sys.Date()`"
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message = FALSE
 )
 ```
 
-proxyC is optimized for computing proximity between rows or columns of large sparse matrices.
+**proxyC** is optimized for computing proximity between rows or columns of large sparse matrices.
 
-In this vignette, we compare the execution types of proxyC with other R packages for a variable
+In this vignette, we compare the execution times of **proxyC** with other R packages for a variable
 sparsity level.
 
-## Euclidean
+## Euclidean Distance
 
 ```{r}
-require(Matrix, quietly = TRUE)
-require(microbenchmark, quietly = TRUE)
-require(ggplot2, quietly = TRUE)
+require(Matrix)
+require(microbenchmark)
+require(ggplot2)
 
 n_rows <- 1000L
 n_cols <- 1000L
@@ -76,7 +77,7 @@ bm <- compute_timings_for_euclidean(n_rows = n_rows, n_cols = n_cols, density = 
 autoplot(bm)
 ```
 
-## Pearson correlation
+## Pearson Correlation
 
 ```{r}
 n_rows <- 1000L

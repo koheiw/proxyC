@@ -38,10 +38,16 @@ double simil_fjaccard(colvec& col_i, colvec& col_j) {
     return accu(min) / accu(max);
 }
 
-double simil_edice(colvec& col_i, colvec& col_j, double weight = 1) {
+double simil_dice(colvec& col_i, colvec& col_j) {
     double e = accu(col_i % col_j);
     if (e == 0) return 0;
-    return (2 * e) / (accu(pow(col_i, weight)) + accu(pow(col_j, weight)));
+    return (2 * e) / (accu(col_i) + accu(col_j));
+}
+
+double simil_edice(colvec& col_i, colvec& col_j) {
+    double e = accu(col_i % col_j);
+    if (e == 0) return 0;
+    return (2 * e) / (accu(square(col_i)) + accu(square(col_j)));
 }
 
 double simil_hamann(colvec& col_i, colvec& col_j) {
@@ -132,14 +138,16 @@ double dist_minkowski(colvec& col_i, colvec& col_j, double p = 1) {
 }
 
 void proxy_pair(const uword i,
-                const sp_mat& mt1, const sp_mat& mt2, Triplets& simil_tri,
+                const sp_mat& mt1, const sp_mat& mt2, const sp_mat& mask,
+                Triplets& simil_tri,
                 const int method,
                 const unsigned int rank, const double limit, const bool symm,
                 const bool diag, const double weight, const double smooth,
-                const bool drop0, const bool use_nan, const int digits) {
+                const bool drop0, const bool use_nan, const bool use_mask,
+                const int digits) {
 
-    arma::uword nrow = mt1.n_rows;
-    arma::uword ncol = mt1.n_cols;
+    uword nrow = mt1.n_rows;
+    uword ncol = mt1.n_cols;
 
     colvec col_i(nrow);
     colvec col_j(nrow);
@@ -151,7 +159,14 @@ void proxy_pair(const uword i,
     } else {
         simils.reserve(ncol);
     }
+    colvec mask_i;
+    if (use_mask)
+        mask_i = colvec(mask.col(i));
     for (uword j = 0; j < ncol; j++) {
+        if (use_mask && mask_i.at(j) == 0) {
+            simils.push_back(std::numeric_limits<double>::quiet_NaN());
+            continue;
+        };
         if (diag && j != i) continue;
         if (symm && j > i) continue;
         col_j = mt1.col(j);
@@ -164,52 +179,55 @@ void proxy_pair(const uword i,
             simil = replace_inf(simil);
             break;
         case 3:
-            simil = simil_ejaccard(col_i, col_j, weight);
-            break;
-        case 4:
-            simil = simil_edice(col_i, col_j, weight);
-            break;
-        case 5:
-            simil = simil_hamann(col_i, col_j);
-            break;
-        case 6:
-            simil = simil_matching(col_i, col_j);
-            break;
-        case 7:
-            simil = simil_faith(col_i, col_j);
-            break;
-        case 8:
             simil = dist_euclidean(col_i, col_j);
             break;
+        case 4:
+            simil = simil_dice(col_i, col_j);
+            break;
+        case 5:
+            simil = simil_edice(col_i, col_j);
+            break;
+        case 6:
+            simil = simil_hamann(col_i, col_j);
+            break;
+        case 7:
+            simil = simil_matching(col_i, col_j);
+            break;
+        case 8:
+            simil = simil_faith(col_i, col_j);
+            break;
         case 9:
-            simil = dist_chisquare(col_i, col_j, smooth);
+            simil = simil_ejaccard(col_i, col_j, weight);
             break;
         case 10:
-            simil = dist_kullback(col_i, col_j, smooth);
+            simil = simil_fjaccard(col_i, col_j);
             break;
         case 11:
-            simil = dist_manhattan(col_i, col_j);
+            simil = dist_chisquare(col_i, col_j, smooth);
             break;
         case 12:
-            simil = dist_maximum(col_i, col_j);
+            simil = dist_kullback(col_i, col_j, smooth);
             break;
         case 13:
-            simil = dist_canberra(col_i, col_j);
+            simil = dist_manhattan(col_i, col_j);
             break;
         case 14:
-            simil = dist_minkowski(col_i, col_j, weight);
+            simil = dist_maximum(col_i, col_j);
             break;
         case 15:
-            simil = dist_hamming(col_i, col_j);
+            simil = dist_canberra(col_i, col_j);
             break;
         case 16:
-            simil = dist_jeffreys(col_i, col_j, smooth);
+            simil = dist_minkowski(col_i, col_j, weight);
             break;
         case 17:
-            simil = dist_jensen(col_i, col_j, smooth);
+            simil = dist_hamming(col_i, col_j);
             break;
         case 18:
-            simil = simil_fjaccard(col_i, col_j);
+            simil = dist_jeffreys(col_i, col_j, smooth);
+            break;
+        case 19:
+            simil = dist_jensen(col_i, col_j, smooth);
             break;
         }
         //Rcout << "simil=" << simil << "\n";
@@ -234,6 +252,7 @@ void proxy_pair(const uword i,
 S4 cpp_pair(arma::sp_mat& mt1,
             arma::sp_mat& mt2,
             const int method,
+            arma::sp_mat& mask,
             unsigned int rank,
             const double limit = -1.0,
             const double weight = 1.0,
@@ -242,6 +261,7 @@ S4 cpp_pair(arma::sp_mat& mt1,
             const bool diag = false,
             const bool drop0 = false,
             const bool use_nan = false,
+            const bool use_mask = false,
             const bool sparse = true,
             const int digits = 14,
             const int thread = -1) {
@@ -249,10 +269,13 @@ S4 cpp_pair(arma::sp_mat& mt1,
     if (mt1.n_rows != mt2.n_rows)
         throw std::range_error("Invalid matrix objects");
 
+    if (use_mask & (mask.n_rows != mt1.n_cols || mask.n_cols != mt2.n_cols))
+        throw std::range_error("Invalid mask object");
+
     uword ncol1 = mt1.n_cols;
     uword ncol2 = mt2.n_cols;
     if (rank < 1) rank = 1;
-    symm = symm && method != 10 && rank == ncol2; // exception for kullback
+    symm = symm && method != 12 && rank == ncol2; // exception for kullback
 
     Triplets simil_tri;
     std::size_t I = ncol2;
@@ -261,15 +284,15 @@ S4 cpp_pair(arma::sp_mat& mt1,
     arena.execute([&]{
         tbb::parallel_for(tbb::blocked_range<int>(0, I), [&](tbb::blocked_range<int> r) {
             for (int i = r.begin(); i < r.end(); i++) {
-                proxy_pair(i, mt1, mt2, simil_tri, method, rank, limit, symm,
-                           diag, weight, smooth, drop0, use_nan, digits);
+                proxy_pair(i, mt1, mt2, mask, simil_tri, method, rank, limit, symm,
+                           diag, weight, smooth, drop0, use_nan, use_mask, digits);
             }
         });
     });
 #else
     for (std::size_t i = 0; i < I; i++) {
-        proxy_pair(i, mt1, mt2, simil_tri, method, rank, limit, symm,
-                   diag, weight, smooth, drop0, use_nan, digits);
+        proxy_pair(i, mt1, mt2, mask, simil_tri, method, rank, limit, symm,
+                   diag, weight, smooth, drop0, use_nan, use_mask, digits);
     }
 # endif
 
@@ -278,8 +301,16 @@ S4 cpp_pair(arma::sp_mat& mt1,
 }
 
 /***R
-mt <- Matrix::rsparsematrix(1000, 500, 0.01)
-microbenchmark::microbenchmark(
-out <- cpp_pair(mt, mt, 6, 100, symm = TRUE, smooth = 0.0)
+# mt <- Matrix::rsparsematrix(1000, 500, 0.01)
+# microbenchmark::microbenchmark(
+# out <- cpp_pair(mt, mt, 6, 100, symm = TRUE, smooth = 0.0)
+# )
+
+mt1 <- Matrix::rsparsematrix(100, 10, 1)
+mt2 <- Matrix::rsparsematrix(100, 20, 1)
+mask <- Matrix::rsparsematrix(10, 20, 0.1)
+system.time(
+    out <- cpp_pair(mt1, mt2, 1, mask, 100, symm = TRUE, use_mask = TRUE, drop0 = TRUE)
 )
+
 */
