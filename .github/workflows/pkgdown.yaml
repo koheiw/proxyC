@@ -25,15 +25,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # - name: Set up dependencies
-      #   if: matrix.config.os == 'ubuntu-latest'
-      #   run: |
-      #     sudo apt update
-      #     sudo apt install libtbb-dev
-      # - if: matrix.config.os == 'macos-latest'
-      #   run: |
-      #     brew update
-      #     brew install tbb
+      - name: Set up dependencies to improve parallellism
+        run: |
+          sudo apt update
+          sudo apt install libtbb-dev
 
       - uses: r-lib/actions/setup-pandoc@v2
 
