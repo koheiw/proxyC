@@ -36,4 +36,4 @@ Encoding: UTF-8
 RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
-Config/Needs/website: coop, Rfast, parallelDist, distances, proxy, microbenchmark
+Config/Needs/website: coop, Rfast, parallelDist, distances, proxy, microbenchmark, ggplot2
