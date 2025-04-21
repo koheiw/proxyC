@@ -27,7 +27,7 @@ dist(
   margin = 1,
   method = c("euclidean", "chisquared", "kullback", "jeffreys", "jensen", "manhattan",
     "maximum", "canberra", "minkowski", "hamming"),
-  mask = mask,
+  mask = NULL,
   p = 2,
   smooth = 0,
   drop0 = FALSE,
