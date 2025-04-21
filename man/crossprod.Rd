@@ -10,17 +10,17 @@ crossprod(x, y = NULL, min_prod = NULL, digits = 14)
 tcrossprod(x, y = NULL, min_prod = NULL, digits = 14)
 }
 \arguments{
-\item{x}{\link{matrix} or \link{Matrix} object. Dense matrices are covered to
-the \link{CsparseMatrix-class} internally.}
+\item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object. Dense matrices are covered to
+the \link[Matrix:CsparseMatrix-class]{Matrix::CsparseMatrix} internally.}
 
-\item{y}{if a \link{matrix} or \link{Matrix} object is provided, proximity
+\item{y}{if a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object is provided, proximity
 between documents or features in \code{x} and \code{y} is computed.}
 
 \item{min_prod}{the minimum product to be recorded.}
 
 \item{digits}{determines rounding of small values towards zero. Use primarily
 to correct floating point errors. Rounding is performed in C++ in a similar
-way as \link{zapsmall}.}
+way as \link[base:zapsmall]{base::zapsmall}.}
 }
 \description{
 Compute the (transposed) cross-product of large sparse matrices using the same

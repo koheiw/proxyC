@@ -26,10 +26,10 @@ tcrossprod <- function(x, y = NULL, min_prod = NULL, digits = 14) {
 
 #' Standard deviation of columns and rows of large matrices
 #'
-#' Produces the same result as \code{apply(x, 1, sd)} or \code{apply(x, 2, sd)}
+#' Produces the same result as `apply(x, 1, sd)` or `apply(x, 2, sd)`
 #' without coercing matrix to dense matrix. Values are not identical to
-#' \code{sd} because of the floating point precision issue in C++.
-#' @param x \link{matrix} or \link{Matrix} object
+#' `sd()` because of the floating point precision issue in C++.
+#' @param x a [base::matrix] or [Matrix::Matrix] object.
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' colSds(mt)
@@ -53,8 +53,8 @@ rowSds <- function(x) {
 
 #' Number of zeros in columns and rows of large matrices
 #'
-#' Produces the same result as applying \code{sum(x == 0)} to each row or column.
-#' @param x \link{matrix} or \link{Matrix} object
+#' Produces the same result as applying `sum(x == 0)` to each row or column.
+#' @param x a [base::matrix] or [Matrix::Matrix] object.
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' colZeros(mt)

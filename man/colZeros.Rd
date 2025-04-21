@@ -10,7 +10,7 @@ colZeros(x)
 rowZeros(x)
 }
 \arguments{
-\item{x}{\link{matrix} or \link{Matrix} object}
+\item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object.}
 }
 \description{
 Produces the same result as applying \code{sum(x == 0)} to each row or column.

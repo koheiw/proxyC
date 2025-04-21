@@ -15,8 +15,8 @@ mask(x, y = NULL)
 a sparse logical matrix with \code{TRUE} for matched pairs.
 }
 \description{
-Create a pattern matrix for \code{simil()} to enable masked similarity computation.
-If the matrix is passed to \code{simil()}, it computes similarity scores only for cells with \code{TRUE}.
+Create a pattern matrix for \code{\link[=simil]{simil()}} or \code{\link[=dist]{dist()}} to enable masked similarity computation.
+If the matrix is passed to the function, it computes similarity scores only for cells with \code{TRUE}.
 }
 \examples{
 mt1 <- Matrix::rsparsematrix(100, 6, 1.0)

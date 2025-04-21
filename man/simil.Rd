@@ -38,10 +38,10 @@ dist(
 )
 }
 \arguments{
-\item{x}{\link{matrix} or \link{Matrix} object. Dense matrices are covered to
-the \link{CsparseMatrix-class} internally.}
+\item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object. Dense matrices are covered to
+the \link[Matrix:CsparseMatrix-class]{Matrix::CsparseMatrix} internally.}
 
-\item{y}{if a \link{matrix} or \link{Matrix} object is provided, proximity
+\item{y}{if a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object is provided, proximity
 between documents or features in \code{x} and \code{y} is computed.}
 
 \item{margin}{integer indicating margin of similarity/distance computation. 1
@@ -72,14 +72,14 @@ denser and therefore larger in RAM. If \code{FALSE}, return zero in same use
 situations as above. If \code{NULL}, will also return zero but also generate a
 warning (default).}
 
-\item{sparse}{if \code{TRUE}, returns \link{sparseMatrix} object. When neither
+\item{sparse}{if \code{TRUE}, returns \link[Matrix:sparseMatrix]{Matrix::sparseMatrix} object. When neither
 \code{min_simil} nor \code{rank} is used, dense matrices require less space in RAM.}
 
 \item{digits}{determines rounding of small values towards zero. Use primarily
 to correct floating point errors. Rounding is performed in C++ in a similar
-way as \link{zapsmall}.}
+way as \link[base:zapsmall]{base::zapsmall}.}
 
-\item{p}{weight for Minkowski distance}
+\item{p}{weight for Minkowski distance.}
 
 \item{smooth}{adds a  fixed value to all the cells to avoid division by zero.
 Only used when \code{method} is "chisquared", "kullback", "jeffreys" or "jensen".}

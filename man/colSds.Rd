@@ -10,12 +10,12 @@ colSds(x)
 rowSds(x)
 }
 \arguments{
-\item{x}{\link{matrix} or \link{Matrix} object}
+\item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object.}
 }
 \description{
 Produces the same result as \code{apply(x, 1, sd)} or \code{apply(x, 2, sd)}
 without coercing matrix to dense matrix. Values are not identical to
-\code{sd} because of the floating point precision issue in C++.
+\code{sd()} because of the floating point precision issue in C++.
 }
 \examples{
 mt <- Matrix::rsparsematrix(100, 100, 0.01)

@@ -1,7 +1,7 @@
 #' Create a pattern matrix for masking
 #'
-#' Create a pattern matrix for `simil()` to enable masked similarity computation.
-#' If the matrix is passed to `simil()`, it computes similarity scores only for cells with `TRUE`.
+#' Create a pattern matrix for [simil()] or [dist()] to enable masked similarity computation.
+#' If the matrix is passed to the function, it computes similarity scores only for cells with `TRUE`.
 #' @param x a numeric or character vector matched against each other.
 #' @param y a numeric or character vector matched against `x` if provided.
 #' @return a sparse logical matrix with `TRUE` for matched pairs.

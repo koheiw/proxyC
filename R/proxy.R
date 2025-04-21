@@ -2,14 +2,14 @@
 #'
 #' Fast similarity/distance computation function for large sparse matrices. You
 #' can floor small similarity value to to save computation time and storage
-#' space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}). You
+#' space by an arbitrary threshold (`min_simil`) or rank (`rank`). You
 #' can specify the number of threads for parallel computing via
 #' `options(proxyC.threads)`.
 #'
-#' @param x \link{matrix} or \link{Matrix} object. Dense matrices are covered to
-#'   the \link{CsparseMatrix-class} internally.
-#' @param y if a \link{matrix} or \link{Matrix} object is provided, proximity
-#'   between documents or features in \code{x} and \code{y} is computed.
+#' @param x a [base::matrix] or [Matrix::Matrix] object. Dense matrices are covered to
+#'   the [Matrix::CsparseMatrix-class] internally.
+#' @param y if a [base::matrix] or [Matrix::Matrix] object is provided, proximity
+#'   between documents or features in `x` and `y` is computed.
 #' @param margin integer indicating margin of similarity/distance computation. 1
 #'   indicates rows or 2 indicates columns.
 #' @param method method to compute similarity or distance
@@ -18,10 +18,10 @@
 #' @param min_simil the minimum similarity value to be recorded.
 #' @param rank an integer value specifying top-n most similarity values to be
 #'   recorded.
-#' @param p weight for Minkowski distance
-#' @param drop0 if \code{TRUE}, removes zero values to make the
+#' @param p weight for Minkowski distance.
+#' @param drop0 if `TRUE`, removes zero values to make the
 #'   similarity/distance matrix sparse. It has no effect when `dense = TRUE`.
-#' @param diag if \code{TRUE}, only compute diagonal elements of the
+#' @param diag if `TRUE`, only compute diagonal elements of the
 #'   similarity/distance matrix; useful when comparing corresponding rows or
 #'   columns of `x` and `y`.
 #' @param use_nan if `TRUE`, returns `NaN` if the standard deviation of a vector
@@ -31,11 +31,11 @@
 #'   denser and therefore larger in RAM. If `FALSE`, return zero in same use
 #'   situations as above. If `NULL`, will also return zero but also generate a
 #'   warning (default).
-#' @param sparse if `TRUE`, returns \link{sparseMatrix} object. When neither
+#' @param sparse if `TRUE`, returns [Matrix::sparseMatrix] object. When neither
 #'   `min_simil` nor `rank` is used, dense matrices require less space in RAM.
 #' @param digits determines rounding of small values towards zero. Use primarily
 #'   to correct floating point errors. Rounding is performed in C++ in a similar
-#'   way as \link{zapsmall}.
+#'   way as [base::zapsmall].
 #' @details ## Available Methods
 #'
 #'   Similarity:
