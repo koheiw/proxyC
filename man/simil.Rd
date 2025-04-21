@@ -27,6 +27,7 @@ dist(
   margin = 1,
   method = c("euclidean", "chisquared", "kullback", "jeffreys", "jensen", "manhattan",
     "maximum", "canberra", "minkowski", "hamming"),
+  mask = mask,
   p = 2,
   smooth = 0,
   drop0 = FALSE,
@@ -48,7 +49,7 @@ indicates rows or 2 indicates columns.}
 
 \item{method}{method to compute similarity or distance}
 
-\item{mask}{a pattern matrix created using \code{\link[=mask]{mask()}} for masked similarity computation.
+\item{mask}{a pattern matrix created using \code{\link[=mask]{mask()}} for masked similarity/distance computation.
 The shape of the matrix must be the same as the resulting matrix.}
 
 \item{min_simil}{the minimum similarity value to be recorded.}

@@ -2,9 +2,9 @@
 
 ## New features and improvements
 
-- Enable `simil()` to perform masked similarity computation. If a pattern matrix 
-  is given via the `mask` argument, it computes scores for selected pairs of rows or columns. 
-  Pattern matrices can be created using newly added `mask()` function.
+- Enable `simil()` nad `dist()` to perform masked similarity/distance computation. 
+  If a pattern matrix is given via the `mask` argument, it computes scores for selected 
+  pairs of rows or columns. Pattern matrices can be created using newly added `mask()` function.
 - Calculate "dice" and "edice" using Armadillo's linear algebra functions in `simil()`. 
   As a result, computation of these scores became as fast as "cosine", "correlation" 
   and "euclidean".
