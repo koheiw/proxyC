@@ -82,7 +82,8 @@
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' simil(mt, method = "cosine")[1:5, 1:5]
 simil <- function(x, y = NULL, margin = 1,
-                  method = c("cosine", "correlation", "jaccard", "ejaccard", "fjaccard",
+                  method = c("cosine", "correlation",
+                             "jaccard", "ejaccard", "fjaccard",
                              "dice", "edice", "hamann", "faith", "simple matching"),
                   min_simil = NULL, rank = NULL, drop0 = FALSE, diag = FALSE,
                   use_nan = NULL, sparse = TRUE, digits = 14) {
@@ -116,7 +117,7 @@ dist <- function(x, y = NULL, margin = 1,
 #' @import Rcpp
 #' @useDynLib proxyC
 proxy <- function(x, y = NULL, margin = 1,
-                  method = c("cosine", "correlation", "jaccard", "ejaccard", "fjaccard",
+                  method = c("cosine", "correlation", "product", "jaccard", "ejaccard", "fjaccard",
                              "dice", "edice", "hamann", "simple matching", "faith",
                              "euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                              "manhattan", "maximum", "canberra", "minkowski", "hamming"),
@@ -195,11 +196,11 @@ proxy <- function(x, y = NULL, margin = 1,
         x <- as(as(x, "lMatrix"), "dMatrix")
         y <- as(as(y, "lMatrix"), "dMatrix")
     }
-    if (method %in% c("cosine", "correlation", "euclidean") && !diag) {
+    if (method %in% c("cosine", "correlation", "euclidean", "product") && !diag) {
         result <- cpp_linear(
             mt1 = x,
             mt2 = y,
-            method = match(method, c("cosine", "correlation", "euclidean")),
+            method = match(method, c("cosine", "correlation", "euclidean", "product")),
             rank = rank,
             limit = min_proxy,
             symm = symm,
@@ -236,72 +237,3 @@ proxy <- function(x, y = NULL, margin = 1,
     dimnames(result) <- list(colnames(x), colnames(y))
     return(result)
 }
-
-#' Standard deviation of columns and rows of large matrices
-#'
-#' Produces the same result as \code{apply(x, 1, sd)} or \code{apply(x, 2, sd)}
-#' without coercing matrix to dense matrix. Values are not identical to
-#' \code{sd} because of the floating point precision issue in C++.
-#' @param x \link{matrix} or \link{Matrix} object
-#' @examples
-#' mt <- Matrix::rsparsematrix(100, 100, 0.01)
-#' colSds(mt)
-#' apply(mt, 2, sd) # the same
-#' @export
-colSds <- function(x) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    result <- cpp_sd(x)
-    names(result) <- colnames(x)
-    return(result)
-}
-
-#' @rdname colSds
-#' @export
-rowSds <- function(x) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    result <- cpp_sd(t(x))
-    names(result) <- rownames(x)
-    return(result)
-}
-
-#' Count number of zeros in columns and rows of large matrices
-#'
-#' Produces the same result as applying \code{sum(x == 0)} to each row or column.
-#' @param x \link{matrix} or \link{Matrix} object
-#' @examples
-#' mt <- Matrix::rsparsematrix(100, 100, 0.01)
-#' colZeros(mt)
-#' apply(mt, 2, function(x) sum(x == 0)) # the same
-#' @export
-colZeros <- function(x) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    result <- nrow(x) - cpp_nz(x)
-    names(result) <- colnames(x)
-    return(result)
-}
-
-#' @rdname colZeros
-#' @export
-rowZeros <- function(x) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    result <- ncol(x) - cpp_nz(t(x))
-    names(result) <- rownames(x)
-    return(result)
-}
-
-getThreads <- function() {
-
-    # respect other settings
-    default <- c("tbb" = as.integer(Sys.getenv("RCPP_PARALLEL_NUM_THREADS")),
-                 "omp" = as.integer(Sys.getenv("OMP_THREAD_LIMIT")),
-                 "max" = cpp_get_max_thread())
-    default <- unname(min(default, na.rm = TRUE))
-    suppressWarnings({
-    value <- as.integer(getOption("proxyC.threads", default))
-    })
-    if (length(value) != 1 || is.na(value)) {
-        stop("proxyC.threads must be an integer")
-    }
-    return(value)
-}
-

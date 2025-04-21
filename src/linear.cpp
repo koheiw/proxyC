@@ -57,6 +57,9 @@ void proxy_linear(const uword i,
         case 3: // euclidean distance
             simils = to_vector(sqrt(trans(mt1t * mt2.col(i)) * -2 + square1 + square2[i]));
             break;
+        case 4: // inner product
+            simils = to_vector(trans(mt1t * mt2.col(i)));
+            break;
         }
         simils = round(simils, digits);
         double l = get_limit(simils, rank, limit);
