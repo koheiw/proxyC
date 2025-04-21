@@ -13,7 +13,7 @@
 #' @param margin integer indicating margin of similarity/distance computation. 1
 #'   indicates rows or 2 indicates columns.
 #' @param method method to compute similarity or distance
-#' @param mask a pattern matrix created using [mask()] for masked similarity computation.
+#' @param mask a pattern matrix created using [mask()] for masked similarity/distance computation.
 #'  The shape of the matrix must be the same as the resulting matrix.
 #' @param min_simil the minimum similarity value to be recorded.
 #' @param rank an integer value specifying top-n most similarity values to be
@@ -109,11 +109,12 @@ simil <- function(x, y = NULL, margin = 1,
 dist <- function(x, y = NULL, margin = 1,
                  method = c("euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                             "manhattan", "maximum", "canberra", "minkowski", "hamming"),
+                 mask = NULL,
                  p = 2, smooth = 0, drop0 = FALSE, diag = FALSE, use_nan = NULL,
                  sparse = TRUE, digits = 14) {
 
     method <- match.arg(method)
-    proxy(x, y, margin, method, mask = NULL, p = p, smooth = smooth, drop0 = drop0,
+    proxy(x, y, margin, method, mask = mask, p = p, smooth = smooth, drop0 = drop0,
           diag = diag, use_nan = use_nan, sparse = sparse, digits = digits)
 }
 

@@ -121,6 +121,57 @@ test_that("mask works with simil pair", {
     )
 })
 
+test_that("mask works with dist linear", {
+
+    # masked with nan
+    d1 <- dist(mat1_test, mat2_test, margin = 2, mask = msk_test,
+               use_nan = TRUE)
+    expect_identical(as.matrix(msk_test != 0), as.matrix(!is.na(d1)))
+    expect_identical(as.matrix(msk_test == 0), as.matrix(is.na(d1)))
+
+    # masked min without nan
+    d2 <- dist(mat1_test, mat2_test, margin = 2, mask = msk_test,
+               use_nan = FALSE)
+    expect_identical(as.matrix(msk_test != 0), as.matrix(d2 != 0))
+    expect_identical(as.matrix(msk_test == 0), as.matrix(d2 == 0))
+
+    # symmetric
+    d3 <- dist(mat1_test, margin = 2, mask = mask(colnames(mat1_test)),
+               use_nan = FALSE,)
+    expect_true(isSymmetric(d3))
+
+    expect_error(
+        dist(mat1_test, mat2_test, margin = 2, mask = msk_test[,-1]),
+        "The shape of mask must be 20 x 5"
+    )
+})
+
+test_that("mask works with dist pair", {
+
+    # masked with nan
+    d1 <- dist(mat1_test, mat2_test, margin = 2, method = "canberra",
+                mask = msk_test, use_nan = TRUE)
+    expect_identical(as.matrix(msk_test != 0), as.matrix(!is.na(d1)))
+    expect_identical(as.matrix(msk_test == 0), as.matrix(is.na(d1)))
+
+    # masked without nan
+    d2 <- dist(mat1_test, mat2_test, margin = 2, method = "canberra",
+                mask = msk_test)
+    expect_identical(as.matrix(msk_test != 0), as.matrix(d2 != 0))
+    expect_identical(as.matrix(msk_test == 0), as.matrix(d2 == 0))
+
+    # symmetric
+    d3 <- dist(mat1_test, margin = 2, method = "canberra",
+               mask = mask(colnames(mat1_test)), use_nan = FALSE,)
+    expect_true(isSymmetric(d3))
+
+    expect_error(
+        dist(mat1_test, mat2_test, margin = 2, method = "chisquared", mask = msk_test[,-1]),
+        "The shape of mask must be 20 x 5"
+    )
+})
+
+
 test_that("mask = NULL is the same as all TRUE", {
 
     s1 <- simil(mat1_test, mat2_test, margin = 2,
