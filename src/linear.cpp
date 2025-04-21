@@ -47,20 +47,20 @@ void proxy_linear(const uword i,
     std::vector<double> simils(nrow);
     //for (uword i = begin; i < end; i++) {
         switch (method) {
-        case 1: // cosine similarity
+        case 1: // cross-product
+            simils = to_vector(trans(mt1t * mt2.col(i)));
+            break;
+        case 2: // cosine similarity
             simils = to_vector(trans(mt1t * mt2.col(i)) / (square1 * square2[i]));
             break;
-        case 2: // correlation similarity
+        case 3: // correlation similarity
             v1 = rowvec(trans(mt1t * mt2.col(i)));
             v2 = center1 * center2[i] * ncol;
             simils = to_vector(((v1 - v2) / ncol) / (square1 * square2[i]));
             simils = replace_inf(simils);
             break;
-        case 3: // euclidean distance
+        case 4: // euclidean distance
             simils = to_vector(sqrt(trans(mt1t * mt2.col(i)) * -2 + square1 + square2[i]));
-            break;
-        case 4: // cross-product
-            simils = to_vector(trans(mt1t * mt2.col(i)));
             break;
         case 5: // dice coefficient
         case 6: // edice coefficient
@@ -113,25 +113,25 @@ S4 cpp_linear(arma::sp_mat& mt1,
     rowvec square1(ncol1), center1(ncol1), sum1(ncol1);
     rowvec square2(ncol2), center2(ncol2), sum2(ncol2);
     switch (method) {
-    case 1: // cosine
+    case 2: // cosine
         square1 = rowvec(sqrt(mat(sum(mt1 % mt1, 0))));
         square2 = rowvec(sqrt(mat(sum(mt2 % mt2, 0))));
         break;
-    case 2: // correlation
+    case 3: // correlation
         square1 = stddev(mt1, 1);
         center1 = mean(mt1);
         square2 = stddev(mt2, 1);
         center2 = mean(mt2);
         break;
-    case 3: // euclidean distance
+    case 4: // euclidean distance
         square1 = rowvec(mat(sum(mt1 % mt1, 0)));
         square2 = rowvec(mat(sum(mt2 % mt2, 0)));
         break;
-    case 4: // dice coefficient
+    case 5: // dice coefficient
         sum1 = sum(mt1, 0);
         sum2 = sum(mt2, 0);
         break;
-    case 5: // edice coefficient
+    case 6: // edice coefficient
         sum1 = sum(square(mt1), 0);
         sum2 = sum(square(mt2), 0);
         break;

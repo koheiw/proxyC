@@ -211,7 +211,7 @@ proxy <- function(x, y = NULL, margin = 1,
         result <- cpp_linear(
             mt1 = x,
             mt2 = y,
-            method = match(method, c("cosine", "correlation", "euclidean", "product", "dice", "edice")),
+            method = match(method, c("product", "cosine", "correlation", "euclidean", "dice", "edice")),
             mask = mask,
             rank = rank,
             limit = min_proxy,
