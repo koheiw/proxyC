@@ -8,8 +8,8 @@
 <title>Similarity and Distance Measures in proxyC • proxyC</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Similarity and Distance Measures in proxyC">
 </head>
 <body>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">proxyC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,9 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/measures.html">Similarity and Distance Measures in proxyC</a></li>
+<li><a class="dropdown-item" href="../articles/masking.html">Masked Similarity Computation</a></li>
+    <li><a class="dropdown-item" href="../articles/measures.html">Similarity and Distance Measures in proxyC</a></li>
+    <li><a class="dropdown-item" href="../articles/timings.html">Comparison of Execution Times</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -60,7 +62,7 @@
                         <h4 data-toc-skip class="author">Kohei
 Watanabe</h4>
             
-            <h4 data-toc-skip class="date">2024-10-15</h4>
+            <h4 data-toc-skip class="date">2025-04-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/koheiw/proxyC/blob/master/vignettes/measures.Rmd" class="external-link"><code>vignettes/measures.Rmd</code></a></small>
       <div class="d-none name"><code>measures.Rmd</code></div>
@@ -108,23 +110,23 @@ equal (or unequal) to the value:</p>
 </h2>
 <p>Similarity measures are available in
 <code><a href="../reference/simil.html">proxyC::simil()</a></code>.</p>
-<div class="section level3">
-<h3 id="cosine-similarity-cosine">Cosine similarity (“cosine”)<a class="anchor" aria-label="anchor" href="#cosine-similarity-cosine"></a>
-</h3>
+<div class="section level4">
+<h4 id="cosine-similarity-cosine">Cosine similarity (“cosine”)<a class="anchor" aria-label="anchor" href="#cosine-similarity-cosine"></a>
+</h4>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>i</mi><mi>m</mi><mi>i</mi><mi>l</mi><mo>=</mo><mfrac><mrow><mo>∑</mo><mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mrow><mrow><msqrt><mrow><mo>∑</mo><msup><mover><mi>x</mi><mo accent="true">→</mo></mover><mn>2</mn></msup></mrow></msqrt><msqrt><mrow><mo>∑</mo><msup><mover><mi>y</mi><mo accent="true">→</mo></mover><mn>2</mn></msup></mrow></msqrt></mrow></mfrac></mrow><annotation encoding="application/x-tex">
 simil = \frac{\sum{\vec{x}\vec{y}}}{\sqrt{\sum{\vec{x} ^ 2}} \sqrt{\sum{\vec{y} ^ 2}}}
 </annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="pearson-correlation-coefficient-correlation">Pearson correlation coefficient (“correlation”)<a class="anchor" aria-label="anchor" href="#pearson-correlation-coefficient-correlation"></a>
-</h3>
+<div class="section level4">
+<h4 id="pearson-correlation-coefficient-correlation">Pearson correlation coefficient (“correlation”)<a class="anchor" aria-label="anchor" href="#pearson-correlation-coefficient-correlation"></a>
+</h4>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>i</mi><mi>m</mi><mi>i</mi><mi>l</mi><mo>=</mo><mfrac><mrow><mi>C</mi><mi>o</mi><mi>v</mi><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mo>,</mo><mover><mi>y</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>V</mi><mi>a</mi><mi>r</mi><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mi>V</mi><mi>a</mi><mi>r</mi><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>y</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">
 simil = \frac{Cov(\vec{x},\vec{y})}{Var(\vec{x}) Var(\vec{y})}
 </annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="jaccard-similarity-jaccard-and-ejaccard">Jaccard similarity (“jaccard” and “ejaccard”)<a class="anchor" aria-label="anchor" href="#jaccard-similarity-jaccard-and-ejaccard"></a>
-</h3>
+<div class="section level4">
+<h4 id="jaccard-similarity-jaccard-and-ejaccard">Jaccard similarity (“jaccard” and “ejaccard”)<a class="anchor" aria-label="anchor" href="#jaccard-similarity-jaccard-and-ejaccard"></a>
+</h4>
 <p>The values of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
 and
@@ -138,9 +140,9 @@ simil = \frac{e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w} - e}
 \end{gather}
 </annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="fuzzy-jaccard-similarity-fjaccard">Fuzzy Jaccard similarity (“fjaccard”)<a class="anchor" aria-label="anchor" href="#fuzzy-jaccard-similarity-fjaccard"></a>
-</h3>
+<div class="section level4">
+<h4 id="fuzzy-jaccard-similarity-fjaccard">Fuzzy Jaccard similarity (“fjaccard”)<a class="anchor" aria-label="anchor" href="#fuzzy-jaccard-similarity-fjaccard"></a>
+</h4>
 <p>The values must be
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>≤</mo><mi>x</mi><mo>≤</mo><mn>1.0</mn></mrow><annotation encoding="application/x-tex">0 \le x \le 1.0</annotation></semantics></math>
 and
@@ -149,9 +151,9 @@ and
 simil = \frac{\sum{min(\vec{x}, \vec{y})}}{\sum{max(\vec{x}, \vec{y})}}
 </annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="dice-similarity-dice-and-edice">Dice similarity (“dice” and “edice”)<a class="anchor" aria-label="anchor" href="#dice-similarity-dice-and-edice"></a>
-</h3>
+<div class="section level4">
+<h4 id="dice-similarity-dice-and-edice">Dice similarity (“dice” and “edice”)<a class="anchor" aria-label="anchor" href="#dice-similarity-dice-and-edice"></a>
+</h4>
 <p>The values of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
 and
@@ -165,9 +167,9 @@ simil = \frac{2 e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w}}
 \end{gather}
 </annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="hamann-similarity-hamann">Hamann similarity (“hamann”)<a class="anchor" aria-label="anchor" href="#hamann-similarity-hamann"></a>
-</h3>
+<div class="section level4">
+<h4 id="hamann-similarity-hamann">Hamann similarity (“hamann”)<a class="anchor" aria-label="anchor" href="#hamann-similarity-hamann"></a>
+</h4>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>e</mi><mo>=</mo><mo>∑</mo><mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>n</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>y</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>u</mi><mo>=</mo><mi>n</mi><mo>−</mo><mi>e</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>s</mi><mi>i</mi><mi>m</mi><mi>i</mi><mi>l</mi><mo>=</mo><mfrac><mrow><mi>e</mi><mo>−</mo><mi>u</mi></mrow><mrow><mi>e</mi><mo>+</mo><mi>u</mi></mrow></mfrac></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{gather}
 e = \sum{\vec{x} \vec{y}} \\
@@ -177,9 +179,9 @@ simil = \frac{e - u}{e + u}
 \end{gather}
 </annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="faith-similarity-faith">Faith similarity (“faith”)<a class="anchor" aria-label="anchor" href="#faith-similarity-faith"></a>
-</h3>
+<div class="section level4">
+<h4 id="faith-similarity-faith">Faith similarity (“faith”)<a class="anchor" aria-label="anchor" href="#faith-similarity-faith"></a>
+</h4>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>t</mi><mo>=</mo><mo>∑</mo><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mover><mi>y</mi><mo accent="true">→</mo></mover><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow></mrow></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>f</mi><mo>=</mo><mo>∑</mo><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mover><mi>y</mi><mo accent="true">→</mo></mover><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">]</mo></mrow></mrow></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>n</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow><mover><mi>y</mi><mo accent="true">→</mo></mover><mrow><mo stretchy="true" form="prefix">|</mo><mo stretchy="true" form="postfix">|</mo></mrow></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>s</mi><mi>i</mi><mi>m</mi><mi>i</mi><mi>l</mi><mo>=</mo><mfrac><mrow><mi>t</mi><mo>+</mo><mn>0.5</mn><mi>f</mi></mrow><mi>n</mi></mfrac></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{gather}
 t = \sum{[\vec{x} = 1][\vec{y} = 1]} \\
@@ -189,9 +191,9 @@ simil = \frac{t + 0.5 f}{n}
 \end{gather}
 </annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="simple-matching-matching">Simple matching (“matching”)<a class="anchor" aria-label="anchor" href="#simple-matching-matching"></a>
-</h3>
+<div class="section level4">
+<h4 id="simple-matching-matching">Simple matching (“matching”)<a class="anchor" aria-label="anchor" href="#simple-matching-matching"></a>
+</h4>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>i</mi><mi>m</mi><mi>i</mi><mi>l</mi><mo>=</mo><mo>∑</mo><mrow><mo stretchy="true" form="prefix">[</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mo>=</mo><mover><mi>y</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
 simil = \sum{[\vec{x} = \vec{y}]}
 </annotation></semantics></math></p>
@@ -207,54 +209,54 @@ Smoothing of the vectors can be performed when <code>method</code> is
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">→</mo></mover><annotation encoding="application/x-tex">\vec{x}</annotation></semantics></math>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>y</mi><mo accent="true">→</mo></mover><annotation encoding="application/x-tex">\vec{y}</annotation></semantics></math>.</p>
-<div class="section level3">
-<h3 id="manhattan-distance-manhattan">Manhattan distance (“manhattan”)<a class="anchor" aria-label="anchor" href="#manhattan-distance-manhattan"></a>
-</h3>
+<div class="section level4">
+<h4 id="manhattan-distance-manhattan">Manhattan distance (“manhattan”)<a class="anchor" aria-label="anchor" href="#manhattan-distance-manhattan"></a>
+</h4>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo>=</mo><mo>∑</mo><mrow><mo stretchy="true" form="prefix">|</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mo>−</mo><mover><mi>y</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">|</mo></mrow></mrow><annotation encoding="application/x-tex">
 dist = \sum{|\vec{x} - \vec{y}|}
 </annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="canberra-distance-canberra">Canberra distance (“canberra”)<a class="anchor" aria-label="anchor" href="#canberra-distance-canberra"></a>
-</h3>
+<div class="section level4">
+<h4 id="canberra-distance-canberra">Canberra distance (“canberra”)<a class="anchor" aria-label="anchor" href="#canberra-distance-canberra"></a>
+</h4>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo>=</mo><mfrac><mrow><mo stretchy="true" form="prefix">|</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mo>−</mo><mover><mi>y</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">|</mo></mrow><mrow><mrow><mo stretchy="true" form="prefix">|</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">|</mo></mrow><mo>+</mo><mrow><mo stretchy="true" form="prefix">|</mo><mover><mi>y</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">|</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">
 dist = \frac{|\vec{x} - \vec{y}|}{|\vec{x}| + |\vec{y}|}
 </annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="euclidian-euclidian">Euclidian (“euclidian”)<a class="anchor" aria-label="anchor" href="#euclidian-euclidian"></a>
-</h3>
+<div class="section level4">
+<h4 id="euclidian-euclidian">Euclidian (“euclidian”)<a class="anchor" aria-label="anchor" href="#euclidian-euclidian"></a>
+</h4>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo>=</mo><mo>∑</mo><msqrt><mrow><msup><mover><mi>x</mi><mo accent="true">→</mo></mover><mn>2</mn></msup><mo>+</mo><msup><mover><mi>y</mi><mo accent="true">→</mo></mover><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">
 dist = \sum{\sqrt{\vec{x}^2 + \vec{y}^2}}
 </annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="minkowski-distance-minkowski">Minkowski distance (“minkowski”)<a class="anchor" aria-label="anchor" href="#minkowski-distance-minkowski"></a>
-</h3>
-<p><span class="math display">$$
+<div class="section level4">
+<h4 id="minkowski-distance-minkowski">Minkowski distance (“minkowski”)<a class="anchor" aria-label="anchor" href="#minkowski-distance-minkowski"></a>
+</h4>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>p</mi><mo>=</mo><mtext mathvariant="normal">user-provided parameter</mtext></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mo>∑</mo><msup><mrow><mo stretchy="true" form="prefix">|</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mo>−</mo><mover><mi>y</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">|</mo></mrow><mi>p</mi></msup><mo stretchy="true" form="postfix">)</mo></mrow><mfrac><mn>1</mn><mi>p</mi></mfrac></msup></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{gather}
 p = \text{user-provided parameter} \\
-dist = \Bigl( \sum{|\vec{x} - \vec{y}| ^ p} \Bigr) ^ \frac{1}{p}
+dist = \left( \sum{|\vec{x} - \vec{y}| ^ p} \right) ^ \frac{1}{p}
 \end{gather}
-$$</span></p>
+</annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="hamming-distance-hamming">Hamming distance (“hamming”)<a class="anchor" aria-label="anchor" href="#hamming-distance-hamming"></a>
-</h3>
+<div class="section level4">
+<h4 id="hamming-distance-hamming">Hamming distance (“hamming”)<a class="anchor" aria-label="anchor" href="#hamming-distance-hamming"></a>
+</h4>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo>=</mo><mo>∑</mo><mrow><mo stretchy="true" form="prefix">[</mo><mover><mi>x</mi><mo accent="true">→</mo></mover><mo>≠</mo><mover><mi>y</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
 dist = \sum{[\vec{x} \ne \vec{y}]}
 </annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="the-largest-difference-between-values-maximum">The largest difference between values (“maximum”)<a class="anchor" aria-label="anchor" href="#the-largest-difference-between-values-maximum"></a>
-</h3>
+<div class="section level4">
+<h4 id="the-largest-difference-between-values-maximum">The largest difference between values (“maximum”)<a class="anchor" aria-label="anchor" href="#the-largest-difference-between-values-maximum"></a>
+</h4>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo>=</mo><mo>max</mo><mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mo>−</mo><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mrow><annotation encoding="application/x-tex">
 dist = \max{\vec{x} - \vec{y}}
 </annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="chi-squared-divergence-chisquared">Chi-squared divergence (“chisquared”)<a class="anchor" aria-label="anchor" href="#chi-squared-divergence-chisquared"></a>
-</h3>
+<div class="section level4">
+<h4 id="chi-squared-divergence-chisquared">Chi-squared divergence (“chisquared”)<a class="anchor" aria-label="anchor" href="#chi-squared-divergence-chisquared"></a>
+</h4>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mrow><mtext mathvariant="normal">augmented matrix from </mtext><mspace width="0.333em"></mspace></mrow><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><mover><mi>y</mi><mo accent="true">→</mo></mover></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>E</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mrow><mtext mathvariant="normal">matrix of expected count for </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo>=</mo><mo>∑</mo><mfrac><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>−</mo><msub><mi>E</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><msub><mi>E</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mfrac></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{gather}
 O_{ij} = \text{augmented matrix from } \vec{x} \text{ and } \vec{y} \\
@@ -263,9 +265,9 @@ dist = \sum{\frac{(O_{ij} - E_{ij}) ^ 2}{ E_{ij}}}
 \end{gather}
 </annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="kullbackleibler-divergence-kullback">Kullback–Leibler divergence (“kullback”)<a class="anchor" aria-label="anchor" href="#kullbackleibler-divergence-kullback"></a>
-</h3>
+<div class="section level4">
+<h4 id="kullbackleibler-divergence-kullback">Kullback–Leibler divergence (“kullback”)<a class="anchor" aria-label="anchor" href="#kullbackleibler-divergence-kullback"></a>
+</h4>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>p</mi><mo accent="true">→</mo></mover><mo>=</mo><mfrac><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo>∑</mo><mover><mi>x</mi><mo accent="true">→</mo></mover></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>q</mi><mo accent="true">→</mo></mover><mo>=</mo><mfrac><mover><mi>y</mi><mo accent="true">→</mo></mover><mrow><mo>∑</mo><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo>=</mo><mo>∑</mo><mrow><mover><mi>q</mi><mo accent="true">→</mo></mover><msub><mo>log</mo><mn>2</mn></msub><mfrac><mover><mi>q</mi><mo accent="true">→</mo></mover><mover><mi>p</mi><mo accent="true">→</mo></mover></mfrac></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{gather}
 \vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
@@ -274,9 +276,9 @@ dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}}
 \end{gather}
 </annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="jeffreys-divergence-jeffreys">Jeffreys divergence (“jeffreys”)<a class="anchor" aria-label="anchor" href="#jeffreys-divergence-jeffreys"></a>
-</h3>
+<div class="section level4">
+<h4 id="jeffreys-divergence-jeffreys">Jeffreys divergence (“jeffreys”)<a class="anchor" aria-label="anchor" href="#jeffreys-divergence-jeffreys"></a>
+</h4>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>p</mi><mo accent="true">→</mo></mover><mo>=</mo><mfrac><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo>∑</mo><mover><mi>x</mi><mo accent="true">→</mo></mover></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>q</mi><mo accent="true">→</mo></mover><mo>=</mo><mfrac><mover><mi>y</mi><mo accent="true">→</mo></mover><mrow><mo>∑</mo><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo>=</mo><mo>∑</mo><mrow><mover><mi>q</mi><mo accent="true">→</mo></mover><msub><mo>log</mo><mn>2</mn></msub><mfrac><mover><mi>q</mi><mo accent="true">→</mo></mover><mover><mi>p</mi><mo accent="true">→</mo></mover></mfrac></mrow><mo>+</mo><mo>∑</mo><mrow><mover><mi>p</mi><mo accent="true">→</mo></mover><msub><mo>log</mo><mn>2</mn></msub><mfrac><mover><mi>p</mi><mo accent="true">→</mo></mover><mover><mi>q</mi><mo accent="true">→</mo></mover></mfrac></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{gather}
 \vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
@@ -286,9 +288,9 @@ dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}} +
 \end{gather}
 </annotation></semantics></math></p>
 </div>
-<div class="section level3">
-<h3 id="jensen-shannon-divergence-jensen">Jensen-Shannon divergence (“jensen”)<a class="anchor" aria-label="anchor" href="#jensen-shannon-divergence-jensen"></a>
-</h3>
+<div class="section level4">
+<h4 id="jensen-shannon-divergence-jensen">Jensen-Shannon divergence (“jensen”)<a class="anchor" aria-label="anchor" href="#jensen-shannon-divergence-jensen"></a>
+</h4>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>p</mi><mo accent="true">→</mo></mover><mo>=</mo><mfrac><mover><mi>x</mi><mo accent="true">→</mo></mover><mrow><mo>∑</mo><mover><mi>x</mi><mo accent="true">→</mo></mover></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>q</mi><mo accent="true">→</mo></mover><mo>=</mo><mfrac><mover><mi>y</mi><mo accent="true">→</mo></mover><mrow><mo>∑</mo><mover><mi>y</mi><mo accent="true">→</mo></mover></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mover><mi>m</mi><mo accent="true">→</mo></mover><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>p</mi><mo accent="true">→</mo></mover><mo>+</mo><mover><mi>q</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>∑</mo><mrow><mover><mi>q</mi><mo accent="true">→</mo></mover><msub><mo>log</mo><mn>2</mn></msub><mfrac><mover><mi>q</mi><mo accent="true">→</mo></mover><mover><mi>m</mi><mo accent="true">→</mo></mover></mfrac></mrow><mo>+</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>∑</mo><mrow><mover><mi>p</mi><mo accent="true">→</mo></mover><msub><mo>log</mo><mn>2</mn></msub><mfrac><mover><mi>p</mi><mo accent="true">→</mo></mover><mover><mi>m</mi><mo accent="true">→</mo></mover></mfrac></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{gather}
 \vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
