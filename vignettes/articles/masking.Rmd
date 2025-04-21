@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-**proxyC** v0.5 introduces masked similarity (or distance) computation to improve the execution time and memory usage. In the toy example, we compute similarity only between column vectors in `mt1` and `mt2` with the alphabetical names. We can achieve this by creating a pattern matrix `msk` using `mask()` and passing it to `simil()` (or `dist()`). 
+**proxyC** v0.5 introduces masked similarity (or distance) computation to improve the execution time and memory usage. In the toy example, we compute similarity only between column vectors in `mt1` and `mt2` with the same alphabetical names, leaving all others `Nan`. We can achieve this by creating a pattern matrix `msk` using `mask()` and passing it to `simil()` (or `dist()`). 
 
 ## Example
 
@@ -28,6 +28,9 @@ mt2 <- rsparsematrix(100, 5, 1.0)
 colnames(mt2) <- c("a", "b", "c", "d", "e")
 
 (msk <- mask(colnames(mt1), colnames(mt2)))
+```
+
+```{r}
 (sim <- simil(mt1, mt2, margin = 2, method = "cosine", mask = msk, use_nan = TRUE))
 ```
 
@@ -51,7 +54,7 @@ msk <- mask(colnames(mt1), colnames(mt2))
 The impact of masking is limited in cosine similarity because **proxyC** employs linear algebra extensively. It computes all the similarity scores but saves values for only unmasked pairs if `method` is either "cosine", "correlation" or "euclidean".
 
 
-```{r timeCosine, fig.width=7, fig.height=4}
+```{r timeLinear, fig.width=7, fig.height=4}
 bm <- microbenchmark(
     unmasked = simil(mt1, mt2, margin = 2, method = "cosine", mask = NULL, drop0 = TRUE),
     masked = simil(mt1, mt2, margin = 2, method = "cosine", mask = msk, drop0 = TRUE)
@@ -64,7 +67,7 @@ autoplot(bm)
 
 Masking has the greatest impact on the execution time in other methods because **proxyC** computes and saves Jaccard similarity scores only for unmasked pairs. We expect to see similar performance improvement in ejaccard", "fjaccard", "edice", "hamann", "faith" and"simple matching".
 
-```{r timeDice, fig.width=7, fig.height=4}
+```{r timePair, fig.width=7, fig.height=4}
 bm <- microbenchmark(
     unmasked = simil(mt1, mt2, margin = 2, method = "jaccard", mask = NULL, drop0 = TRUE),
     masked = simil(mt1, mt2, margin = 2, method = "jaccard", mask = msk, drop0 = TRUE)
