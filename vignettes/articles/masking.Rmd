@@ -18,9 +18,9 @@ knitr::opts_chunk$set(
 
 ## Example
 
-```{r}
-require(proxyC)
-require(Matrix)
+```{r, message=FALSE, warning=FALSE}
+library(proxyC)
+library(Matrix)
 
 mt1 <- rsparsematrix(100, 6, 1.0)
 colnames(mt1) <- c("a", "a", "d", "d", "e", "e")
@@ -38,9 +38,9 @@ colnames(mt2) <- c("a", "b", "c", "d", "e")
 
 With large matrices, we can measures the impact of masked similarity computation.
 
-```{r}
-require(microbenchmark)
-require(ggplot2)
+```{r, message=FALSE, warning=FALSE}
+library(microbenchmark)
+library(ggplot2)
 
 mt1 <- rsparsematrix(1000L, 2600L, 0.1)
 colnames(mt1) <- rep(letters, each = 100L)
