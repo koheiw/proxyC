@@ -1,3 +1,9 @@
+# proxyC 0.5.0
+
+## New features and improvements
+
+- Add `crossprod()` and `tcrossprod()` using the same infrastructure as `simil()` and `dist()`.
+
 # proxyC 0.4.2
 
 ## New features and improvements
