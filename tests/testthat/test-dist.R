@@ -53,6 +53,7 @@ test_that("test chisquared distance", {
 
 test_that("test kullback leibler distance", {
     skip_if_not_installed("entropy")
+
     smat <- rsparsematrix(10, 2, 0.5, rand.x = sample.int)
     expect_equal(
         proxyC::dist(smat, method = "kullback", margin = 2)[1,2],
@@ -71,6 +72,7 @@ test_that("test kullback leibler distance", {
 
 test_that("test jeffreys distance", {
     skip_if_not_installed("entropy")
+
     smat <- rsparsematrix(10, 2, 0.5, rand.x = sample.int)
     expect_equal(
         proxyC::dist(smat, method = "jeffreys", margin = 2)[1,2],
@@ -85,6 +87,7 @@ test_that("test jeffreys distance", {
 
 
 test_that("test jensen shannon distance", {
+    skip_if_not_installed("entropy")
 
     smat1 <- rsparsematrix(5, 5, 1, rand.x = sample.int)
     smat2 <- rsparsematrix(5, 5, 1, rand.x = sample.int)
