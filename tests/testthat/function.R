@@ -1,4 +1,6 @@
 require(Matrix)
+require(proxyC)
+options(proxyC.threads = 2)
 
 mat_test <- rsparsematrix(500, 50, 0.5)
 mat_test[1, ] <- 0.0 # set sum(x) == 0
