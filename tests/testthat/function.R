@@ -1,6 +1,6 @@
 require(Matrix)
 
-mat_test <- rsparsematrix(100, 50, 0.5)
+mat_test <- rsparsematrix(500, 50, 0.5)
 mat_test[1, ] <- 0.0 # set sum(x) == 0
 mat_test[2, ] <- 0.5 # set sd(x) == 0
 mat_test[3, ] <- 0.0001 # set sd(x) == 0
