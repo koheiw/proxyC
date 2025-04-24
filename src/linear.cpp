@@ -132,8 +132,14 @@ S4 cpp_linear(arma::sp_mat& mt1,
         sum2 = sum(mt2, 0);
         break;
     case 6: // edice coefficient
+#if defined(__clang__) && __clang_major__ == 20
+        // workaround for #65
+        sum1 = sum(sp_mat(square(mt1)), 0);
+        sum2 = sum(sp_mat(square(mt2)), 0);
+#else
         sum1 = sum(square(mt1), 0);
         sum2 = sum(square(mt2), 0);
+#endif
         break;
     }
 
