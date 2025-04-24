@@ -1,3 +1,9 @@
+# proxyC 0.5.1
+
+## Bug fixes
+
+- Add workaround for a compilation error when clang 20 is used (#65).
+
 # proxyC 0.5.0
 
 ## New features and improvements
