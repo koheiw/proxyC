@@ -1,3 +1,9 @@
+# proxyC 0.5.2
+
+## Bug fixes
+
+- Update tests to pass CRAN check with Intel MKL.
+
 # proxyC 0.5.1
 
 ## Bug fixes
