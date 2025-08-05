@@ -1,3 +1,9 @@
+# proxyC 0.5.3
+
+## New features and improvements
+
+- Add `maskUpdate()` to perform logical operations (and, or, xor) on pattern matrices.
+
 # proxyC 0.5.2
 
 ## Bug fixes

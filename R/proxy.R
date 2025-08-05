@@ -207,7 +207,7 @@ proxy <- function(x, y = NULL, margin = 1,
         x <- as(as(x, "lMatrix"), "dMatrix")
         y <- as(as(y, "lMatrix"), "dMatrix")
     }
-    if (method %in% c("cosine", "correlation", "euclidean", "product", "dice", "edice") && !diag) {
+    if (method %in% c("cosine", "correlation", "euclidean", "product", "dice", "edice") && !diag && !use_mask) {
         result <- cpp_linear(
             mt1 = x,
             mt2 = y,
