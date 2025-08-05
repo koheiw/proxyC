@@ -4,6 +4,8 @@
 #' If the matrix is passed to the function, it computes similarity scores only for cells with `TRUE`.
 #' @param x a numeric or character vector matched against each other.
 #' @param y a numeric or character vector matched against `x` if provided.
+#' @param mask a pattern matrix to be updated.
+#' @param operator logical operations to update `mask`.
 #' @return a sparse logical matrix with `TRUE` for matched pairs.
 #' @export
 #' @examples
@@ -32,6 +34,7 @@ mask <- function(x, y = NULL) {
     return(result)
 }
 
+#' @rdname mask
 #' @export
 maskUpdate <- function(mask, x, y = NULL, operator = c("and", "or", "xor")) {
 

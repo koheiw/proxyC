@@ -2,14 +2,21 @@
 % Please edit documentation in R/mask.R
 \name{mask}
 \alias{mask}
+\alias{maskUpdate}
 \title{Create a pattern matrix for masking}
 \usage{
 mask(x, y = NULL)
+
+maskUpdate(mask, x, y = NULL, operator = c("and", "or", "xor"))
 }
 \arguments{
 \item{x}{a numeric or character vector matched against each other.}
 
 \item{y}{a numeric or character vector matched against \code{x} if provided.}
+
+\item{mask}{a pattern matrix to be updated.}
+
+\item{operator}{logical operations to update \code{mask}.}
 }
 \value{
 a sparse logical matrix with \code{TRUE} for matched pairs.
