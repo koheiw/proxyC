@@ -59,8 +59,8 @@ S4 cpp_mask_update(IntegerVector v1_,
             for (int i = r.begin(); i < r.end(); i++) {
                 for (std::size_t j = 0; j < J; j++) {
                     bool b = false;
-                    if (operation == 1 && (bool)mask(i, j)) {
-                        b = v1[i] == v2[j];
+                    if (operation == 1) {
+                        b = (bool)mask(i, j) && v1[i] == v2[j];
                     } else if (operation == 2) {
                         b = (bool)mask(i, j) || (v1[i] == v2[j]);
                     } else if (operation == 3) {
@@ -77,8 +77,8 @@ S4 cpp_mask_update(IntegerVector v1_,
     for (std::size_t i = 0; i < I; i++) {
         for (std::size_t j = 0; j < J; j++) {
             bool b = false;
-            if (operation == 1 && (bool)mask(i, j)) {
-                b = v1[i] == v2[j];
+            if (operation == 1) {
+                b = (bool)mask(i, j) && v1[i] == v2[j];
             } else if (operation == 2) {
                 b = (bool)mask(i, j) || (v1[i] == v2[j]);
             } else if (operation == 3) {
