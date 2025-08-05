@@ -30,7 +30,14 @@ mt1 <- Matrix::rsparsematrix(100, 6, 1.0)
 colnames(mt1) <- c("a", "a", "d", "d", "e", "e")
 mt2 <- Matrix::rsparsematrix(100, 5, 1.0)
 colnames(mt2) <- c("a", "b", "c", "d", "e")
+mt3 <- Matrix::rsparsematrix(100, 5, 1.0)
+colnames(mt3) <- c("e", "e", "e", "e", "e")
 
+# create a pattern matrix
 (msk <- mask(colnames(mt1), colnames(mt2)))
 simil(mt1, mt2, margin = 2, mask = msk, drop0 = TRUE)
+
+# update a pattern matrix
+(msk2 <- maskUpdate(msk, colnames(mt1), colnames(mt3), operator = "or"))
+simil(mt1, mt2, margin = 2, mask = msk2, drop0 = TRUE)
 }
