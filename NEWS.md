@@ -1,4 +1,4 @@
-# proxyC 0.5.2
+# proxyC 0.5.3
 
 ## New features and improvements
 
