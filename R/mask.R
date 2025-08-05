@@ -31,3 +31,25 @@ mask <- function(x, y = NULL) {
 
     return(result)
 }
+
+#' @export
+maskUpdate <- function(mask, x, y = NULL, operator = c("and", "or", "xor")) {
+
+    operator <- match.arg(operator)
+    operator <-  match(operator, c("and", "or", "xor"))
+
+    if (is.null(y))
+        y <- x
+    if (length(x) != nrow(mask) || length(y) != ncol(mask) )
+        stop("x and y must be the same lengths as rows and columns of mask")
+    if (!identical(class(x), class(y)))
+        stop("x and y must be the same type of vectors")
+    z <- union(x, y)
+
+    mask <- as(as(as(mask, "CsparseMatrix"), "generalMatrix"), "dMatrix")
+    result <- cpp_mask_update(match(x, z), match(y, z), mask, operator, getThreads())
+    result <- as(result, "lMatrix")
+    dimnames(result) <- dimnames(mask)
+
+    return(result)
+}

@@ -58,15 +58,17 @@ S4 cpp_mask_update(IntegerVector v1_,
         tbb::parallel_for(tbb::blocked_range<int>(0, I), [&](tbb::blocked_range<int> r) {
             for (int i = r.begin(); i < r.end(); i++) {
                 for (std::size_t j = 0; j < J; j++) {
-                    double v = 0.0;
+                    bool b = false;
                     if (operation == 1) {
-                        v = (bool)mask(i, j) && (v1[i] == v2[j]);
+                        b = (bool)mask(i, j) && (v1[i] == v2[j]);
                     } else if (operation == 2) {
-                        v = (bool)mask(i, j) || (v1[i] == v2[j]);
+                        b = (bool)mask(i, j) || (v1[i] == v2[j]);
                     } else {
-                        v = (bool)mask(i, j) != (v1[i] == v2[j]);
+                        b = (bool)mask(i, j) != (v1[i] == v2[j]);
                     }
-                    simil_tri.push_back(std::make_tuple(i, j, v));
+                    if (b) {
+                        simil_tri.push_back(std::make_tuple(i, j, 1.0));
+                    }
                 }
             }
         });
@@ -74,15 +76,17 @@ S4 cpp_mask_update(IntegerVector v1_,
 # else
     for (std::size_t i = 0; i < I; i++) {
         for (std::size_t j = 0; j < J; j++) {
-            double v = 0.0;
+            bool b = false;
             if (operation == 1) {
-                v = (bool)mask(i, j) && (v1[i] == v2[j]);
+                b = (bool)mask(i, j) && (v1[i] == v2[j]);
             } else if (operation == 2) {
-                v = (bool)mask(i, j) || (v1[i] == v2[j]);
+                b = (bool)mask(i, j) || (v1[i] == v2[j]);
             } else {
-                v = (bool)mask(i, j) != (v1[i] == v2[j]);
+                b = (bool)mask(i, j) != (v1[i] == v2[j]);
             }
-            simil_tri.push_back(std::make_tuple(i, j, v));
+            if (b) {
+                simil_tri.push_back(std::make_tuple(i, j, 1.0));
+            }
         }
     }
 # endif
