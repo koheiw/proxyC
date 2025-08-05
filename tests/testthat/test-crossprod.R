@@ -19,7 +19,7 @@ test_that("test crossprod", {
     # with min_prod
     prod1_min <- proxyC:::crossprod(mat1, mat2, min_prod = 1.0)
     prod2_min <- prod2
-    prod2_min[prod2_min <= 1.0] <- 0.0
+    prod2_min[prod2_min < 1.0] <- 0.0
 
     expect_equal(
         as.matrix(prod1_min), as.matrix(prod2_min),
@@ -49,7 +49,7 @@ test_that("test tcrossprod", {
     # with min_prod
     prod1_min <- proxyC:::tcrossprod(mat1, mat2, min_prod = 1.0)
     prod2_min <- prod2
-    prod2_min[prod2_min <= 1.0] <- 0.0
+    prod2_min[prod2_min < 1.0] <- 0.0
 
     expect_equal(
         as.matrix(prod1_min), as.matrix(prod2_min),
