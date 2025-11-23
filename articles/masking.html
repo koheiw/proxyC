@@ -62,7 +62,7 @@
                         <h4 data-toc-skip class="author">Kohei
 Watanabe</h4>
             
-            <h4 data-toc-skip class="date">2025-08-05</h4>
+            <h4 data-toc-skip class="date">2025-11-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/koheiw/proxyC/blob/master/vignettes/articles/masking.Rmd" class="external-link"><code>vignettes/articles/masking.Rmd</code></a></small>
       <div class="d-none name"><code>masking.Rmd</code></div>
@@ -137,8 +137,17 @@ all the similarity scores but saves values for only unmasked pairs if
 <span>    masked <span class="op">=</span> <span class="fu"><a href="../reference/simil.html">simil</a></span><span class="op">(</span><span class="va">mt1</span>, <span class="va">mt2</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span>, mask <span class="op">=</span> <span class="va">msk</span>, drop0 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bm</span><span class="op">)</span></span></code></pre></div>
-<p><img src="masking_files/figure-html/timeLinear-1.png" width="672"></p>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bm</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: `aes_string()` was deprecated in ggplot2 3.0.0.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use tidy evaluation idioms with `aes()`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> See also `vignette("ggplot2-in-packages")` for more information.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">microbenchmark</span> package.</span></span>
+<span><span class="co">#&gt;   Please report the issue at</span></span>
+<span><span class="co">#&gt;   <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/joshuaulrich/microbenchmark/issues/&gt;</span>.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span></code></pre></div>
+<p><img src="masking_files/figure-html/timeLinear-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="jaccard-similarity">Jaccard Similarity<a class="anchor" aria-label="anchor" href="#jaccard-similarity"></a>
@@ -155,7 +164,7 @@ performance improvement in ejaccard”, “fjaccard”, “edice”, “hamann�
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bm</span><span class="op">)</span></span></code></pre></div>
-<p><img src="masking_files/figure-html/timePair-1.png" width="672"></p>
+<p><img src="masking_files/figure-html/timePair-1.png" class="r-plt" width="672"></p>
 </div>
 </div>
 <div class="section level2">
@@ -183,7 +192,7 @@ when <code>use_nan = FALSE</code>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
