@@ -4,6 +4,8 @@
 #' If the matrix is passed to the function, it computes similarity scores only for cells with `TRUE`.
 #' @param x a numeric or character vector matched against each other.
 #' @param y a numeric or character vector matched against `x` if provided.
+#' @param mask a pattern matrix to be updated.
+#' @param operator logical operations to update `mask`.
 #' @return a sparse logical matrix with `TRUE` for matched pairs.
 #' @export
 #' @examples
@@ -11,9 +13,16 @@
 #' colnames(mt1) <- c("a", "a", "d", "d", "e", "e")
 #' mt2 <- Matrix::rsparsematrix(100, 5, 1.0)
 #' colnames(mt2) <- c("a", "b", "c", "d", "e")
+#' mt3 <- Matrix::rsparsematrix(100, 5, 1.0)
+#' colnames(mt3) <- c("e", "e", "e", "e", "e")
 #'
+#' # create a pattern matrix
 #' (msk <- mask(colnames(mt1), colnames(mt2)))
 #' simil(mt1, mt2, margin = 2, mask = msk, drop0 = TRUE)
+#'
+#' # update a pattern matrix
+#' (msk2 <- maskUpdate(msk, colnames(mt1), colnames(mt3), operator = "or"))
+#' simil(mt1, mt2, margin = 2, mask = msk2, drop0 = TRUE)
 mask <- function(x, y = NULL) {
 
     if (is.null(y))
@@ -28,6 +37,29 @@ mask <- function(x, y = NULL) {
         rownames(result) <- as.character(x)
     if (is.character(y) || is.factor(x))
         colnames(result) <- as.character(y)
+
+    return(result)
+}
+
+#' @rdname mask
+#' @export
+maskUpdate <- function(mask, x, y = NULL, operator = c("and", "or", "xor")) {
+
+    operator <- match.arg(operator)
+    operator <-  match(operator, c("and", "or", "xor"))
+
+    if (is.null(y))
+        y <- x
+    if (length(x) != nrow(mask) || length(y) != ncol(mask) )
+        stop("x and y must be the same lengths as rows and columns of mask")
+    if (!identical(class(x), class(y)))
+        stop("x and y must be the same type of vectors")
+    z <- union(x, y)
+
+    mask <- as(as(as(mask, "CsparseMatrix"), "generalMatrix"), "dMatrix")
+    result <- cpp_mask_update(match(x, z), match(y, z), mask, operator, getThreads())
+    result <- as(result, "lMatrix")
+    dimnames(result) <- dimnames(mask)
 
     return(result)
 }

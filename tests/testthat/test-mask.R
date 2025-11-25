@@ -185,3 +185,43 @@ test_that("mask = NULL is the same as all TRUE", {
                 mask = Matrix(1.0, nrow = 20, ncol = 5))
     expect_identical(as.matrix(s1), as.matrix(s3))
 })
+
+test_that("maskUpdate is working", {
+
+    v1 <- c(1, 2, 3, 4, 5, 6)
+    v2 <- c(1, 2, 3, 0, 0, 0)
+    v3 <- c(0, 0, 0, 4, 5, 6)
+
+    msk <- mask(v1, v2)
+    dimnames(msk) <- list(letters[1:6], LETTERS[1:6])
+
+    expect_equal(
+        as.matrix(maskUpdate(msk, v1, v2)),
+        as.matrix(msk & mask(v1, v2))
+    )
+
+    expect_equal(
+        as.matrix(maskUpdate(msk, v1, v3, operator = "or")),
+        as.matrix(msk | mask(v1, v3))
+    )
+
+    expect_equal(
+        as.matrix(maskUpdate(msk, v2, v3, operator = "xor")),
+        as.matrix(msk != mask(v2, v3))
+    )
+
+    expect_equal(
+        dimnames(maskUpdate(msk, v1, v2)),
+        dimnames(msk)
+    )
+
+    expect_error(
+        maskUpdate(msk, v1, v2[-1]),
+        "x and y must be the same lengths as rows and columns of mask"
+    )
+    expect_error(
+        maskUpdate(msk, v2, v3[-1]),
+        "x and y must be the same lengths as rows and columns of mask"
+    )
+
+})
