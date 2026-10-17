@@ -1,9 +1,9 @@
 #' Compute similarity/distance between rows or columns of large matrices
 #'
-#' Fast similarity/distance computation function for large matrices. To save
-#' computation time and storage, it applies arbitrary threshold (`min_simil`)
-#' or rank (`rank`) for the similarity/distance scores and return them in a
-#' sparse matrix.
+#' Fast similarity/distance computation function for large matrices using multiple
+#' processors. To save computation time and storage, it can also apply arbitrary
+#' threshold (`min_simil`) or rank (`rank`) to the similarity/distance scores and
+#' return them in a sparse matrix.
 #'
 #' @param x a [base::matrix] or [Matrix::Matrix] object. Only sparse matrices are
 #' covered to the [Matrix::CsparseMatrix-class] internally.
@@ -35,7 +35,9 @@
 #' @param digits determines rounding of small values towards zero. Use primarily
 #'   to correct floating point errors. Rounding is performed in C++ in a similar
 #'   way as [base::zapsmall].
-#' @details ## Available Methods
+#' @details
+#'
+#'   ## Available Methods
 #'
 #'   Similarity:
 #' \itemize{

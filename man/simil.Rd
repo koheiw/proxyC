@@ -85,10 +85,10 @@ way as \link[base:zapsmall]{base::zapsmall}.}
 Only used when \code{method} is "chisquared", "kullback", "jeffreys" or "jensen".}
 }
 \description{
-Fast similarity/distance computation function for large matrices. To save
-computation time and storage, it applies arbitrary threshold (\code{min_simil})
-or rank (\code{rank}) for the similarity/distance scores and return them in a
-sparse matrix.
+Fast similarity/distance computation function for large matrices using multiple
+processors. To save computation time and storage, it can also apply arbitrary
+threshold (\code{min_simil}) or rank (\code{rank}) to the similarity/distance scores and
+return them in a sparse matrix.
 }
 \details{
 \subsection{Available Methods}{
