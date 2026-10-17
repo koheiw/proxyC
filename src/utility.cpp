@@ -1,5 +1,5 @@
 #include "proxyc.h"
-#include "dev.h"
+//#include "dev.h"
 
 // [[Rcpp::export]]
 int cpp_get_max_thread() {
