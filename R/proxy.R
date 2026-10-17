@@ -131,18 +131,45 @@ proxy <- function(x, y = NULL, margin = 1,
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
+
+    symm <- FALSE
+    boolean <- FALSE
+    weight <- 1
+    if (method == "jaccard") {
+        boolean <- TRUE
+        method <- "ejaccard"
+    } else if (method == "ejaccard") {
+        weight <- 2
+    } else if (method == "dice") {
+        boolean <- TRUE
+    } else if (method == "hamann") {
+        boolean <- TRUE
+    } else if (method == "faith") {
+        boolean <- TRUE
+    } else if (method == "simple matching") {
+        boolean <- TRUE
+    } else if (method == "minkowski") {
+        if (p <= 0)
+            stop("p must be greater than zero")
+        weight <- p
+    }
+
     x <- as(as(x, "generalMatrix"), "dMatrix")
+    if (boolean)
+        x <- as(as(x, "lMatrix"), "dMatrix")
     if (is(x, "dgeMatrix")) {
         x <- as.matrix(x)
     } else {
         x <- as(x, "CsparseMatrix")
     }
-    symm <- is.null(y)
 
     if (is.null(y)) {
+        symm <- TRUE
         y <- x
     } else {
         y <- as(as(y, "generalMatrix"), "dMatrix")
+        if (boolean)
+            y <- as(as(y, "lMatrix"), "dMatrix")
         if (is(y, "dgeMatrix")) {
             y <- as.matrix(y)
         } else {
@@ -191,30 +218,7 @@ proxy <- function(x, y = NULL, margin = 1,
         }
         use_nan <- FALSE
     }
-    boolean <- FALSE
-    weight <- 1
-    if (method == "jaccard") {
-        boolean <- TRUE
-        method <- "ejaccard"
-    } else if (method == "ejaccard") {
-        weight <- 2
-    } else if (method == "dice") {
-        boolean <- TRUE
-    } else if (method == "hamann") {
-        boolean <- TRUE
-    } else if (method == "faith") {
-        boolean <- TRUE
-    } else if (method == "simple matching") {
-        boolean <- TRUE
-    } else if (method == "minkowski") {
-        if (p <= 0)
-            stop("p must be greater than zero")
-        weight <- p
-    }
-    if (boolean) {
-        x <- as(as(x, "lMatrix"), "dMatrix")
-        y <- as(as(y, "lMatrix"), "dMatrix")
-    }
+
     if (method %in% c("cosine", "correlation", "euclidean", "product", "dice", "edice") && !diag) {
         result <- cpp_linear(
             s1 = x,
