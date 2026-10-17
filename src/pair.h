@@ -137,9 +137,9 @@ inline double dist_minkowski(colvec& col_i, colvec& col_j, double p = 1) {
     return pow(accu(pow(abs(col_i - col_j), p)), 1 / p);
 }
 
-template <typename T>
-void proxy_pair(const uword i,
-                const T& mt1, const T& mt2, const sp_mat& mask,
+template <typename M1, typename M2>
+void calc_pair(const uword i,
+                const M1& mt1, const M2& mt2, const sp_mat& mask,
                 Triplets& simil_tri,
                 const int method,
                 const unsigned int rank, const double limit, const bool symm,
@@ -249,3 +249,54 @@ void proxy_pair(const uword i,
     }
 }
 
+template <typename M1, typename M2>
+S4 iter_pair(M1& mt1,
+                   M2& mt2,
+                   const int method,
+                   arma::sp_mat& mask,
+                   unsigned int rank,
+                   const double limit = -1.0,
+                   const double weight = 1.0,
+                   const double smooth = 0,
+                   bool symm = false,
+                   const bool diag = false,
+                   const bool drop0 = false,
+                   const bool use_nan = false,
+                   const bool use_mask = false,
+                   const bool sparse = true,
+                   const int digits = 14,
+                   const int thread = -1) {
+
+    if (mt1.n_rows != mt2.n_rows)
+        throw std::range_error("Invalid matrix objects");
+
+    if (use_mask & (mask.n_rows != mt1.n_cols || mask.n_cols != mt2.n_cols))
+        throw std::range_error("Invalid mask object");
+
+    uword ncol1 = mt1.n_cols;
+    uword ncol2 = mt2.n_cols;
+    if (rank < 1) rank = 1;
+    symm = symm && method != 12 && rank == ncol2; // exception for kullback
+
+    Triplets simil_tri;
+    std::size_t I = ncol2;
+#if PROXYC_USE_TBB
+    tbb::task_arena arena(thread);
+    arena.execute([&]{
+        tbb::parallel_for(tbb::blocked_range<int>(0, I), [&](tbb::blocked_range<int> r) {
+            for (int i = r.begin(); i < r.end(); i++) {
+                calc_pair(i, mt1, mt2, mask, simil_tri, method, rank, limit, symm,
+                           diag, weight, smooth, drop0, use_nan, use_mask, digits);
+            }
+        });
+    });
+#else
+    for (std::size_t i = 0; i < I; i++) {
+        calc_pair(i, mt1, mt2, mask, simil_tri, method, rank, limit, symm,
+                   diag, weight, smooth, drop0, use_nan, use_mask, digits);
+    }
+# endif
+
+    return to_matrix(simil_tri, ncol1, ncol2, symm, sparse);
+
+}
