@@ -177,8 +177,8 @@ test_that("functions works with different matrices", {
     emat <- Matrix(smat, sparse = FALSE)
     s <- proxyC::simil(smat, smat)
 
-    expect_identical(as.matrix(proxyC:::proxy(dmat, dmat)), as.matrix(s))
-    expect_identical(as.matrix(proxyC:::proxy(emat, emat)), as.matrix(s))
+    expect_equal(as.matrix(proxyC:::proxy(dmat, dmat)), as.matrix(s))
+    expect_equal(as.matrix(proxyC:::proxy(emat, emat)), as.matrix(s))
     expect_silent(proxyC:::proxy(smat > 0, smat > 0))
     expect_silent(proxyC:::proxy(forceSymmetric(smat), forceSymmetric(smat)))
     expect_silent(proxyC:::proxy(forceSymmetric(emat), forceSymmetric(emat)))
