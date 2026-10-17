@@ -131,15 +131,23 @@ proxy <- function(x, y = NULL, margin = 1,
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
-    #x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
-    x <- as(as(as(x, "CsparseMatrix"), "generalMatrix"), "dMatrix") # for Matrix v1.4-2 or later
+    x <- as(as(x, "generalMatrix"), "dMatrix")
+    if (is(x, "dgeMatrix")) {
+        x <- as.matrix(x)
+    } else {
+        x <- as(x, "CsparseMatrix")
+    }
     symm <- is.null(y)
 
     if (is.null(y)) {
         y <- x
     } else {
-        #y <- as(as(y, "CsparseMatrix"), "dgCMatrix")
-        y <- as(as(as(y, "CsparseMatrix"), "generalMatrix"), "dMatrix") # for Matrix v1.4-2 or later
+        y <- as(as(y, "generalMatrix"), "dMatrix")
+        if (is(y, "dgeMatrix")) {
+            y <- as.matrix(y)
+        } else {
+            y <- as(y, "CsparseMatrix")
+        }
     }
     if (!margin %in% c(1, 2))
         stop("Matrgin must be 1 (row) or 2 (column)")
@@ -209,8 +217,8 @@ proxy <- function(x, y = NULL, margin = 1,
     }
     if (method %in% c("cosine", "correlation", "euclidean", "product", "dice", "edice") && !diag) {
         result <- cpp_linear(
-            mt1 = x,
-            mt2 = y,
+            s1 = x,
+            s2 = y,
             method = match(method, c("product", "cosine", "correlation", "euclidean", "dice", "edice")),
             mask = mask,
             rank = rank,
@@ -225,8 +233,8 @@ proxy <- function(x, y = NULL, margin = 1,
         )
     } else {
         result <- cpp_pair(
-            mt1 = x,
-            mt2 = y,
+            s1 = x,
+            s2 = y,
             method = match(method, c("cosine", "correlation", "euclidean",
                                      "dice", "edice", "hamann", "simple matching",
                                      "faith", "ejaccard", "fjaccard",
