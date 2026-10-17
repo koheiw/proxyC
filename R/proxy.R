@@ -1,13 +1,12 @@
 #' Compute similarity/distance between rows or columns of large matrices
 #'
-#' Fast similarity/distance computation function for large sparse matrices. You
-#' can floor small similarity value to to save computation time and storage
-#' space by an arbitrary threshold (`min_simil`) or rank (`rank`). You
-#' can specify the number of threads for parallel computing via
-#' `options(proxyC.threads)`.
+#' Fast similarity/distance computation function for large matrices. To save
+#' computation time and storage, it applies arbitrary threshold (`min_simil`)
+#' or rank (`rank`) for the similarity/distance scores and return them in a
+#' sparse matrix.
 #'
-#' @param x a [base::matrix] or [Matrix::Matrix] object. Dense matrices are covered to
-#'   the [Matrix::CsparseMatrix-class] internally.
+#' @param x a [base::matrix] or [Matrix::Matrix] object. Only sparse matrices are
+#' covered to the [Matrix::CsparseMatrix-class] internally.
 #' @param y if a [base::matrix] or [Matrix::Matrix] object is provided, proximity
 #'   between documents or features in `x` and `y` is computed.
 #' @param margin integer indicating margin of similarity/distance computation. 1

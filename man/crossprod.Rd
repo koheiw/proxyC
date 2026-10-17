@@ -5,18 +5,21 @@
 \alias{tcrossprod}
 \title{Cross-product of large sparse matrices}
 \usage{
-crossprod(x, y = NULL, min_prod = NULL, digits = 14)
+crossprod(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14)
 
-tcrossprod(x, y = NULL, min_prod = NULL, digits = 14)
+tcrossprod(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14)
 }
 \arguments{
-\item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object. Dense matrices are covered to
-the \link[Matrix:CsparseMatrix-class]{Matrix::CsparseMatrix} internally.}
+\item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object. Only sparse matrices are
+covered to the \link[Matrix:CsparseMatrix-class]{Matrix::CsparseMatrix} internally.}
 
 \item{y}{if a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object is provided, proximity
 between documents or features in \code{x} and \code{y} is computed.}
 
 \item{min_prod}{the minimum product to be recorded.}
+
+\item{sparse}{if \code{TRUE}, returns \link[Matrix:sparseMatrix]{Matrix::sparseMatrix} object. When neither
+\code{min_simil} nor \code{rank} is used, dense matrices require less space in RAM.}
 
 \item{digits}{determines rounding of small values towards zero. Use primarily
 to correct floating point errors. Rounding is performed in C++ in a similar
