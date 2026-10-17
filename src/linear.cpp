@@ -43,28 +43,31 @@ S4 cpp_linear(SEXP s1,
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_sd_sparse(arma::sp_mat& mt) {
-    std::vector<double> sds = to_vector(stddev(mt, 0));
-    return wrap(sds);
+NumericVector cpp_sd(SEXP s) {
+    if (Rf_isS4(s)) {
+        arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
+        std::vector<double> sds = to_vector(stddev(mt, 0));
+        return wrap(sds);
+    } else {
+        arma::mat mt = Rcpp::as<arma::mat>(s);
+        std::vector<double> sds = to_vector(stddev(mt, 0));
+        return wrap(sds);
+    }
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_nz_sparse(arma::sp_mat& mt) {
-    std::vector<double> nzs = to_vector(nnz(mt));
-    return wrap(nzs);
+NumericVector cpp_nz(SEXP s) {
+    if (Rf_isS4(s)) {
+        arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
+        std::vector<double> nzs = to_vector(nnz(mt));
+        return wrap(nzs);
+    } else {
+        arma::mat mt = Rcpp::as<arma::mat>(s);
+        std::vector<double> nzs = to_vector(nnz(mt));
+        return wrap(nzs);
+    }
 }
 
-// [[Rcpp::export]]
-NumericVector cpp_sd_dense(arma::mat& mt) {
-    std::vector<double> sds = to_vector(stddev(mt, 0));
-    return wrap(sds);
-}
-
-// [[Rcpp::export]]
-NumericVector cpp_nz_dense(arma::mat& mt) {
-    std::vector<double> nzs = to_vector(nnz(mt));
-    return wrap(nzs);
-}
 
 /***R
 mt1 <- Matrix::rsparsematrix(100, 2, 1)
