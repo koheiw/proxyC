@@ -1,3 +1,11 @@
+# proxyC 0.6.0
+
+## New features and improvements
+
+- Significantly reduces the computation time and storage when dense matrices are 
+  given to `simil()` or`dist()`. They no longer convert dense matrices to sparse 
+  matrices internally.
+
 # proxyC 0.5.2
 
 ## Bug fixes
