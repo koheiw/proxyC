@@ -151,13 +151,14 @@ namespace proxyc{
         return simil;
     }
 
-    template <typename M> // for all dense matrix types
-    inline std::vector<double> to_vector(const arma::Base<double, M>& mt) {
-        return arma::conv_to<std::vector<double>>::from(arma::mat(mt.get_ref()));
+    template <typename T>
+    inline std::vector<double> to_vector(const arma::Base<double, T>& expr) {
+        return arma::conv_to<std::vector<double>>::from(arma::mat(expr.get_ref()));
     }
 
-    inline std::vector<double> to_vector(const arma::sp_mat& mt) {
-        return arma::conv_to< std::vector<double> >::from(arma::mat(mt));
+    template <typename T>
+    inline std::vector<double> to_vector(const arma::SpBase<double, T>& expr) {
+        return arma::conv_to<std::vector<double>>::from(arma::mat(arma::sp_mat(expr.get_ref())));
     }
 
     inline std::vector<double> to_vector(const arma::rowvec& v) {
