@@ -81,6 +81,7 @@ rowZeros <- function(x) {
 #' Find Column or row indices of maximum values in sparse matrices. Works in a
 #' similar way as `base::max.col(ties.method = "first")` but without conversion
 #' to dense matrices.
+#' @param x a [base::matrix] or [Matrix::Matrix] object.
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' maxCol(mt)

@@ -9,6 +9,9 @@ maxCol(x)
 
 maxRow(x)
 }
+\arguments{
+\item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object.}
+}
 \description{
 Find Column or row indices of maximum values in sparse matrices. Works in a
 similar way as \code{base::max.col(ties.method = "first")} but without conversion
