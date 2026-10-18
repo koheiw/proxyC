@@ -56,6 +56,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_maxrow
+IntegerVector cpp_maxrow(SEXP s);
+RcppExport SEXP _proxyC_cpp_maxrow(SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_maxrow(s));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_mask
 S4 cpp_mask(IntegerVector v1_, IntegerVector v2_, const int thread);
 RcppExport SEXP _proxyC_cpp_mask(SEXP v1_SEXP, SEXP v2_SEXP, SEXP threadSEXP) {
@@ -120,6 +131,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_proxyC_cpp_linear", (DL_FUNC) &_proxyC_cpp_linear, 13},
     {"_proxyC_cpp_sd", (DL_FUNC) &_proxyC_cpp_sd, 1},
     {"_proxyC_cpp_nz", (DL_FUNC) &_proxyC_cpp_nz, 1},
+    {"_proxyC_cpp_maxrow", (DL_FUNC) &_proxyC_cpp_maxrow, 1},
     {"_proxyC_cpp_mask", (DL_FUNC) &_proxyC_cpp_mask, 3},
     {"_proxyC_cpp_pair", (DL_FUNC) &_proxyC_cpp_pair, 16},
     {"_proxyC_cpp_get_max_thread", (DL_FUNC) &_proxyC_cpp_get_max_thread, 0},

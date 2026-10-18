@@ -13,6 +13,10 @@ cpp_nz <- function(s) {
     .Call('_proxyC_cpp_nz', PACKAGE = 'proxyC', s)
 }
 
+cpp_maxrow <- function(s) {
+    .Call('_proxyC_cpp_maxrow', PACKAGE = 'proxyC', s)
+}
+
 cpp_mask <- function(v1_, v2_, thread = -1L) {
     .Call('_proxyC_cpp_mask', PACKAGE = 'proxyC', v1_, v2_, thread)
 }
