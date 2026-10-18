@@ -37,18 +37,14 @@ tcrossprod <- function(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14)
 #' @export
 colSds <- function(x) {
     x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    result <- cpp_sd(x)
-    names(result) <- colnames(x)
-    return(result)
+    structure(cpp_sd(x), names = colnames(x))
 }
 
 #' @rdname colSds
 #' @export
 rowSds <- function(x) {
     x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    result <- cpp_sd(t(x))
-    names(result) <- rownames(x)
-    return(result)
+    structure(cpp_sd(t(x)), names = rownames(x))
 }
 
 #' Number of zeros in columns and rows of large matrices
@@ -62,18 +58,49 @@ rowSds <- function(x) {
 #' @export
 colZeros <- function(x) {
     x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    result <- nrow(x) - cpp_nz(x)
-    names(result) <- colnames(x)
-    return(result)
+    structure(nrow(x) - cpp_nz(x), names = colnames(x))
 }
 
 #' @rdname colZeros
 #' @export
 rowZeros <- function(x) {
     x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    result <- ncol(x) - cpp_nz(t(x))
-    names(result) <- rownames(x)
-    return(result)
+    structure(ncol(x) - cpp_nz(t(x)), names = rownames(x))
+}
+
+#' Maximum/minimum values in columns or rows
+#'
+#' Produces the same result as `apply(x, 1, max)` or `apply(x, 2, min)`.
+#' @param x a [base::matrix] or [Matrix::Matrix] object.
+#' @examples
+#' mt <- Matrix::rsparsematrix(100, 100, 0.01)
+#' colMaxs(mt)
+#' apply(mt, 2, max) # the same
+#' @export
+colMaxs <- function(x) {
+    x <- as(as(x, "CsparseMatrix"), "dMatrix")
+    structure(cpp_max(x), names = colnames(x))
+}
+
+#' @rdname colMaxs
+#' @export
+rowMaxs <- function(x) {
+    x <- as(as(x, "CsparseMatrix"), "dMatrix")
+    structure(cpp_max(t(x)), names = rownames(x))
+}
+
+#' @rdname colMaxs
+#' @export
+colMins <- function(x) {
+    x <- as(as(x, "CsparseMatrix"), "dMatrix")
+    structure(cpp_min(x), names = colnames(x))
+}
+
+#' @rdname colMaxs
+#' @export
+rowMins <- function(x) {
+    x <- as(as(x, "CsparseMatrix"), "dMatrix")
+    structure(cpp_min(t(x)), names = rownames(x))
 }
 
 #' Column or row indices of maximum values
@@ -89,18 +116,14 @@ rowZeros <- function(x) {
 #' @export
 maxCol <- function(x) {
     x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    result <- cpp_maxrow(t(x)) + 1L
-    names(result) <- rownames(x)
-    return(result)
+    structure(cpp_maxrow(t(x)) + 1L, names = rownames(x))
 }
 
 #' @rdname maxCol
 #' @export
 maxRow <- function(x) {
     x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    result <- cpp_maxrow(x) + 1L
-    names(result) <- colnames(x)
-    return(result)
+    structure(cpp_maxrow(x) + 1L, names = colnames(x))
 }
 
 getThreads <- function() {
