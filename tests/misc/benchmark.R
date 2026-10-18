@@ -23,3 +23,16 @@ microbenchmark::microbenchmark(
     proxyC2 = proxyC::crossprod(mt1, mt2, sparse = FALSE),
     times = 10
 )
+
+microbenchmark::microbenchmark(
+    maxCol(smt1),
+    max.col(smt1),
+    times = 10
+)
+
+microbenchmark::microbenchmark(
+    maxCol(mt1),
+    max.col(mt1),
+    times = 10
+)
+

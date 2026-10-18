@@ -146,6 +146,32 @@ test_that("colZeros and rowZeros are working", {
     expect_equal(colZeros(as.matrix(mt)), apply(mt, 2, function(x) sum(x == 0)))
 })
 
+test_that("maxRow and maxCol are working", {
+    mt <- rsparsematrix(100, 100, 0.5)
+    rownames(mt) <- paste0("row", 1:100)
+    colnames(mt) <- paste0("col", 1:100)
+
+    expect_identical(
+        max.col(mt, ties.method = "first"),
+        unname(maxCol(mt))
+    )
+
+    expect_identical(
+        max.col(t(mt), ties.method = "first"),
+        unname(maxRow(mt))
+    )
+
+    expect_identical(
+        names(maxRow(mt)),
+        colnames(mt)
+    )
+
+    expect_identical(
+        names(maxCol(mt)),
+        rownames(mt)
+    )
+})
+
 test_that("diag is working", {
     sim1 <- proxyC:::proxy(mat_test[11:20,], mat_test[1:10,], diag = TRUE)
     expect_is(sim1, "ddiMatrix")
