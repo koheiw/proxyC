@@ -5,32 +5,39 @@ distance measures.
 
 ## Notation
 
-$$\begin{matrix}
-{\overset{\rightarrow}{x} = \left\lbrack x_{i},x_{i + 1},\ldots,x_{n} \right\rbrack} \\
-{\overset{\rightarrow}{y} = \left\lbrack y_{i},y_{i + 1},\ldots,y_{n} \right\rbrack}
-\end{matrix}$$
+``` math
+\begin{gather}
+\vec{x} = [x_i, x_{i + 1}, \dots, x_n] \\
+\vec{y} = [y_i, y_{i + 1}, \dots, y_n]
+\end{gather}
+```
 
-The length of the vector $n = {||}\overset{\rightarrow}{x}{||}$, while
-$\left| \overset{\rightarrow}{x} \right|$ is the absolute values of the
-elements.
+The length of the vector $`n = ||\vec{x}||`$, while $`|\vec{x}|`$ is the
+absolute values of the elements.
 
 Operations on vectors are element-wise:
 
-$$\begin{matrix}
-{\overset{\rightarrow}{z} = \overset{\rightarrow}{x}\overset{\rightarrow}{y}} \\
-{n = {||}\overset{\rightarrow}{x}{||} = {||}\overset{\rightarrow}{y}{||} = {||}\overset{\rightarrow}{z}{||}}
-\end{matrix}$$
+``` math
+\begin{gather}
+\vec{z} = \vec{x}\vec{y} \\
+n = ||\vec{x}|| = ||\vec{y}|| =||\vec{z}||
+\end{gather}
+```
 
 Summation of the elements of vectors is written using sigma without
 specifying the range:
 
-$$\sum\overset{\rightarrow}{x} = \sum\limits_{i = 1}^{n}x_{i}$$
+``` math
+\sum{\vec{x}} = \sum_{i=1}^{n}{x_i}
+```
 
 When the elements of the vector is compared with a value in a pair of
 square brackets, the summation is counting the number of elements that
 equal (or unequal) to the value:
 
-$$\sum\left\lbrack \overset{\rightarrow}{x} = 1 \right\rbrack = \sum\limits_{i = 1}^{n}\left\lbrack x_{i} = 1 \right\rbrack$$
+``` math
+\sum{[\vec{x} = 1]} = \sum_{i=1}^{n}{[x_i = 1]}
+```
 
 ## Similarity Measures
 
@@ -39,59 +46,75 @@ Similarity measures are available in
 
 #### Cosine similarity (“cosine”)
 
-$$simil = \frac{\sum{\overset{\rightarrow}{x}\overset{\rightarrow}{y}}}{\sqrt{\sum{\overset{\rightarrow}{x}}^{2}}\sqrt{\sum{\overset{\rightarrow}{y}}^{2}}}$$
+``` math
+simil = \frac{\sum{\vec{x}\vec{y}}}{\sqrt{\sum{\vec{x} ^ 2}} \sqrt{\sum{\vec{y} ^ 2}}}
+```
 
 #### Pearson correlation coefficient (“correlation”)
 
-$$simil = \frac{Cov\left( \overset{\rightarrow}{x},\overset{\rightarrow}{y} \right)}{Var\left( \overset{\rightarrow}{x} \right)Var\left( \overset{\rightarrow}{y} \right)}$$
+``` math
+simil = \frac{Cov(\vec{x},\vec{y})}{Var(\vec{x}) Var(\vec{y})}
+```
 
 #### Jaccard similarity (“jaccard” and “ejaccard”)
 
-The values of $x$ and $y$ are Boolean for “jaccard”.
+The values of $`x`$ and $`y`$ are Boolean for “jaccard”.
 
-$$\begin{matrix}
-{e = \sum{\overset{\rightarrow}{x}\overset{\rightarrow}{y}}} \\
-{w = \text{user-provided weight}} \\
-{simil = \frac{e}{\sum{\overset{\rightarrow}{x}}^{w} + \sum{\overset{\rightarrow}{y}}^{w} - e}}
-\end{matrix}$$
+``` math
+\begin{gather}
+e = \sum{\vec{x} \vec{y}} \\
+w = \text{user-provided weight} \\
+simil = \frac{e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w} - e}
+\end{gather}
+```
 
 #### Fuzzy Jaccard similarity (“fjaccard”)
 
-The values must be $0 \leq x \leq 1.0$ and $0 \leq y \leq 1.0$.
+The values must be $`0 \le x \le 1.0`$ and $`0 \le y \le 1.0`$.
 
-$$simil = \frac{\sum{min\left( \overset{\rightarrow}{x},\overset{\rightarrow}{y} \right)}}{\sum{max\left( \overset{\rightarrow}{x},\overset{\rightarrow}{y} \right)}}$$
+``` math
+simil = \frac{\sum{min(\vec{x}, \vec{y})}}{\sum{max(\vec{x}, \vec{y})}}
+```
 
 #### Dice similarity (“dice” and “edice”)
 
-The values of $x$ and $y$ are Boolean for “dice”.
+The values of $`x`$ and $`y`$ are Boolean for “dice”.
 
-$$\begin{matrix}
-{e = \sum{\overset{\rightarrow}{x}\overset{\rightarrow}{y}}} \\
-{w = \text{user-provided weight}} \\
-{simil = \frac{2e}{\sum{\overset{\rightarrow}{x}}^{w} + \sum{\overset{\rightarrow}{y}}^{w}}}
-\end{matrix}$$
+``` math
+\begin{gather}
+e = \sum{\vec{x} \vec{y}} \\
+w = \text{user-provided weight} \\
+simil = \frac{2 e}{\sum{\vec{x} ^ w} + \sum{\vec{y} ^ w}}
+\end{gather}
+```
 
 #### Hamann similarity (“hamann”)
 
-$$\begin{matrix}
-{e = \sum{\overset{\rightarrow}{x}\overset{\rightarrow}{y}}} \\
-{n = {||}\overset{\rightarrow}{x}{||} = {||}\overset{\rightarrow}{y}{||}} \\
-{u = n - e} \\
-{simil = \frac{e - u}{e + u}}
-\end{matrix}$$
+``` math
+\begin{gather}
+e = \sum{\vec{x} \vec{y}} \\
+n = ||\vec{x}|| = ||\vec{y}|| \\
+u = n - e \\
+simil = \frac{e - u}{e + u}
+\end{gather}
+```
 
 #### Faith similarity (“faith”)
 
-$$\begin{matrix}
-{t = \sum{\left\lbrack \overset{\rightarrow}{x} = 1 \right\rbrack\left\lbrack \overset{\rightarrow}{y} = 1 \right\rbrack}} \\
-{f = \sum{\left\lbrack \overset{\rightarrow}{x} = 0 \right\rbrack\left\lbrack \overset{\rightarrow}{y} = 0 \right\rbrack}} \\
-{n = {||}\overset{\rightarrow}{x}{||} = {||}\overset{\rightarrow}{y}{||}} \\
-{simil = \frac{t + 0.5f}{n}}
-\end{matrix}$$
+``` math
+\begin{gather}
+t = \sum{[\vec{x} = 1][\vec{y} = 1]} \\
+f = \sum{[\vec{x} = 0][\vec{y} = 0]} \\
+n = ||\vec{x}|| = ||\vec{y}|| \\
+simil = \frac{t + 0.5 f}{n}
+\end{gather}
+```
 
 #### Simple matching (“matching”)
 
-$$simil = \sum\left\lbrack \overset{\rightarrow}{x} = \overset{\rightarrow}{y} \right\rbrack$$
+``` math
+simil = \sum{[\vec{x} = \vec{y}]}
+```
 
 ## Distance Measures
 
@@ -99,68 +122,89 @@ Similarity measures are available in
 [`proxyC::dist()`](https://koheiw.github.io/proxyC/reference/simil.md).
 Smoothing of the vectors can be performed when `method` is “chisquared”,
 “kullback”, “jefferys” or “jensen”: the value of `smooth` will be added
-to each element of $\overset{\rightarrow}{x}$ and
-$\overset{\rightarrow}{y}$.
+to each element of $`\vec{x}`$ and $`\vec{y}`$.
 
 #### Manhattan distance (“manhattan”)
 
-$$dist = \sum\left| \overset{\rightarrow}{x} - \overset{\rightarrow}{y} \right|$$
+``` math
+dist = \sum{|\vec{x} - \vec{y}|}
+```
 
 #### Canberra distance (“canberra”)
 
-$$dist = \frac{\left| \overset{\rightarrow}{x} - \overset{\rightarrow}{y} \right|}{\left| \overset{\rightarrow}{x} \right| + \left| \overset{\rightarrow}{y} \right|}$$
+``` math
+dist = \frac{|\vec{x} - \vec{y}|}{|\vec{x}| + |\vec{y}|}
+```
 
 #### Euclidian (“euclidian”)
 
-$$dist = \sum\sqrt{{\overset{\rightarrow}{x}}^{2} + {\overset{\rightarrow}{y}}^{2}}$$
+``` math
+dist = \sum{\sqrt{\vec{x}^2 + \vec{y}^2}}
+```
 
 #### Minkowski distance (“minkowski”)
 
-$$\begin{matrix}
-{p = \text{user-provided parameter}} \\
-{dist = \left( \sum\left| \overset{\rightarrow}{x} - \overset{\rightarrow}{y} \right|^{p} \right)^{\frac{1}{p}}}
-\end{matrix}$$
+``` math
+\begin{gather}
+p = \text{user-provided parameter} \\
+dist = \left( \sum{|\vec{x} - \vec{y}| ^ p} \right) ^ \frac{1}{p}
+\end{gather}
+```
 
 #### Hamming distance (“hamming”)
 
-$$dist = \sum\left\lbrack \overset{\rightarrow}{x} \neq \overset{\rightarrow}{y} \right\rbrack$$
+``` math
+dist = \sum{[\vec{x} \ne \vec{y}]}
+```
 
 #### The largest difference between values (“maximum”)
 
-$$dist = \max{\overset{\rightarrow}{x} - \overset{\rightarrow}{y}}$$
+``` math
+dist = \max{\vec{x} - \vec{y}}
+```
 
 #### Chi-squared divergence (“chisquared”)
 
-$$\begin{matrix}
-{O_{ij} = {\text{augmented matrix from}\mspace{6mu}}\overset{\rightarrow}{x}{\mspace{6mu}\text{and}\mspace{6mu}}\overset{\rightarrow}{y}} \\
-{E_{ij} = {\text{matrix of expected count for}\mspace{6mu}}O_{ij}} \\
-{dist = \sum\frac{\left( O_{ij} - E_{ij} \right)^{2}}{E_{ij}}}
-\end{matrix}$$
+``` math
+\begin{gather}
+O_{ij} = \text{augmented matrix from } \vec{x} \text{ and } \vec{y} \\
+E_{ij} = \text{matrix of expected count for } O_{ij} \\
+dist = \sum{\frac{(O_{ij} - E_{ij}) ^ 2}{ E_{ij}}}
+\end{gather}
+```
 
 #### Kullback–Leibler divergence (“kullback”)
 
-$$\begin{matrix}
-{\overset{\rightarrow}{p} = \frac{\overset{\rightarrow}{x}}{\sum\overset{\rightarrow}{x}}} \\
-{\overset{\rightarrow}{q} = \frac{\overset{\rightarrow}{y}}{\sum\overset{\rightarrow}{y}}} \\
-{dist = \sum{\overset{\rightarrow}{q}\log_{2}\frac{\overset{\rightarrow}{q}}{\overset{\rightarrow}{p}}}}
-\end{matrix}$$
+``` math
+\begin{gather}
+\vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
+\vec{q} = \frac{\vec{y}}{\sum{\vec{y}}} \\
+dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}}
+\end{gather}
+```
 
 #### Jeffreys divergence (“jeffreys”)
 
-$$\begin{matrix}
-{\overset{\rightarrow}{p} = \frac{\overset{\rightarrow}{x}}{\sum\overset{\rightarrow}{x}}} \\
-{\overset{\rightarrow}{q} = \frac{\overset{\rightarrow}{y}}{\sum\overset{\rightarrow}{y}}} \\
-{dist = \sum{\overset{\rightarrow}{q}\log_{2}\frac{\overset{\rightarrow}{q}}{\overset{\rightarrow}{p}}} + \sum{\overset{\rightarrow}{p}\log_{2}\frac{\overset{\rightarrow}{p}}{\overset{\rightarrow}{q}}}}
-\end{matrix}$$
+``` math
+\begin{gather}
+\vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
+\vec{q} = \frac{\vec{y}}{\sum{\vec{y}}} \\
+dist = \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{p}}}} + 
+       \sum{\vec{p} \log_2{\frac{\vec{p}}{\vec{q}}}}
+\end{gather}
+```
 
 #### Jensen-Shannon divergence (“jensen”)
 
-$$\begin{matrix}
-{\overset{\rightarrow}{p} = \frac{\overset{\rightarrow}{x}}{\sum\overset{\rightarrow}{x}}} \\
-{\overset{\rightarrow}{q} = \frac{\overset{\rightarrow}{y}}{\sum\overset{\rightarrow}{y}}} \\
-{\overset{\rightarrow}{m} = \frac{1}{2}\left( \overset{\rightarrow}{p} + \overset{\rightarrow}{q} \right)} \\
-{dist = \frac{1}{2}\sum{\overset{\rightarrow}{q}\log_{2}\frac{\overset{\rightarrow}{q}}{\overset{\rightarrow}{m}}} + \frac{1}{2}\sum{\overset{\rightarrow}{p}\log_{2}\frac{\overset{\rightarrow}{p}}{\overset{\rightarrow}{m}}}}
-\end{matrix}$$
+``` math
+\begin{gather}
+\vec{p} = \frac{\vec{x}}{\sum{\vec{x}}} \\
+\vec{q} = \frac{\vec{y}}{\sum{\vec{y}}} \\
+\vec{m} = \frac{1}{2} (\vec{p} + \vec{q}) \\
+dist = \frac{1}{2} \sum{\vec{q} \log_2{\frac{\vec{q}}{\vec{m}}}} + 
+       \frac{1}{2} \sum{\vec{p} \log_2{\frac{\vec{p}}{\vec{m}}}}
+\end{gather}
+```
 
 ## References
 

@@ -28,12 +28,14 @@ sudo apt install libtbb-dev
 ```
 
 ``` r
+
 install.packages("proxyC")
 ```
 
 ## Performance
 
 ``` r
+
 require(Matrix)
 ## Loading required package: Matrix
 require(microbenchmark)
@@ -61,6 +63,7 @@ With sparse matrices, **proxyC** is roughly 10 to 100 times faster than
 **proxy**.
 
 ``` r
+
 bm1 <- microbenchmark(
     "proxy 1k" = proxy::simil(dm1k, method = "cosine"),
     "proxyC 1k" = proxyC::simil(sm1k, margin = 2, method = "cosine"),
@@ -79,6 +82,7 @@ If `min_simil` is used, **proxyC** becomes even faster because small
 similarity scores are floored to zero.
 
 ``` r
+
 bm2 <- microbenchmark(
     "proxyC all" = proxyC::simil(sm1k, margin = 2, method = "cosine"),
     "proxyC min_simil" = proxyC::simil(sm1k, margin = 2, method = "cosine", min_simil = 0.9),
@@ -92,6 +96,7 @@ autoplot(bm2)
 Flooring by `min_simil` makes the resulting object much smaller.
 
 ``` r
+
 proxyC::simil(sm10k, margin = 2, method = "cosine") %>% 
   object.size() %>% 
   print(units = "MB")
@@ -107,6 +112,7 @@ proxyC::simil(sm10k, margin = 2, method = "cosine", min_simil = 0.9) %>%
 If `rank` is used, **proxyC** only returns top-n values.
 
 ``` r
+
 bm3 <- microbenchmark(
     "proxyC rank" = proxyC::simil(sm1k, margin = 2, method = "correlation", rank = 10),
     "proxyC all" = proxyC::simil(sm1k, margin = 2, method = "correlation"),

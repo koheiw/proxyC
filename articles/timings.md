@@ -9,6 +9,7 @@ other R packages for a variable sparsity level.
 ## Euclidean Distance
 
 ``` r
+
 library(Matrix)
 library(microbenchmark)
 library(ggplot2)
@@ -43,6 +44,7 @@ compute_timings_for_euclidean <- function(
 ### 1000 rows, 1000 columns, 95% sparsity
 
 ``` r
+
 bm <- compute_timings_for_euclidean(n_rows = n_rows, n_cols = n_cols, density = 0.05)
 
 autoplot(bm)
@@ -52,7 +54,7 @@ autoplot(bm)
 #> ℹ The deprecated feature was likely used in the microbenchmark package.
 #>   Please report the issue at
 #>   <https://github.com/joshuaulrich/microbenchmark/issues/>.
-#> This warning is displayed once every 8 hours.
+#> This warning is displayed once per session.
 #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 #> generated.
 ```
@@ -62,6 +64,7 @@ autoplot(bm)
 ### 1000 rows, 1000 columns, 50% sparsity
 
 ``` r
+
 bm <- compute_timings_for_euclidean(n_rows = n_rows, n_cols = n_cols, density = 0.5)
 
 autoplot(bm)
@@ -72,6 +75,7 @@ autoplot(bm)
 ### 1000 rows, 1000 columns, 5% sparsity
 
 ``` r
+
 bm <- compute_timings_for_euclidean(n_rows = n_rows, n_cols = n_cols, density = 0.95)
 
 autoplot(bm)
@@ -82,6 +86,7 @@ autoplot(bm)
 ## Pearson Correlation
 
 ``` r
+
 n_rows <- 1000L
 n_cols <- 1000L
 
@@ -110,6 +115,7 @@ compute_timings_for_correlation <- function(
 ### 1000 rows, 1000 columns, 95% sparsity
 
 ``` r
+
 bm <- compute_timings_for_correlation(n_rows = n_rows, n_cols = n_cols, density = 0.05)
 
 autoplot(bm)
@@ -120,6 +126,7 @@ autoplot(bm)
 ### 1000 rows, 1000 columns, 50% sparsity
 
 ``` r
+
 bm <- compute_timings_for_correlation(n_rows = n_rows, n_cols = n_cols, density = 0.5)
 
 autoplot(bm)
@@ -130,6 +137,7 @@ autoplot(bm)
 ### 1000 rows, 1000 columns, 5% sparsity
 
 ``` r
+
 bm <- compute_timings_for_correlation(n_rows = n_rows, n_cols = n_cols, density = 0.95)
 
 autoplot(bm)

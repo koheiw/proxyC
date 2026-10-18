@@ -13,14 +13,14 @@
 Source:
 [`DESCRIPTION`](https://github.com/koheiw/proxyC/blob/master/DESCRIPTION)
 
-Watanabe K, Cannoodt R (2025). *proxyC: Computes Proximity in Large
+Watanabe K, Cannoodt R (2026). *proxyC: Computes Proximity in Large
 Sparse Matrices*. R package version 0.5.2,
 <https://github.com/koheiw/proxyC>.
 
     @Manual{,
       title = {proxyC: Computes Proximity in Large Sparse Matrices},
       author = {Kohei Watanabe and Robrecht Cannoodt},
-      year = {2025},
+      year = {2026},
       note = {R package version 0.5.2},
       url = {https://github.com/koheiw/proxyC},
     }

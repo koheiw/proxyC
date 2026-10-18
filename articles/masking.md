@@ -13,6 +13,7 @@ passing it to
 ## Example
 
 ``` r
+
 library(proxyC)
 library(Matrix)
 
@@ -33,6 +34,7 @@ colnames(mt2) <- c("a", "b", "c", "d", "e")
 ```
 
 ``` r
+
 (sim <- simil(mt1, mt2, margin = 2, method = "cosine", mask = msk, use_nan = TRUE))
 #> 6 x 5 sparse Matrix of class "dgTMatrix"
 #>             a   b   c           d           e
@@ -50,6 +52,7 @@ With large matrices, we can measures the impact of masked similarity
 computation.
 
 ``` r
+
 library(microbenchmark)
 library(ggplot2)
 
@@ -68,6 +71,7 @@ scores but saves values for only unmasked pairs if `method` is either
 “cosine”, “correlation” or “euclidean”.
 
 ``` r
+
 bm <- microbenchmark(
     unmasked = simil(mt1, mt2, margin = 2, method = "cosine", mask = NULL, drop0 = TRUE),
     masked = simil(mt1, mt2, margin = 2, method = "cosine", mask = msk, drop0 = TRUE)
@@ -80,7 +84,7 @@ autoplot(bm)
 #> ℹ The deprecated feature was likely used in the microbenchmark package.
 #>   Please report the issue at
 #>   <https://github.com/joshuaulrich/microbenchmark/issues/>.
-#> This warning is displayed once every 8 hours.
+#> This warning is displayed once per session.
 #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 #> generated.
 ```
@@ -95,6 +99,7 @@ unmasked pairs. We expect to see similar performance improvement in
 ejaccard”, “fjaccard”, “edice”, “hamann”, “faith” and”simple matching”.
 
 ``` r
+
 bm <- microbenchmark(
     unmasked = simil(mt1, mt2, margin = 2, method = "jaccard", mask = NULL, drop0 = TRUE),
     masked = simil(mt1, mt2, margin = 2, method = "jaccard", mask = msk, drop0 = TRUE)
@@ -111,6 +116,7 @@ Masking also dramatically reduces the sizes of similarity matrices when
 `use_nan = FALSE`.
 
 ``` r
+
 sim_um <- simil(mt1, mt2, margin = 2, method = "cosine", mask = NULL, use_nan = FALSE)
 sim_mk <- simil(mt1, mt2, margin = 2, method = "cosine", mask = msk, use_nan = FALSE)
 
