@@ -57,6 +57,24 @@ rowvec mean(const mat& mt) {
     return(v);
 }
 
+urowvec maxrow(const sp_mat& mt) {
+    urowvec v(mt.n_cols, fill::zeros);
+    if (mt.is_empty()) return(v);
+    for (uword i = 0; i < mt.n_cols; i++) {
+        v[i] = mt.col(i).index_max();
+    }
+    return(v);
+}
+
+urowvec maxrow(const mat& mt) {
+    urowvec v(mt.n_cols, fill::zeros);
+    if (mt.is_empty()) return(v);
+    for (uword i = 0; i < mt.n_cols; i++) {
+        v[i] = mt.col(i).index_max();
+    }
+    return(v);
+}
+
 template <typename M1, typename M2>
 void calc_linear(const uword i,
                  const M1& mt1t, const M2& mt2, const sp_mat& mask,
