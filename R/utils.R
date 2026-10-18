@@ -26,7 +26,7 @@ tcrossprod <- function(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14)
 
 #' Standard deviation of columns and rows of large matrices
 #'
-#' Produces the same result as `apply(x, 1, sd)` or `apply(x, 2, sd)`
+#' Produces the same result as `apply(x, 2, sd)` and `apply(x, 1, sd)`, respectively.
 #' without coercing matrix to dense matrix. Values are not identical to
 #' `sd()` because of the floating point precision issue in C++.
 #' @param x a [base::matrix] or [Matrix::Matrix] object.
@@ -70,7 +70,8 @@ rowZeros <- function(x) {
 
 #' Maximum/minimum values in columns or rows
 #'
-#' Produces the same result as `apply(x, 1, max)` or `apply(x, 2, min)`.
+#' Produces the same result as `apply(x, 2, max)`, `apply(x, 1, max)`,
+#' `apply(x, 2, min)` and `apply(x, 1, min)`, respectively, but `NA` are ignored.
 #' @param x a [base::matrix] or [Matrix::Matrix] object.
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
