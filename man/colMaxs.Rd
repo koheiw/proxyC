@@ -19,8 +19,8 @@ rowMins(x)
 \item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object.}
 }
 \description{
-Produces the same result as \code{apply(x, 2, max)}, \code{apply(x, 1, max)},
-\code{apply(x, 2, min)} and \code{apply(x, 1, min)}, respectively, but \code{NA} are ignored.
+Produce the same result as \code{apply(x, 2, max)}, \code{apply(x, 1, max)},
+\code{apply(x, 2, min)} and \code{apply(x, 1, min)}, respectively, but ignore \code{NA}.
 }
 \examples{
 mt <- Matrix::rsparsematrix(100, 100, 0.01)

@@ -26,7 +26,7 @@ tcrossprod <- function(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14)
 
 #' Standard deviation of columns and rows of large matrices
 #'
-#' Produces the same result as `apply(x, 2, sd)` and `apply(x, 1, sd)`, respectively.
+#' Produce the same result as `apply(x, 2, sd)` and `apply(x, 1, sd)`, respectively.
 #' without coercing matrix to dense matrix. Values are not identical to
 #' `sd()` because of the floating point precision issue in C++.
 #' @param x a [base::matrix] or [Matrix::Matrix] object.
@@ -49,7 +49,7 @@ rowSds <- function(x) {
 
 #' Number of zeros in columns and rows of large matrices
 #'
-#' Produces the same result as applying `sum(x == 0)` to each row or column.
+#' Produce the same result as applying `sum(x == 0)` to each row or column.
 #' @param x a [base::matrix] or [Matrix::Matrix] object.
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
@@ -70,8 +70,8 @@ rowZeros <- function(x) {
 
 #' Maximum/minimum values in columns or rows
 #'
-#' Produces the same result as `apply(x, 2, max)`, `apply(x, 1, max)`,
-#' `apply(x, 2, min)` and `apply(x, 1, min)`, respectively, but `NA` are ignored.
+#' Produce the same result as `apply(x, 2, max)`, `apply(x, 1, max)`,
+#' `apply(x, 2, min)` and `apply(x, 1, min)`, respectively, but ignore `NA`.
 #' @param x a [base::matrix] or [Matrix::Matrix] object.
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
@@ -106,7 +106,7 @@ rowMins <- function(x) {
 
 #' Column or row indices of maximum values
 #'
-#' Find Column or row indices of maximum values in sparse matrices. Works in a
+#' Find column or row indices of maximum values in sparse matrices. Works in a
 #' similar way as `base::max.col(ties.method = "first")` but without conversion
 #' to dense matrices.
 #' @param x a [base::matrix] or [Matrix::Matrix] object.
