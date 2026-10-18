@@ -42,45 +42,6 @@ S4 cpp_linear(SEXP s1,
     }
 }
 
-// [[Rcpp::export]]
-NumericVector cpp_sd(SEXP s) {
-    if (Rf_isS4(s)) {
-        arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<double> v = to_vector(stddev(mt, 0));
-        return wrap(v);
-    } else {
-        arma::mat mt = Rcpp::as<arma::mat>(s);
-        std::vector<double> v = to_vector(stddev(mt, 0));
-        return wrap(v);
-    }
-}
-
-// [[Rcpp::export]]
-NumericVector cpp_nz(SEXP s) {
-    if (Rf_isS4(s)) {
-        arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<double> v = to_vector(nnz(mt));
-        return wrap(v);
-    } else {
-        arma::mat mt = Rcpp::as<arma::mat>(s);
-        std::vector<double> v = to_vector(nnz(mt));
-        return wrap(v);
-    }
-}
-
-// [[Rcpp::export]]
-IntegerVector cpp_maxrow(SEXP s) {
-    if (Rf_isS4(s)) {
-        arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<int> v = to_vector(maxrow(mt));
-        return wrap(v);
-    } else {
-        arma::mat mt = Rcpp::as<arma::mat>(s);
-        std::vector<int> v = to_vector(maxrow(mt));
-        return wrap(v);
-    }
-}
-
 
 /***R
 mt1 <- Matrix::rsparsematrix(100, 2, 1)
