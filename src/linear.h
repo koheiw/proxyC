@@ -45,7 +45,7 @@ void calc_linear(const uword i,
     if (use_mask)
         simils = replace_masked(simils, mask.col(i));
     simils = round(simils, digits);
-    double l = get_limit(simils, rank, limit);
+    double l = get_limit(simils, rank, limit); // NOTE: use arma::sort_index()?
     for (std::size_t k = 0; k < simils.size(); k++) {
         double s = simils[k];
         if (symm && k > i) continue;
