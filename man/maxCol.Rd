@@ -13,7 +13,7 @@ maxRow(x, use_nan = FALSE)
 \item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object.}
 
 \item{use_nan}{if \code{TRUE}, return \code{NA} for columns or rows with all zero.
-Only used when \code{x} is a sparse matrix.}
+Applies only when \code{x} is a sparse matrix.}
 }
 \value{
 an integer vector

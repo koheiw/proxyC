@@ -36,12 +36,14 @@ test_that("colSds and rowSds are working", {
         colZeros(mt) == 100
     )
 
-    # ignore use_nan
-    expect_all_false(
-        is.nan(rowSds(as.matrix(mt), use_nan = TRUE))
+    # error
+    expect_error(
+        maxCol(rowSds(mt), use_nan = TRUE),
+        "use_nan applies only x is a sparse matrix"
     )
-    expect_all_false(
-        is.nan(colSds(as.matrix(mt), use_nan = TRUE))
+    expect_error(
+        maxRow(colSds(mt), use_nan = TRUE),
+        "use_nan applies only x is a sparse matrix"
     )
 })
 
@@ -82,18 +84,22 @@ test_that("colMax, rowMax, colMin, rowMin are working", {
         rowZeros(mt) == 100
     )
 
-    # ignore use_nan
-    expect_all_false(
-        is.nan(colMaxs(as.matrix(mt), use_nan = TRUE))
+    # error
+    expect_error(
+        maxCol(colMaxs(mt), use_nan = TRUE),
+        "use_nan applies only x is a sparse matrix"
     )
-    expect_all_false(
-        is.nan(rowMaxs(as.matrix(mt), use_nan = TRUE))
+    expect_error(
+        maxRow(rowMaxs(mt), use_nan = TRUE),
+        "use_nan applies only x is a sparse matrix"
     )
-    expect_all_false(
-        is.nan(colMins(as.matrix(mt), use_nan = TRUE))
+    expect_error(
+        maxCol(colMins(mt), use_nan = TRUE),
+        "use_nan applies only x is a sparse matrix"
     )
-    expect_all_false(
-        is.nan(rowMins(as.matrix(mt), use_nan = TRUE))
+    expect_error(
+        maxRow(rowMins(mt), use_nan = TRUE),
+        "use_nan applies only x is a sparse matrix"
     )
 })
 
@@ -131,12 +137,14 @@ test_that("maxRow and maxCol are working", {
         colZeros(mt2) == 100
     )
 
-    # ignore use_nan
-    expect_all_false(
-        is.na(maxCol(as.matrix(mt2), use_nan = TRUE))
+    # error
+    expect_error(
+        maxCol(as.matrix(mt2), use_nan = TRUE),
+        "use_nan applies only x is a sparse matrix"
     )
-    expect_all_false(
-        is.nan(maxRow(as.matrix(mt2), use_nan = TRUE))
+    expect_error(
+        maxRow(as.matrix(mt2), use_nan = TRUE),
+        "use_nan applies only x is a sparse matrix"
     )
 })
 

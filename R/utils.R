@@ -61,6 +61,7 @@ rowZeros <- function(x) {
 #' @export
 colSds <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
+    check_use_nan(x, use_nan)
     structure(cpp_sd(x, use_nan), names = colnames(x))
 }
 
@@ -68,6 +69,7 @@ colSds <- function(x, use_nan = FALSE) {
 #' @export
 rowSds <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
+    check_use_nan(x, use_nan)
     structure(cpp_sd(t(x), use_nan), names = rownames(x))
 }
 
@@ -91,6 +93,7 @@ colMaxs <- function(x, use_nan = FALSE) {
 #' @export
 rowMaxs <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
+    check_use_nan(x, use_nan)
     structure(cpp_max(t(x), use_nan), names = rownames(x))
 }
 
@@ -98,6 +101,7 @@ rowMaxs <- function(x, use_nan = FALSE) {
 #' @export
 colMins <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
+    check_use_nan(x, use_nan)
     structure(cpp_min(x, use_nan), names = colnames(x))
 }
 
@@ -105,6 +109,7 @@ colMins <- function(x, use_nan = FALSE) {
 #' @export
 rowMins <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
+    check_use_nan(x, use_nan)
     structure(cpp_min(t(x), use_nan), names = rownames(x))
 }
 
@@ -115,7 +120,7 @@ rowMins <- function(x, use_nan = FALSE) {
 #' to dense matrices.
 #' @param x a [base::matrix] or [Matrix::Matrix] object.
 #' @param use_nan if `TRUE`, return `NA` for columns or rows with all zero.
-#'   Only used when `x` is a sparse matrix.
+#'   Applies only when `x` is a sparse matrix.
 #' @return an integer vector
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.9)
@@ -124,6 +129,7 @@ rowMins <- function(x, use_nan = FALSE) {
 #' @export
 maxCol <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
+    check_use_nan(x, use_nan)
     structure(cpp_maxrow(t(x), use_nan) + 1L, names = rownames(x))
 }
 
@@ -131,6 +137,7 @@ maxCol <- function(x, use_nan = FALSE) {
 #' @export
 maxRow <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
+    check_use_nan(x, use_nan)
     structure(cpp_maxrow(x, use_nan) + 1L, names = colnames(x))
 }
 
@@ -162,3 +169,7 @@ convertMatrix <- function(x, boolean = FALSE) {
     return(x)
 }
 
+check_use_nan <- function(x, use_nan) {
+    if (is.matrix(x) && use_nan)
+        stop("use_nan applies only x is a sparse matrix")
+}
