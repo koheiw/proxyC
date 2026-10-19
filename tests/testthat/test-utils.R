@@ -43,6 +43,17 @@ test_that("colSds and rowSds are working", {
     expect_all_false(
         is.nan(colSds(as.matrix(mt), use_nan = TRUE))
     )
+
+    # with NA
+    mt2 <- Matrix(c(0.1, 0.2, NA, -0.1, -0.2, 0), nrow = 2, sparse = TRUE)
+    expect_equal(
+        is.nan(rowSds(mt2)),
+        c(TRUE, FALSE)
+    )
+    expect_equal(
+        is.nan(colSds(mt2)),
+        c(FALSE, TRUE, FALSE)
+    )
 })
 
 test_that("colMax, rowMax, colMin, rowMin are working", {
@@ -95,6 +106,25 @@ test_that("colMax, rowMax, colMin, rowMin are working", {
     expect_all_false(
         is.nan(rowMins(as.matrix(mt), use_nan = TRUE))
     )
+
+    # with NA
+    mt2 <- Matrix(c(0.1, 0.2, NA, -0.1, -0.2, 0), nrow = 2, sparse = TRUE)
+    expect_equal(
+        is.nan(colMaxs(mt2)),
+        c(FALSE, FALSE, FALSE)
+    )
+    expect_equal(
+        is.nan(rowMaxs(mt2)),
+        c(FALSE, FALSE)
+    )
+    expect_equal(
+        is.nan(colMins(mt2)),
+        c(FALSE, FALSE, FALSE)
+    )
+    expect_equal(
+        is.nan(rowMins(mt2)),
+        c(FALSE, FALSE)
+    )
 })
 
 test_that("maxRow and maxCol are working", {
@@ -137,5 +167,16 @@ test_that("maxRow and maxCol are working", {
     )
     expect_all_false(
         is.nan(maxRow(as.matrix(mt), use_nan = TRUE))
+    )
+
+    # with NA
+    mt2 <- Matrix(c(0.1, 0.2, NA, -0.1, -0.2, 0), nrow = 2, sparse = TRUE)
+    expect_equal(
+        is.nan(maxCol(mt2)),
+        c(FALSE, FALSE)
+    )
+    expect_equal(
+        is.nan(maxRow(mt2)),
+        c(FALSE, FALSE, FALSE)
     )
 })
