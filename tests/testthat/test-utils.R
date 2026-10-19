@@ -1,5 +1,6 @@
 
 test_that("colZeros and rowZeros are working", {
+
     mt <- rsparsematrix(100, 100, 0.01)
     dimnames(mt) <- list(paste0("row", seq_len(nrow(mt))),
                          paste0("col", seq_len(ncol(mt))))
@@ -15,6 +16,7 @@ test_that("colZeros and rowZeros are working", {
 })
 
 test_that("colSds and rowSds are working", {
+
     mt <- rsparsematrix(100, 100, 0.01)
     dimnames(mt) <- list(paste0("row", seq_len(nrow(mt))),
                          paste0("col", seq_len(ncol(mt))))
@@ -24,7 +26,7 @@ test_that("colSds and rowSds are working", {
     expect_equal(rowSds(as.matrix(mt)), apply(mt, 1, sd))
     expect_equal(colSds(as.matrix(mt)), apply(mt, 2, sd))
 
-    # use NaN
+    # enable use_nan
     expect_identical(
         is.nan(rowSds(mt, use_nan = TRUE)),
         rowZeros(mt) == 100
@@ -33,9 +35,18 @@ test_that("colSds and rowSds are working", {
         is.nan(colSds(mt, use_nan = TRUE)),
         colZeros(mt) == 100
     )
+
+    # ignore use_nan
+    expect_all_false(
+        is.nan(rowSds(as.matrix(mt), use_nan = TRUE))
+    )
+    expect_all_false(
+        is.nan(colSds(as.matrix(mt), use_nan = TRUE))
+    )
 })
 
 test_that("colMax, rowMax, colMin, rowMin are working", {
+
     mt <- rsparsematrix(100, 100, 0.01)
     dimnames(mt) <- list(paste0("row", seq_len(nrow(mt))),
                          paste0("col", seq_len(ncol(mt))))
@@ -53,7 +64,7 @@ test_that("colMax, rowMax, colMin, rowMin are working", {
     expect_equal(rowMins(mt), apply(mt, 1, min))
     expect_equal(names(rowMins(mt)), rownames(mt))
 
-    # use NaN
+    # enable use_nan
     expect_identical(
         is.nan(colMaxs(mt, use_nan = TRUE)),
         colZeros(mt) == 100
@@ -70,9 +81,24 @@ test_that("colMax, rowMax, colMin, rowMin are working", {
         is.nan(rowMins(mt, use_nan = TRUE)),
         rowZeros(mt) == 100
     )
+
+    # ignore use_nan
+    expect_all_false(
+        is.nan(colMaxs(as.matrix(mt), use_nan = TRUE))
+    )
+    expect_all_false(
+        is.nan(rowMaxs(as.matrix(mt), use_nan = TRUE))
+    )
+    expect_all_false(
+        is.nan(colMins(as.matrix(mt), use_nan = TRUE))
+    )
+    expect_all_false(
+        is.nan(rowMins(as.matrix(mt), use_nan = TRUE))
+    )
 })
 
 test_that("maxRow and maxCol are working", {
+
     mt <- rsparsematrix(100, 100, 0.5)
     rownames(mt) <- paste0("row", 1:100)
     colnames(mt) <- paste0("col", 1:100)
@@ -81,19 +107,35 @@ test_that("maxRow and maxCol are working", {
         max.col(mt, ties.method = "first"),
         unname(maxCol(mt))
     )
-
     expect_identical(
         max.col(t(mt), ties.method = "first"),
         unname(maxRow(mt))
     )
-
     expect_identical(
         names(maxRow(mt)),
         colnames(mt)
     )
-
     expect_identical(
         names(maxCol(mt)),
         rownames(mt)
+    )
+
+    # enable use_nan
+    mt2 <- rsparsematrix(100, 100, 0.01)
+    expect_identical(
+        is.na(maxCol(mt2, use_nan = TRUE)), # NOTE: change to use_na?
+        rowZeros(mt2) == 100
+    )
+    expect_identical(
+        is.na(maxRow(mt2, use_nan = TRUE)),
+        colZeros(mt2) == 100
+    )
+
+    # ignore use_nan
+    expect_all_false(
+        is.na(maxCol(as.matrix(mt), use_nan = TRUE))
+    )
+    expect_all_false(
+        is.nan(maxRow(as.matrix(mt), use_nan = TRUE))
     )
 })
