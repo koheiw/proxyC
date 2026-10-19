@@ -21,23 +21,23 @@ cpp_tbb_enabled <- function() {
     .Call('_proxyC_cpp_tbb_enabled', PACKAGE = 'proxyC')
 }
 
-cpp_sd <- function(s) {
-    .Call('_proxyC_cpp_sd', PACKAGE = 'proxyC', s)
-}
-
 cpp_nz <- function(s) {
     .Call('_proxyC_cpp_nz', PACKAGE = 'proxyC', s)
 }
 
-cpp_max <- function(s) {
-    .Call('_proxyC_cpp_max', PACKAGE = 'proxyC', s)
+cpp_sd <- function(s, use_nan = FALSE) {
+    .Call('_proxyC_cpp_sd', PACKAGE = 'proxyC', s, use_nan)
 }
 
-cpp_min <- function(s) {
-    .Call('_proxyC_cpp_min', PACKAGE = 'proxyC', s)
+cpp_max <- function(s, use_nan = FALSE) {
+    .Call('_proxyC_cpp_max', PACKAGE = 'proxyC', s, use_nan)
 }
 
-cpp_maxrow <- function(s) {
-    .Call('_proxyC_cpp_maxrow', PACKAGE = 'proxyC', s)
+cpp_min <- function(s, use_nan = FALSE) {
+    .Call('_proxyC_cpp_min', PACKAGE = 'proxyC', s, use_nan)
+}
+
+cpp_maxrow <- function(s, use_nan = FALSE) {
+    .Call('_proxyC_cpp_maxrow', PACKAGE = 'proxyC', s, use_nan)
 }
 
