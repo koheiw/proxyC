@@ -1,5 +1,5 @@
-smt1 <- Matrix::rsparsematrix(100000, 100, 0.9)
-smt2 <- Matrix::rsparsematrix(100000, 200, 0.9)
+smt1 <- Matrix::rsparsematrix(100000, 100, 0.1)
+smt2 <- Matrix::rsparsematrix(100000, 200, 0.1)
 mt1 <- as.matrix(smt1)
 mt2 <- as.matrix(smt2)
 mask <- Matrix::rsparsematrix(100, 200, 1)
@@ -33,6 +33,18 @@ microbenchmark::microbenchmark(
 microbenchmark::microbenchmark(
     maxCol(mt1),
     max.col(mt1),
+    times = 10
+)
+
+microbenchmark::microbenchmark(
+    maxRow(smt1),
+    max.col(t(smt1)),
+    times = 10
+)
+
+microbenchmark::microbenchmark(
+    maxRow(mt1),
+    max.col(t(mt1)),
     times = 10
 )
 
