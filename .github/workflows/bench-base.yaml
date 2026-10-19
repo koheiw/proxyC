@@ -1,0 +1,73 @@
+# Track benchmark results of master on bencher.dev, one report per testbed.
+# These are the baseline that pull requests are compared against
+# (bench-pr-run.yaml + bench-pr-track.yaml).
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+name: Benchmarks (base)
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  benchmark:
+    name: ${{ matrix.testbed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    strategy:
+      fail-fast: false
+      matrix:
+        testbed: [single-thread, openblas, refblas]
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/bench-run
+        with:
+          testbed: ${{ matrix.testbed }}
+          iterations: 3
+
+      - uses: bencherdev/bencher@v0.6.11
+
+      - name: Track benchmarks with Bencher
+        env:
+          BENCHER_API_TOKEN: ${{ secrets.BENCHER_API_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TESTBED: ${{ matrix.testbed }}
+        run: |
+          bencher run \
+            --project proxyc \
+            --token "$BENCHER_API_TOKEN" \
+            --branch master \
+            --testbed "$TESTBED" \
+            --threshold-measure latency \
+            --threshold-test t_test \
+            --threshold-max-sample-size 64 \
+            --threshold-min-sample-size 5 \
+            --threshold-upper-boundary 0.99 \
+            --threshold-measure memory \
+            --threshold-test t_test \
+            --threshold-max-sample-size 64 \
+            --threshold-min-sample-size 5 \
+            --threshold-upper-boundary 0.99 \
+            --threshold-measure cpu_time \
+            --threshold-test t_test \
+            --threshold-max-sample-size 64 \
+            --threshold-min-sample-size 5 \
+            --threshold-upper-boundary 0.99 \
+            --thresholds-reset \
+            --ci-id "$TESTBED" \
+            --err \
+            --adapter json \
+            --github-actions "$GITHUB_TOKEN" \
+            --file "results-$TESTBED.json"
