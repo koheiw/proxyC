@@ -192,3 +192,44 @@ test_that("handle NA properly", {
     )
 })
 
+test_that("convertMatrix works", {
+
+    mat100 <- rsparsematrix(100, 100, 1.0)
+    mat50 <- rsparsematrix(100, 100, 0.5)
+    mat1 <- rsparsematrix(100, 100, 0.01)
+    mat0 <- rsparsematrix(100, 100, 0)
+
+    expect_s4_class(
+        proxyC:::convertMatrix(mat100),
+        "dgCMatrix"
+    )
+    expect_s4_class(
+        proxyC:::convertMatrix(mat50),
+        "dgCMatrix"
+    )
+    expect_s4_class(
+        proxyC:::convertMatrix(mat1),
+        "dgCMatrix"
+    )
+    expect_s4_class(
+        proxyC:::convertMatrix(mat0),
+        "dgCMatrix"
+    )
+
+    expect_is(
+        proxyC:::convertMatrix(as.matrix(mat100)),
+        "matrix"
+    )
+    expect_is(
+        proxyC:::convertMatrix(as.matrix(mat100)),
+        "matrix"
+    )
+    expect_is(
+        proxyC:::convertMatrix(as.matrix(mat1)),
+        "matrix"
+    )
+    expect_is(
+        proxyC:::convertMatrix(as.matrix(mat0)),
+        "matrix"
+    )
+})
