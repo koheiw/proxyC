@@ -155,27 +155,12 @@ proxy <- function(x, y = NULL, margin = 1,
         weight <- p
     }
 
-    x <- as(as(x, "generalMatrix"), "dMatrix")
-    if (boolean)
-        x <- as(as(x, "lMatrix"), "dMatrix")
-    if (is(x, "dgeMatrix")) {
-        x <- as.matrix(x)
-    } else {
-        x <- as(x, "CsparseMatrix")
-    }
-
+    x <- toArmadillo(x, boolean)
     if (is.null(y)) {
         symm <- TRUE
         y <- x
     } else {
-        y <- as(as(y, "generalMatrix"), "dMatrix")
-        if (boolean)
-            y <- as(as(y, "lMatrix"), "dMatrix")
-        if (is(y, "dgeMatrix")) {
-            y <- as.matrix(y)
-        } else {
-            y <- as(y, "CsparseMatrix")
-        }
+        y <- toArmadillo(y, boolean)
     }
     if (!margin %in% c(1, 2))
         stop("Matrgin must be 1 (row) or 2 (column)")
