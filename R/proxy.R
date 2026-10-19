@@ -156,12 +156,12 @@ proxy <- function(x, y = NULL, margin = 1,
         weight <- p
     }
 
-    x <- toArmadillo(x, boolean)
+    x <- convertMatrix(x, boolean)
     if (is.null(y)) {
         symm <- TRUE
         y <- x
     } else {
-        y <- toArmadillo(y, boolean)
+        y <- convertMatrix(y, boolean)
     }
     if (!margin %in% c(1, 2))
         stop("Matrgin must be 1 (row) or 2 (column)")
