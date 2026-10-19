@@ -43,17 +43,6 @@ test_that("colSds and rowSds are working", {
     expect_all_false(
         is.nan(colSds(as.matrix(mt), use_nan = TRUE))
     )
-
-    # with NA
-    mt2 <- Matrix(c(0.1, 0.2, NA, -0.1, -0.2, 0), nrow = 2, sparse = TRUE)
-    expect_equal(
-        is.nan(rowSds(mt2)),
-        c(TRUE, FALSE)
-    )
-    expect_equal(
-        is.nan(colSds(mt2)),
-        c(FALSE, TRUE, FALSE)
-    )
 })
 
 test_that("colMax, rowMax, colMin, rowMin are working", {
@@ -106,25 +95,6 @@ test_that("colMax, rowMax, colMin, rowMin are working", {
     expect_all_false(
         is.nan(rowMins(as.matrix(mt), use_nan = TRUE))
     )
-
-    # with NA
-    mt2 <- Matrix(c(0.1, 0.2, NA, -0.1, -0.2, 0), nrow = 2, sparse = TRUE)
-    expect_equal(
-        is.nan(colMaxs(mt2)),
-        c(FALSE, FALSE, FALSE)
-    )
-    expect_equal(
-        is.nan(rowMaxs(mt2)),
-        c(FALSE, FALSE)
-    )
-    expect_equal(
-        is.nan(colMins(mt2)),
-        c(FALSE, FALSE, FALSE)
-    )
-    expect_equal(
-        is.nan(rowMins(mt2)),
-        c(FALSE, FALSE)
-    )
 })
 
 test_that("maxRow and maxCol are working", {
@@ -163,20 +133,54 @@ test_that("maxRow and maxCol are working", {
 
     # ignore use_nan
     expect_all_false(
-        is.na(maxCol(as.matrix(mt), use_nan = TRUE))
+        is.na(maxCol(as.matrix(mt2), use_nan = TRUE))
     )
     expect_all_false(
-        is.nan(maxRow(as.matrix(mt), use_nan = TRUE))
+        is.nan(maxRow(as.matrix(mt2), use_nan = TRUE))
+    )
+})
+
+test_that("handle NA properly", {
+
+    mt <- Matrix(c(0.1, 0.2, NA, -0.1, -0.2, 0),
+                  nrow = 2, sparse = TRUE)
+
+    # colSds/rowSds
+    expect_equal(
+        is.nan(colSds(mt)),
+        c(FALSE, TRUE, FALSE)
+    )
+    expect_equal(
+        is.nan(rowSds(mt)),
+        c(TRUE, FALSE)
     )
 
-    # with NA
-    mt2 <- Matrix(c(0.1, 0.2, NA, -0.1, -0.2, 0), nrow = 2, sparse = TRUE)
+    # colMaxs/rowMaxs
     expect_equal(
-        is.nan(maxCol(mt2)),
+        is.nan(colMaxs(mt)),
+        c(FALSE, FALSE, FALSE)
+    )
+    expect_equal(
+        is.nan(rowMaxs(mt)),
         c(FALSE, FALSE)
     )
     expect_equal(
-        is.nan(maxRow(mt2)),
+        is.nan(colMins(mt)),
+        c(FALSE, FALSE, FALSE)
+    )
+    expect_equal(
+        is.nan(rowMins(mt)),
+        c(FALSE, FALSE)
+    )
+
+    # maxCol/maxRow
+    expect_equal(
+        is.nan(maxCol(mt)),
+        c(FALSE, FALSE)
+    )
+    expect_equal(
+        is.nan(maxRow(mt)),
         c(FALSE, FALSE, FALSE)
     )
 })
+
