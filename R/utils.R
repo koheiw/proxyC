@@ -34,14 +34,14 @@ tcrossprod <- function(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14)
 #' apply(mt, 2, function(x) sum(x == 0)) # the same
 #' @export
 colZeros <- function(x) {
-    x <- toArmadillo(x)
+    x <- convertMatrix(x)
     structure(nrow(x) - cpp_nz(x), names = colnames(x))
 }
 
 #' @rdname colZeros
 #' @export
 rowZeros <- function(x) {
-    x <- toArmadillo(x)
+    x <- convertMatrix(x)
     structure(ncol(x) - cpp_nz(t(x)), names = rownames(x))
 }
 
@@ -60,14 +60,14 @@ rowZeros <- function(x) {
 #' apply(mt, 2, sd) # the same
 #' @export
 colSds <- function(x, use_nan = FALSE) {
-    x <- toArmadillo(x)
+    x <- convertMatrix(x)
     structure(cpp_sd(x, use_nan), names = colnames(x))
 }
 
 #' @rdname colSds
 #' @export
 rowSds <- function(x, use_nan = FALSE) {
-    x <- toArmadillo(x)
+    x <- convertMatrix(x)
     structure(cpp_sd(t(x), use_nan), names = rownames(x))
 }
 
@@ -83,28 +83,28 @@ rowSds <- function(x, use_nan = FALSE) {
 #'   apply(mt, 2, max) # the same
 #' @export
 colMaxs <- function(x, use_nan = FALSE) {
-    x <- toArmadillo(x)
+    x <- convertMatrix(x)
     structure(cpp_max(x, use_nan), names = colnames(x))
 }
 
 #' @rdname colMaxs
 #' @export
 rowMaxs <- function(x, use_nan = FALSE) {
-    x <- toArmadillo(x)
+    x <- convertMatrix(x)
     structure(cpp_max(t(x), use_nan), names = rownames(x))
 }
 
 #' @rdname colMaxs
 #' @export
 colMins <- function(x, use_nan = FALSE) {
-    x <- toArmadillo(x)
+    x <- convertMatrix(x)
     structure(cpp_min(x, use_nan), names = colnames(x))
 }
 
 #' @rdname colMaxs
 #' @export
 rowMins <- function(x, use_nan = FALSE) {
-    x <- toArmadillo(x)
+    x <- convertMatrix(x)
     structure(cpp_min(t(x), use_nan), names = rownames(x))
 }
 
@@ -123,14 +123,14 @@ rowMins <- function(x, use_nan = FALSE) {
 #' max.col(mt, ties.method = "first") # the same
 #' @export
 maxCol <- function(x, use_nan = FALSE) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
+    x <- convertMatrix(x)
     structure(cpp_maxrow(t(x), use_nan) + 1L, names = rownames(x))
 }
 
 #' @rdname maxCol
 #' @export
 maxRow <- function(x, use_nan = FALSE) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
+    x <- convertMatrix(x)
     structure(cpp_maxrow(x, use_nan) + 1L, names = colnames(x))
 }
 
@@ -150,7 +150,7 @@ getThreads <- function() {
     return(value)
 }
 
-toArmadillo <- function(x, boolean = FALSE) {
+convertMatrix <- function(x, boolean = FALSE) {
     x <- as(as(x, "generalMatrix"), "dMatrix")
     if (boolean)
         x <- as(as(x, "lMatrix"), "dMatrix")
