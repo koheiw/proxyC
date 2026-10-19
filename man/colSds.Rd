@@ -15,6 +15,9 @@ rowSds(x, use_nan = FALSE)
 \item{use_nan}{if \code{TRUE}, return \code{NaN} for columns or rows with all zero.
 Only used when \code{x} is a sparse matrix.}
 }
+\value{
+a numeric vector
+}
 \description{
 Produce the same result as \code{apply(x, 2, sd)} and \code{apply(x, 1, sd)}, respectively.
 without coercing matrix to dense matrix. Values are not identical to

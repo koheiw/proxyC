@@ -80,6 +80,7 @@
 #'
 #' @import methods Matrix
 #' @seealso zapsmall
+#' @return a [Matrix::Matrix] object
 #' @export
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)

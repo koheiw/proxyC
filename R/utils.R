@@ -27,6 +27,7 @@ tcrossprod <- function(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14)
 #'
 #' Produce the same result as applying `sum(x == 0)` to each row or column.
 #' @param x a [base::matrix] or [Matrix::Matrix] object.
+#' @return an integer vector
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' colZeros(mt)
@@ -50,8 +51,9 @@ rowZeros <- function(x) {
 #' without coercing matrix to dense matrix. Values are not identical to
 #' `sd()` because of the floating point precision issue in C++.
 #' @param x a [base::matrix] or [Matrix::Matrix] object.
-##' @param use_nan if `TRUE`, return `NaN` for columns or rows with all zero.
+#' @param use_nan if `TRUE`, return `NaN` for columns or rows with all zero.
 #'   Only used when `x` is a sparse matrix.
+#' @return a numeric vector
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' colSds(mt)
@@ -74,6 +76,7 @@ rowSds <- function(x, use_nan = FALSE) {
 #' Produce the same result as `apply(x, 2, max)`, `apply(x, 1, max)`,
 #' `apply(x, 2, min)` and `apply(x, 1, min)`, respectively, but ignore `NA`.
 #' @inheritParams colSds
+#' @return a numeric vector
 #' @examples
 #'   mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #'   colMaxs(mt)
@@ -110,7 +113,10 @@ rowMins <- function(x, use_nan = FALSE) {
 #' Find column or row indices of maximum values in sparse matrices. Works in a
 #' similar way as `base::max.col(ties.method = "first")` but without conversion
 #' to dense matrices.
-#' @inheritParams colSds
+#' @param x a [base::matrix] or [Matrix::Matrix] object.
+#' @param use_nan if `TRUE`, return `NA` for columns or rows with all zero.
+#'   Only used when `x` is a sparse matrix.
+#' @return an integer vector
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' maxCol(mt)

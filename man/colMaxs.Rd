@@ -21,6 +21,9 @@ rowMins(x, use_nan = FALSE)
 \item{use_nan}{if \code{TRUE}, return \code{NaN} for columns or rows with all zero.
 Only used when \code{x} is a sparse matrix.}
 }
+\value{
+a numeric vector
+}
 \description{
 Produce the same result as \code{apply(x, 2, max)}, \code{apply(x, 1, max)},
 \code{apply(x, 2, min)} and \code{apply(x, 1, min)}, respectively, but ignore \code{NA}.
