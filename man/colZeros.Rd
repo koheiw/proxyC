@@ -19,7 +19,7 @@ an integer vector
 Produce the same result as applying \code{sum(x == 0)} to each row or column.
 }
 \examples{
-mt <- Matrix::rsparsematrix(100, 100, 0.01)
+mt <- Matrix::rsparsematrix(100, 100, 0.9)
 colZeros(mt)
 apply(mt, 2, function(x) sum(x == 0)) # the same
 }

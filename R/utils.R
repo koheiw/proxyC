@@ -29,7 +29,7 @@ tcrossprod <- function(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14)
 #' @param x a [base::matrix] or [Matrix::Matrix] object.
 #' @return an integer vector
 #' @examples
-#' mt <- Matrix::rsparsematrix(100, 100, 0.01)
+#' mt <- Matrix::rsparsematrix(100, 100, 0.9)
 #' colZeros(mt)
 #' apply(mt, 2, function(x) sum(x == 0)) # the same
 #' @export
@@ -55,7 +55,7 @@ rowZeros <- function(x) {
 #'   Only used when `x` is a sparse matrix.
 #' @return a numeric vector
 #' @examples
-#' mt <- Matrix::rsparsematrix(100, 100, 0.01)
+#' mt <- Matrix::rsparsematrix(100, 100, 0.9)
 #' colSds(mt)
 #' apply(mt, 2, sd) # the same
 #' @export
@@ -78,7 +78,7 @@ rowSds <- function(x, use_nan = FALSE) {
 #' @inheritParams colSds
 #' @return a numeric vector
 #' @examples
-#'   mt <- Matrix::rsparsematrix(100, 100, 0.01)
+#'   mt <- Matrix::rsparsematrix(100, 100, 0.9)
 #'   colMaxs(mt)
 #'   apply(mt, 2, max) # the same
 #' @export
@@ -118,7 +118,7 @@ rowMins <- function(x, use_nan = FALSE) {
 #'   Only used when `x` is a sparse matrix.
 #' @return an integer vector
 #' @examples
-#' mt <- Matrix::rsparsematrix(100, 100, 0.01)
+#' mt <- Matrix::rsparsematrix(100, 100, 0.9)
 #' maxCol(mt)
 #' max.col(mt, ties.method = "first") # the same
 #' @export

@@ -24,7 +24,7 @@ without coercing matrix to dense matrix. Values are not identical to
 \code{sd()} because of the floating point precision issue in C++.
 }
 \examples{
-mt <- Matrix::rsparsematrix(100, 100, 0.01)
+mt <- Matrix::rsparsematrix(100, 100, 0.9)
 colSds(mt)
 apply(mt, 2, sd) # the same
 }

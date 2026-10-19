@@ -24,7 +24,7 @@ similar way as \code{base::max.col(ties.method = "first")} but without conversio
 to dense matrices.
 }
 \examples{
-mt <- Matrix::rsparsematrix(100, 100, 0.01)
+mt <- Matrix::rsparsematrix(100, 100, 0.9)
 maxCol(mt)
 max.col(mt, ties.method = "first") # the same
 }
