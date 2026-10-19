@@ -17,6 +17,10 @@ cpp_mask <- function(v1_, v2_, thread = -1L) {
     .Call('_proxyC_cpp_mask', PACKAGE = 'proxyC', v1_, v2_, thread)
 }
 
+cpp_mask_update <- function(v1_, v2_, mask, operation = 1L, thread = -1L) {
+    .Call('_proxyC_cpp_mask_update', PACKAGE = 'proxyC', v1_, v2_, mask, operation, thread)
+}
+
 cpp_pair <- function(mt1, mt2, method, mask, rank, limit = -1.0, weight = 1.0, smooth = 0, symm = FALSE, diag = FALSE, drop0 = FALSE, use_nan = FALSE, use_mask = FALSE, sparse = TRUE, digits = 14L, thread = -1L) {
     .Call('_proxyC_cpp_pair', PACKAGE = 'proxyC', mt1, mt2, method, mask, rank, limit, weight, smooth, symm, diag, drop0, use_nan, use_mask, sparse, digits, thread)
 }

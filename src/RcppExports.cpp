@@ -69,6 +69,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_mask_update
+S4 cpp_mask_update(IntegerVector v1_, IntegerVector v2_, arma::sp_mat& mask, int operation, const int thread);
+RcppExport SEXP _proxyC_cpp_mask_update(SEXP v1_SEXP, SEXP v2_SEXP, SEXP maskSEXP, SEXP operationSEXP, SEXP threadSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type v1_(v1_SEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type v2_(v2_SEXP);
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type mask(maskSEXP);
+    Rcpp::traits::input_parameter< int >::type operation(operationSEXP);
+    Rcpp::traits::input_parameter< const int >::type thread(threadSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_mask_update(v1_, v2_, mask, operation, thread));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_pair
 S4 cpp_pair(arma::sp_mat& mt1, arma::sp_mat& mt2, const int method, arma::sp_mat& mask, unsigned int rank, const double limit, const double weight, const double smooth, bool symm, const bool diag, const bool drop0, const bool use_nan, const bool use_mask, const bool sparse, const int digits, const int thread);
 RcppExport SEXP _proxyC_cpp_pair(SEXP mt1SEXP, SEXP mt2SEXP, SEXP methodSEXP, SEXP maskSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP weightSEXP, SEXP smoothSEXP, SEXP symmSEXP, SEXP diagSEXP, SEXP drop0SEXP, SEXP use_nanSEXP, SEXP use_maskSEXP, SEXP sparseSEXP, SEXP digitsSEXP, SEXP threadSEXP) {
@@ -121,6 +136,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_proxyC_cpp_sd", (DL_FUNC) &_proxyC_cpp_sd, 1},
     {"_proxyC_cpp_nz", (DL_FUNC) &_proxyC_cpp_nz, 1},
     {"_proxyC_cpp_mask", (DL_FUNC) &_proxyC_cpp_mask, 3},
+    {"_proxyC_cpp_mask_update", (DL_FUNC) &_proxyC_cpp_mask_update, 5},
     {"_proxyC_cpp_pair", (DL_FUNC) &_proxyC_cpp_pair, 16},
     {"_proxyC_cpp_get_max_thread", (DL_FUNC) &_proxyC_cpp_get_max_thread, 0},
     {"_proxyC_cpp_tbb_enabled", (DL_FUNC) &_proxyC_cpp_tbb_enabled, 0},
