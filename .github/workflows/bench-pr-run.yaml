@@ -1,0 +1,63 @@
+# Run the benchmarks on a pull request, one job per testbed. This runs the
+# PR's code, so it gets no secrets and a read-only token (fork-safe): results
+# are only uploaded as artifacts, and bench-pr-track.yaml sends them to
+# bencher.dev.
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths:
+      - 'R/**'
+      - 'src/**'
+      - 'configure'
+      - 'configure.ac'
+      - 'DESCRIPTION'
+      - 'benchmarks/**'
+      - '.github/workflows/bench-*.yaml'
+      - '.github/actions/bench-run/**'
+
+name: Benchmarks (PR run)
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    name: ${{ matrix.testbed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    strategy:
+      fail-fast: false
+      matrix:
+        testbed: [single-thread, openblas, refblas]
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/bench-run
+        with:
+          testbed: ${{ matrix.testbed }}
+          iterations: 3
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: results-${{ matrix.testbed }}
+          path: results-${{ matrix.testbed }}.json
+          if-no-files-found: error
+
+  # separate job, so the matrix legs don't race to upload the same artifact
+  event:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/upload-artifact@v7
+        with:
+          name: event
+          path: ${{ github.event_path }}
+          if-no-files-found: error

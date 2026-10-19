@@ -1,0 +1,99 @@
+# Shared by bench-base.yaml and bench-pr-run.yaml. Sets up one testbed (BLAS
+# flavour + thread settings), installs R, proxyC and the benchmark
+# dependencies, checks that the setup matches the testbed, and runs the
+# benchmarks. Writes results-<testbed>.json to the workspace root.
+name: Run proxyC benchmarks
+description: Set up a benchmark testbed and run benchmarks/run_benchmarks.R
+
+inputs:
+  testbed:
+    description: "Testbed: single-thread, openblas or refblas"
+    required: true
+  iterations:
+    description: Iterations per benchmark case
+    required: false
+    default: "3"
+
+runs:
+  using: composite
+  steps:
+    - name: Install TBB and BLAS
+      shell: bash
+      env:
+        TESTBED: ${{ inputs.testbed }}
+      run: |
+        case "$TESTBED" in
+          single-thread|openblas|refblas) ;;
+          *) echo "::error::Unknown testbed '$TESTBED'"; exit 1 ;;
+        esac
+        sudo apt-get update
+        sudo apt-get install -y libtbb-dev libblas-dev liblapack-dev
+        arch="$(dpkg-architecture -qDEB_HOST_MULTIARCH)"
+        if [ "$TESTBED" = "openblas" ]; then
+          # OpenBLAS has a higher alternatives priority than the reference
+          # BLAS, so libblas.so.3 and liblapack.so.3 now point at it
+          sudo apt-get install -y libopenblas-dev
+        else
+          # pin the reference BLAS/LAPACK in case the image ships OpenBLAS
+          sudo update-alternatives --set "libblas.so.3-$arch" "/usr/lib/$arch/blas/libblas.so.3" || true
+          sudo update-alternatives --set "liblapack.so.3-$arch" "/usr/lib/$arch/lapack/liblapack.so.3" || true
+        fi
+        update-alternatives --display "libblas.so.3-$arch" || true
+        update-alternatives --display "liblapack.so.3-$arch" || true
+
+    - name: Set up R
+      uses: r-lib/actions/setup-r@v2
+      with:
+        use-public-rspm: true
+
+    # after apt, so that proxyC's configure finds TBB
+    - name: Install proxyC and benchmark dependencies
+      uses: r-lib/actions/setup-r-dependencies@v2
+      with:
+        dependencies: '"hard"'
+        extra-packages: any::bench any::callr any::jsonlite local::.
+
+    - name: Configure threads
+      shell: bash
+      env:
+        TESTBED: ${{ inputs.testbed }}
+      run: |
+        if [ "$TESTBED" = "single-thread" ]; then
+          echo "OMP_NUM_THREADS=1" >> "$GITHUB_ENV"
+          echo "OPENBLAS_NUM_THREADS=1" >> "$GITHUB_ENV"
+          echo "THREADS=1" >> "$GITHUB_ENV"
+        else
+          echo "THREADS=-1" >> "$GITHUB_ENV"
+        fi
+
+    # fails the job if the testbed is not what it claims to be
+    - name: Check testbed
+      shell: Rscript {0}
+      env:
+        TESTBED: ${{ inputs.testbed }}
+      run: |
+        testbed <- Sys.getenv("TESTBED")
+        si <- sessionInfo()
+        cat("testbed:              ", testbed, "\n")
+        cat("proxyC:               ", format(packageVersion("proxyC")), "\n")
+        cat("built:                ", packageDescription("proxyC")$Built, "\n")
+        cat("BLAS:                 ", si$BLAS, "\n")
+        cat("LAPACK:               ", si$LAPACK, "\n")
+        cat("TBB enabled:          ", proxyC:::cpp_tbb_enabled(), "\n")
+        cat("max threads:          ", proxyC:::cpp_get_max_thread(), "\n")
+        cat("detectCores:          ", parallel::detectCores(), "\n")
+        cat("OMP_NUM_THREADS:      ", Sys.getenv("OMP_NUM_THREADS", "<unset>"), "\n")
+        cat("OPENBLAS_NUM_THREADS: ", Sys.getenv("OPENBLAS_NUM_THREADS", "<unset>"), "\n")
+        stopifnot(proxyC:::cpp_tbb_enabled())
+        stopifnot(grepl("openblas", si$BLAS, ignore.case = TRUE) == (testbed == "openblas"))
+
+    - name: Run benchmarks
+      shell: bash
+      env:
+        TESTBED: ${{ inputs.testbed }}
+        ITERATIONS: ${{ inputs.iterations }}
+      run: |
+        Rscript benchmarks/run_benchmarks.R \
+          --iterations "$ITERATIONS" \
+          --threads "$THREADS" \
+          --output "results-$TESTBED.json"
