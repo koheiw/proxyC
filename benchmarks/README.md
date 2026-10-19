@@ -261,7 +261,7 @@ The setup follows the benchmarks of [anndataR](https://github.com/scverse/anndat
 ### `bench-pr-track.yaml`: Benchmarks (PR track)
 
 - Trigger: `workflow_run`, when Benchmarks (PR run) completes. It is skipped when that run was cancelled or wasn't for a pull request.
-- Runs the version of the workflow on `master`, with access to `BENCHER_API_TOKEN` and a token that can comment on PRs. It never checks out or runs PR code: the artifacts are untrusted data. The PR event is validated (PR number, SHAs, refs), cross-checked against the triggering run and the live PR, and its values reach the shell only through environment variables.
+- Runs the version of the workflow on `master`, with access to `BENCHER_API_KEY` and a token that can comment on PRs. It never checks out or runs PR code: the artifacts are untrusted data. The PR event is validated (PR number, SHAs, refs), cross-checked against the triggering run and the live PR, and its values reach the shell only through environment variables.
 - Uploads each testbed's results to bencher on the PR's branch, with the base branch at the PR's base commit as start point and its thresholds cloned. Branches from forks are prefixed with the fork owner (`owner/branch`), so they can't collide with branches of this repository.
 - Each testbed gets its own PR comment. If one testbed raises an alert, the others are still uploaded and the job fails at the end. If a testbed of the PR run failed, the ones that produced results are still tracked.
 
@@ -273,14 +273,16 @@ GitHub only runs `workflow_run` workflows from the default branch, and only offe
 
 | Secret | Description |
 |---|---|
-| `BENCHER_API_TOKEN` | API token of a [bencher.dev](https://bencher.dev) user with access to the `proxyc` project. Used by `bench-base.yaml` and `bench-pr-track.yaml`. |
+| `BENCHER_API_KEY` | [bencher.dev](https://bencher.dev) API key with access to the `proxyc` project: a project key (`bencher_run_…`) or a user key (`bencher_user_…`). Used by `bench-base.yaml` and `bench-pr-track.yaml`. |
 
 `GITHUB_TOKEN` is provided automatically.
+
+The `bencher` CLI reads the key from the `BENCHER_API_KEY` environment variable. The older JWT API tokens (`--token`/`BENCHER_API_TOKEN`) are deprecated and can't be combined with a key: setting both is an error, so the workflows only pass the key.
 
 ## First-time setup
 
 - [ ] The bencher project `proxyc` exists: <https://bencher.dev/perf/proxyc>.
-- [ ] The repository secret `BENCHER_API_TOKEN` exists (Settings → Secrets and variables → Actions).
+- [ ] The repository secret `BENCHER_API_KEY` exists (Settings → Secrets and variables → Actions).
 - [ ] The workflows are merged into `master` (see [Only on `master`](#only-on-master)).
 - [ ] `master` has a report on all three testbeds, so PRs have a start point. The merge itself triggers Benchmarks (base) through the push to `master`; if that run didn't complete on every testbed, run it once by hand: Actions → Benchmarks (base) → Run workflow on `master`, or `gh workflow run bench-base.yaml --ref master`.
 - [ ] Collaborators are invited to the bencher organization, so they can manage thresholds and alerts.

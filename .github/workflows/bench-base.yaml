@@ -41,13 +41,12 @@ jobs:
 
       - name: Track benchmarks with Bencher
         env:
-          BENCHER_API_TOKEN: ${{ secrets.BENCHER_API_TOKEN }}
+          BENCHER_API_KEY: ${{ secrets.BENCHER_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TESTBED: ${{ matrix.testbed }}
         run: |
           bencher run \
             --project proxyc \
-            --token "$BENCHER_API_TOKEN" \
             --branch master \
             --testbed "$TESTBED" \
             --threshold-measure latency \
