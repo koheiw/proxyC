@@ -5,6 +5,7 @@ using namespace arma;
 
 namespace proxyc{
 
+    // nnz
     inline rowvec nnz(const sp_mat& mt) {
         rowvec v(mt.n_cols, fill::zeros);
         if (mt.is_empty()) return(v);
@@ -23,11 +24,19 @@ namespace proxyc{
         return(v);
     }
 
-    inline rowvec stddev(const sp_mat& mt, const int norm_type) {
+    // stddev
+    inline rowvec stddev(const sp_mat& mt, const int norm_type,
+                         const bool use_nan = false) {
         rowvec v(mt.n_cols, fill::zeros);
         if (mt.is_empty()) return(v);
+        colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
-            v[i] = arma::stddev(colvec(mt.col(i)), norm_type);
+            e = colvec(mt.col(i));
+            if (arma::any(e)) {
+                v[i] = arma::stddev(e, norm_type);
+            } else if (use_nan) {
+                v[i] = arma::datum::nan;
+            }
         }
         return(v);
     }
@@ -41,11 +50,18 @@ namespace proxyc{
         return(v);
     }
 
-    inline rowvec mean(const sp_mat& mt) {
+    // mean
+    inline rowvec mean(const sp_mat& mt, const bool use_nan = false) {
         rowvec v(mt.n_cols, fill::zeros);
         if (mt.is_empty()) return(v);
+        colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
-            v[i] = arma::mean(colvec(mt.col(i)));
+            e = colvec(mt.col(i));
+            if (arma::any(e)) {
+                v[i] = arma::mean(e);
+            } else if (use_nan) {
+                v[i] = arma::datum::nan;
+            }
         }
         return(v);
     }
@@ -59,17 +75,24 @@ namespace proxyc{
         return(v);
     }
 
-    inline rowvec max(const sp_mat& mt) {
+    // max
+    inline rowvec max(const sp_mat& mt, const bool use_nan = false) {
         rowvec v(mt.n_cols, fill::zeros);
         if (mt.is_empty()) return(v);
+        colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
-            v[i] = arma::max(colvec(mt.col(i)));
+            e = colvec(mt.col(i));
+            if (arma::any(e)) {
+                v[i] = arma::max(e);
+            } else if (use_nan) {
+                v[i] = arma::datum::nan;
+            }
         }
         return(v);
     }
 
     inline rowvec max(const mat& mt) {
-        rowvec v(mt.n_cols, fill::zeros);
+        rowvec v(mt.n_cols, fill::nan);
         if (mt.is_empty()) return(v);
         for (uword i = 0; i < mt.n_cols; i++) {
             v[i] = arma::max(colvec(mt.col(i)));
@@ -77,11 +100,18 @@ namespace proxyc{
         return(v);
     }
 
-    inline rowvec min(const sp_mat& mt) {
+    // min
+    inline rowvec min(const sp_mat& mt, const bool use_nan = false) {
         rowvec v(mt.n_cols, fill::zeros);
         if (mt.is_empty()) return(v);
+        colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
-            v[i] = arma::min(colvec(mt.col(i)));
+            e = colvec(mt.col(i));
+            if (arma::any(e)) {
+                v[i] = arma::min(e);
+            } else if (use_nan) {
+                v[i] = arma::datum::nan;
+            }
         }
         return(v);
     }
@@ -95,17 +125,25 @@ namespace proxyc{
         return(v);
     }
 
-    inline urowvec maxrow(const sp_mat& mt) {
-        urowvec v(mt.n_cols, fill::zeros);
+
+    // maxrow
+    inline rowvec maxrow(const sp_mat& mt, const bool use_nan = false) {
+        rowvec v(mt.n_cols, fill::zeros);
         if (mt.is_empty()) return(v);
+        colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
-            v[i] = mt.col(i).index_max();
+            e = colvec(mt.col(i));
+            if (arma::any(e)) {
+                v[i] = e.index_max();
+            } else if (use_nan) {
+                v[i] = arma::datum::nan;
+            }
         }
         return(v);
     }
 
-    inline urowvec maxrow(const mat& mt) {
-        urowvec v(mt.n_cols, fill::zeros);
+    inline rowvec maxrow(const mat& mt) {
+        rowvec v(mt.n_cols, fill::zeros);
         if (mt.is_empty()) return(v);
         for (uword i = 0; i < mt.n_cols; i++) {
             v[i] = mt.col(i).index_max();

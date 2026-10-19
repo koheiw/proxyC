@@ -20,10 +20,10 @@ bool cpp_tbb_enabled(){
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_sd(SEXP s) {
+NumericVector cpp_sd(SEXP s, const bool use_nan = false) {
     if (Rf_isS4(s)) {
         arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<double> v = to_vector(stddev(mt, 0));
+        std::vector<double> v = to_vector(stddev(mt, 0, use_nan));
         return wrap(v);
     } else {
         arma::mat mt = Rcpp::as<arma::mat>(s);
@@ -46,10 +46,10 @@ NumericVector cpp_nz(SEXP s) {
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_max(SEXP s) {
+NumericVector cpp_max(SEXP s, const bool use_nan = false) {
     if (Rf_isS4(s)) {
         arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<double> v = to_vector(max(mt));
+        std::vector<double> v = to_vector(max(mt, use_nan));
         return wrap(v);
     } else {
         arma::mat mt = Rcpp::as<arma::mat>(s);
@@ -59,10 +59,10 @@ NumericVector cpp_max(SEXP s) {
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_min(SEXP s) {
+NumericVector cpp_min(SEXP s, const bool use_nan = false) {
     if (Rf_isS4(s)) {
         arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<double> v = to_vector(min(mt));
+        std::vector<double> v = to_vector(min(mt, use_nan));
         return wrap(v);
     } else {
         arma::mat mt = Rcpp::as<arma::mat>(s);
@@ -72,14 +72,14 @@ NumericVector cpp_min(SEXP s) {
 }
 
 // [[Rcpp::export]]
-IntegerVector cpp_maxrow(SEXP s) {
+IntegerVector cpp_maxrow(SEXP s, const bool use_nan = false) {
     if (Rf_isS4(s)) {
         arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<int> v = to_vector(maxrow(mt));
+        std::vector<double> v = to_vector(maxrow(mt, use_nan));
         return wrap(v);
     } else {
         arma::mat mt = Rcpp::as<arma::mat>(s);
-        std::vector<int> v = to_vector(maxrow(mt));
+        std::vector<double> v = to_vector(maxrow(mt));
         return wrap(v);
     }
 }

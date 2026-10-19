@@ -7,23 +7,26 @@
 \alias{rowMins}
 \title{Maximum/minimum values in columns or rows}
 \usage{
-colMaxs(x)
+colMaxs(x, use_nan = FALSE)
 
-rowMaxs(x)
+rowMaxs(x, use_nan = FALSE)
 
-colMins(x)
+colMins(x, use_nan = FALSE)
 
-rowMins(x)
+rowMins(x, use_nan = FALSE)
 }
 \arguments{
 \item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object.}
+
+\item{use_nan}{if \code{TRUE}, return \code{NaN} for columns or rows with all zero.
+Only used when \code{x} is a sparse matrix.}
 }
 \description{
 Produce the same result as \code{apply(x, 2, max)}, \code{apply(x, 1, max)},
 \code{apply(x, 2, min)} and \code{apply(x, 1, min)}, respectively, but ignore \code{NA}.
 }
 \examples{
-mt <- Matrix::rsparsematrix(100, 100, 0.01)
-colMaxs(mt)
-apply(mt, 2, max) # the same
+  mt <- Matrix::rsparsematrix(100, 100, 0.01)
+  colMaxs(mt)
+  apply(mt, 2, max) # the same
 }

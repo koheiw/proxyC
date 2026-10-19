@@ -5,12 +5,15 @@
 \alias{maxRow}
 \title{Column or row indices of maximum values}
 \usage{
-maxCol(x)
+maxCol(x, use_nan = FALSE)
 
-maxRow(x)
+maxRow(x, use_nan = FALSE)
 }
 \arguments{
 \item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object.}
+
+\item{use_nan}{if \code{TRUE}, return \code{NaN} for columns or rows with all zero.
+Only used when \code{x} is a sparse matrix.}
 }
 \description{
 Find column or row indices of maximum values in sparse matrices. Works in a

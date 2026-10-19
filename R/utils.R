@@ -23,30 +23,6 @@ tcrossprod <- function(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14)
           sparse = sparse, digits = digits)
 }
 
-
-#' Standard deviation of columns and rows of large matrices
-#'
-#' Produce the same result as `apply(x, 2, sd)` and `apply(x, 1, sd)`, respectively.
-#' without coercing matrix to dense matrix. Values are not identical to
-#' `sd()` because of the floating point precision issue in C++.
-#' @param x a [base::matrix] or [Matrix::Matrix] object.
-#' @examples
-#' mt <- Matrix::rsparsematrix(100, 100, 0.01)
-#' colSds(mt)
-#' apply(mt, 2, sd) # the same
-#' @export
-colSds <- function(x) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    structure(cpp_sd(x), names = colnames(x))
-}
-
-#' @rdname colSds
-#' @export
-rowSds <- function(x) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    structure(cpp_sd(t(x)), names = rownames(x))
-}
-
 #' Number of zeros in columns and rows of large matrices
 #'
 #' Produce the same result as applying `sum(x == 0)` to each row or column.
@@ -68,40 +44,65 @@ rowZeros <- function(x) {
     structure(ncol(x) - cpp_nz(t(x)), names = rownames(x))
 }
 
+#' Standard deviation of columns and rows of large matrices
+#'
+#' Produce the same result as `apply(x, 2, sd)` and `apply(x, 1, sd)`, respectively.
+#' without coercing matrix to dense matrix. Values are not identical to
+#' `sd()` because of the floating point precision issue in C++.
+#' @param x a [base::matrix] or [Matrix::Matrix] object.
+##' @param use_nan if `TRUE`, return `NaN` for columns or rows with all zero.
+#'   Only used when `x` is a sparse matrix.
+#' @examples
+#' mt <- Matrix::rsparsematrix(100, 100, 0.01)
+#' colSds(mt)
+#' apply(mt, 2, sd) # the same
+#' @export
+colSds <- function(x, use_nan = FALSE) {
+    x <- as(as(x, "CsparseMatrix"), "dMatrix")
+    structure(cpp_sd(x, use_nan), names = colnames(x))
+}
+
+#' @rdname colSds
+#' @export
+rowSds <- function(x, use_nan = FALSE) {
+    x <- as(as(x, "CsparseMatrix"), "dMatrix")
+    structure(cpp_sd(t(x), use_nan), names = rownames(x))
+}
+
 #' Maximum/minimum values in columns or rows
 #'
 #' Produce the same result as `apply(x, 2, max)`, `apply(x, 1, max)`,
 #' `apply(x, 2, min)` and `apply(x, 1, min)`, respectively, but ignore `NA`.
-#' @param x a [base::matrix] or [Matrix::Matrix] object.
+#' @inheritParams colSds
 #' @examples
-#' mt <- Matrix::rsparsematrix(100, 100, 0.01)
-#' colMaxs(mt)
-#' apply(mt, 2, max) # the same
+#'   mt <- Matrix::rsparsematrix(100, 100, 0.01)
+#'   colMaxs(mt)
+#'   apply(mt, 2, max) # the same
 #' @export
-colMaxs <- function(x) {
+colMaxs <- function(x, use_nan = FALSE) {
     x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    structure(cpp_max(x), names = colnames(x))
+    structure(cpp_max(x, use_nan), names = colnames(x))
 }
 
 #' @rdname colMaxs
 #' @export
-rowMaxs <- function(x) {
+rowMaxs <- function(x, use_nan = FALSE) {
     x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    structure(cpp_max(t(x)), names = rownames(x))
+    structure(cpp_max(t(x), use_nan), names = rownames(x))
 }
 
 #' @rdname colMaxs
 #' @export
-colMins <- function(x) {
+colMins <- function(x, use_nan = FALSE) {
     x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    structure(cpp_min(x), names = colnames(x))
+    structure(cpp_min(x, use_nan), names = colnames(x))
 }
 
 #' @rdname colMaxs
 #' @export
-rowMins <- function(x) {
+rowMins <- function(x, use_nan = FALSE) {
     x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    structure(cpp_min(t(x)), names = rownames(x))
+    structure(cpp_min(t(x), use_nan), names = rownames(x))
 }
 
 #' Column or row indices of maximum values
@@ -109,22 +110,22 @@ rowMins <- function(x) {
 #' Find column or row indices of maximum values in sparse matrices. Works in a
 #' similar way as `base::max.col(ties.method = "first")` but without conversion
 #' to dense matrices.
-#' @param x a [base::matrix] or [Matrix::Matrix] object.
+#' @inheritParams colSds
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
 #' maxCol(mt)
 #' max.col(mt, ties.method = "first") # the same
 #' @export
-maxCol <- function(x) {
+maxCol <- function(x, use_nan = FALSE) {
     x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    structure(cpp_maxrow(t(x)) + 1L, names = rownames(x))
+    structure(cpp_maxrow(t(x), use_nan) + 1L, names = rownames(x))
 }
 
 #' @rdname maxCol
 #' @export
-maxRow <- function(x) {
+maxRow <- function(x, use_nan = FALSE) {
     x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    structure(cpp_maxrow(x) + 1L, names = colnames(x))
+    structure(cpp_maxrow(x, use_nan) + 1L, names = colnames(x))
 }
 
 getThreads <- function() {
