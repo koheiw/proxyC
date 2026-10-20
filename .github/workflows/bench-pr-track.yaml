@@ -1,0 +1,128 @@
+# Send the results of bench-pr-run.yaml to bencher.dev and comment on the PR,
+# one comment per testbed. This runs from the default branch with access to
+# secrets, so it never checks out or executes PR code: the artifacts are
+# untrusted data, they are validated, and values reach the shell only through
+# environment variables.
+on:
+  workflow_run:
+    workflows: ["Benchmarks (PR run)"]
+    types: [completed]
+
+name: Benchmarks (PR track)
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+  actions: read
+
+jobs:
+  track:
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion != 'cancelled'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Download benchmark results and PR event
+        uses: dawidd6/action-download-artifact@v27
+        with:
+          run_id: ${{ github.event.workflow_run.id }}
+          name: '^(results-.*|event)$'
+          name_is_regexp: true
+          path: artifacts
+
+      - name: Export PR event data
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const fail = (msg) => { throw new Error(msg); };
+            const isSha = (x) => typeof x === 'string' && /^[0-9a-f]{40}$/.test(x);
+            const isRef = (x) => typeof x === 'string' && x.length > 0 && !/[\r\n]/.test(x);
+
+            const found = fs.readdirSync('artifacts', { recursive: true })
+              .filter((p) => path.basename(p) === 'event.json');
+            if (found.length !== 1) fail(`expected one event.json under artifacts/, found ${found.length}`);
+            const event = JSON.parse(fs.readFileSync(path.join('artifacts', found[0]), 'utf8'));
+            const pr = event.pull_request;
+            if (!pr || !pr.head || !pr.base) fail('event.json is not a pull_request event');
+
+            const number = event.number;
+            if (!Number.isInteger(number) || number <= 0) fail('invalid PR number');
+            if (!isSha(pr.head.sha) || !isSha(pr.base.sha)) fail('invalid head or base SHA');
+            if (!isRef(pr.head.ref) || !isRef(pr.base.ref)) fail('invalid head or base ref');
+
+            // event.json was written by PR code, so tie it to the triggering
+            // run, whose payload GitHub fills in
+            const run = context.payload.workflow_run;
+            const headRepo = run.head_repository && run.head_repository.full_name;
+            const baseRepo = run.repository.full_name;
+            if (pr.head.sha !== run.head_sha) fail('head SHA does not match the triggering run');
+            if (pr.head.ref !== run.head_branch) fail('head branch does not match the triggering run');
+            if (!pr.head.repo || pr.head.repo.full_name !== headRepo) fail('head repo does not match the triggering run');
+            if (!pr.base.repo || pr.base.repo.full_name !== baseRepo) fail('base repo does not match the triggering run');
+
+            // and make sure the PR number belongs to that head
+            const { data: live } = await github.rest.pulls.get({ ...context.repo, pull_number: number });
+            if (!live.head.repo || live.head.repo.full_name !== headRepo ||
+                live.head.ref !== run.head_branch || live.base.ref !== pr.base.ref) {
+              fail(`PR #${number} does not match the triggering run`);
+            }
+
+            // prefix fork branches with the fork owner so they can't collide
+            // with (or pose as) branches of this repo
+            const head = headRepo === baseRepo ?
+              run.head_branch :
+              `${run.head_repository.owner.login}/${run.head_branch}`;
+
+            core.exportVariable('PR_HEAD', head);
+            core.exportVariable('PR_HEAD_SHA', pr.head.sha);
+            core.exportVariable('PR_BASE', pr.base.ref);
+            core.exportVariable('PR_BASE_SHA', pr.base.sha);
+            core.exportVariable('PR_NUMBER', String(number));
+
+      - uses: bencherdev/bencher@v0.6.13
+
+      - name: Track benchmarks with Bencher
+        env:
+          BENCHER_API_KEY: ${{ secrets.BENCHER_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          shopt -s globstar nullglob
+          files=(artifacts/**/results-*.json)
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "::error::No results-*.json in the benchmark artifacts"
+            exit 1
+          fi
+          rc=0
+          # --start-point-reset always starts a new branch head, so only pass
+          # it for the first testbed; the others add their reports to that head
+          reset=(--start-point-reset)
+          for f in "${files[@]}"; do
+            tb="$(basename "$f" .json)"
+            tb="${tb#results-}"
+            case "$tb" in
+              single-thread|openblas|refblas) ;;
+              *) echo "::warning::Skipping a results file with an unknown testbed"; continue ;;
+            esac
+            echo "::group::bencher run ($tb)"
+            bencher run \
+              --project proxyc \
+              --branch "$PR_HEAD" \
+              --hash "$PR_HEAD_SHA" \
+              --start-point "$PR_BASE" \
+              --start-point-hash "$PR_BASE_SHA" \
+              --start-point-clone-thresholds \
+              "${reset[@]}" \
+              --testbed "$tb" \
+              --ci-id "$tb" \
+              --ci-number "$PR_NUMBER" \
+              --err \
+              --adapter json \
+              --github-actions "$GITHUB_TOKEN" \
+              --file "$f" || rc=1
+            reset=()
+            echo "::endgroup::"
+          done
+          exit "$rc"
