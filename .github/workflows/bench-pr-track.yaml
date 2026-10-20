@@ -82,7 +82,7 @@ jobs:
             core.exportVariable('PR_BASE_SHA', pr.base.sha);
             core.exportVariable('PR_NUMBER', String(number));
 
-      - uses: bencherdev/bencher@v0.6.11
+      - uses: bencherdev/bencher@v0.6.13
 
       - name: Track benchmarks with Bencher
         env:
