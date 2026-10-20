@@ -72,14 +72,15 @@ NumericVector cpp_min(SEXP s, const bool use_nan = false) {
 }
 
 // [[Rcpp::export]]
-IntegerVector cpp_maxrow(SEXP s, const bool use_nan = false) {
+IntegerVector cpp_maxrow(SEXP s, const int mode = 1,
+                         const bool use_nan = false) {
     if (Rf_isS4(s)) {
         arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<double> v = to_vector(maxrow(mt, use_nan));
+        std::vector<double> v = to_vector(maxrow(mt, mode, use_nan));
         return wrap(v);
     } else {
         arma::mat mt = Rcpp::as<arma::mat>(s);
-        std::vector<double> v = to_vector(maxrow(mt));
+        std::vector<double> v = to_vector(maxrow(mt, mode));
         return wrap(v);
     }
 }

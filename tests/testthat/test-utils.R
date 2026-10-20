@@ -103,20 +103,40 @@ test_that("colMax, rowMax, colMin, rowMin are working", {
     )
 })
 
-test_that("maxRow and maxCol are working", {
+test_that("maxRow and maxCol works with sparse marix", {
 
-    mt <- rsparsematrix(100, 100, 0.5)
+    mt <- rsparsematrix(100, 100, 0.1)
     rownames(mt) <- paste0("row", 1:100)
     colnames(mt) <- paste0("col", 1:100)
 
+    # random
+    expect_false(
+        all(maxCol(mt) == maxCol(mt, ties_method = "first"))
+    )
+    expect_false(
+        all(maxCol(mt) == maxCol(mt, ties_method = "last"))
+    )
+
+    # first
     expect_identical(
         max.col(mt, ties.method = "first"),
-        unname(maxCol(mt))
+        unname(maxCol(mt, ties_method = "first"))
     )
     expect_identical(
         max.col(t(mt), ties.method = "first"),
-        unname(maxRow(mt))
+        unname(maxRow(mt, ties_method = "first"))
     )
+
+    # last
+    expect_identical(
+        max.col(mt, ties.method = "last"),
+        unname(maxCol(mt, ties_method = "last"))
+    )
+    expect_identical(
+        max.col(t(mt), ties.method = "last"),
+        unname(maxRow(mt, ties_method = "last"))
+    )
+
     expect_identical(
         names(maxRow(mt)),
         colnames(mt)
@@ -137,14 +157,80 @@ test_that("maxRow and maxCol are working", {
         colZeros(mt2) == 100
     )
 
+    # extreme case
+    mt2 <- Matrix::Matrix(rep(NA_real_, 6), nrow = 2, sparse = TRUE)
+    expect_equal(
+        maxCol(mt2),
+        rep(NA_integer_, 2)
+    )
+    expect_equal(
+        maxRow(mt2),
+        rep(NA_integer_, 3)
+    )
+})
+
+test_that("maxRow and maxCol works with dense marix", {
+
+    mt <- as.matrix(rsparsematrix(100, 100, 0.1))
+    rownames(mt) <- paste0("row", 1:100)
+    colnames(mt) <- paste0("col", 1:100)
+
+    # random
+    expect_false(
+        all(maxCol(mt) == maxCol(mt, ties_method = "first"))
+    )
+    expect_false(
+        all(maxCol(mt) == maxCol(mt, ties_method = "last"))
+    )
+
+    # first
+    expect_identical(
+        max.col(mt, ties.method = "first"),
+        unname(maxCol(mt, ties_method = "first"))
+    )
+    expect_identical(
+        max.col(t(mt), ties.method = "first"),
+        unname(maxRow(mt, ties_method = "first"))
+    )
+
+    # last
+    expect_identical(
+        max.col(mt, ties.method = "last"),
+        unname(maxCol(mt, ties_method = "last"))
+    )
+    expect_identical(
+        max.col(t(mt), ties.method = "last"),
+        unname(maxRow(mt, ties_method = "last"))
+    )
+
+    expect_identical(
+        names(maxRow(mt)),
+        colnames(mt)
+    )
+    expect_identical(
+        names(maxCol(mt)),
+        rownames(mt)
+    )
+
     # error
     expect_error(
-        maxCol(as.matrix(mt2), use_nan = TRUE),
+        maxCol(mt, use_nan = TRUE),
         "use_nan applies only x is a sparse matrix"
     )
     expect_error(
-        maxRow(as.matrix(mt2), use_nan = TRUE),
+        maxRow(mt, use_nan = TRUE),
         "use_nan applies only x is a sparse matrix"
+    )
+
+    # extreme case
+    mt2 <- matrix(rep(NA_real_, 6), nrow = 2)
+    expect_equal(
+        maxCol(mt2),
+        rep(NA_integer_, 2)
+    )
+    expect_equal(
+        maxRow(mt2),
+        rep(NA_integer_, 3)
     )
 })
 

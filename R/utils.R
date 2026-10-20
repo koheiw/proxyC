@@ -127,18 +127,26 @@ rowMins <- function(x, use_nan = FALSE) {
 #' maxCol(mt)
 #' max.col(mt, ties.method = "first") # the same
 #' @export
-maxCol <- function(x, use_nan = FALSE) {
+maxCol <- function(x, ties_method = c("random", "first", "last"),
+                   use_nan = FALSE) {
     x <- convertMatrix(x)
+    ties_method <- match.arg(ties_method)
     check_use_nan(x, use_nan)
-    structure(cpp_maxrow(t(x), use_nan) + 1L, names = rownames(x))
+
+    mode <- match(ties_method, c("random", "first", "last"))
+    structure(cpp_maxrow(t(x), mode, use_nan) + 1L, names = rownames(x))
 }
 
 #' @rdname maxCol
 #' @export
-maxRow <- function(x, use_nan = FALSE) {
+maxRow <- function(x, ties_method = c("random", "first", "last"),
+                   use_nan = FALSE) {
     x <- convertMatrix(x)
+    ties_method <- match.arg(ties_method)
     check_use_nan(x, use_nan)
-    structure(cpp_maxrow(x, use_nan) + 1L, names = colnames(x))
+
+    mode <- match(ties_method, c("random", "first", "last"))
+    structure(cpp_maxrow(x, mode, use_nan) + 1L, names = colnames(x))
 }
 
 getThreads <- function() {

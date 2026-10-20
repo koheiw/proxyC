@@ -125,16 +125,32 @@ namespace proxyc{
         return(v);
     }
 
-
     // maxrow
-    inline rowvec maxrow(const sp_mat& mt, const bool use_nan = false) {
+    inline rowvec maxrow(const sp_mat& mt, const int mode = 1,
+                         const bool use_nan = false) {
         rowvec v(mt.n_cols, fill::zeros);
         if (mt.is_empty()) return(v);
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
             e = colvec(mt.col(i));
             if (arma::any(e)) {
-                v[i] = e.index_max();
+                uvec idx;
+                switch (mode) {
+                case 1: // random
+                    idx = shuffle(find(e == max(e)));
+                    break;
+                case 2: // first
+                    idx = find(e == max(e), 1);
+                    break;
+                case 3: // last
+                    idx = find(e == max(e), 1, "last");
+                    break;
+                }
+                if (idx.size() == 0) {
+                    v[i] = arma::datum::nan;
+                } else {
+                    v[i] = idx(0);
+                }
             } else if (use_nan) {
                 v[i] = arma::datum::nan;
             }
@@ -142,11 +158,29 @@ namespace proxyc{
         return(v);
     }
 
-    inline rowvec maxrow(const mat& mt) {
+    inline rowvec maxrow(const mat& mt, const int mode = 1) {
         rowvec v(mt.n_cols, fill::zeros);
         if (mt.is_empty()) return(v);
+        colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
-            v[i] = mt.col(i).index_max();
+            e = colvec(mt.col(i));
+            uvec idx;
+            switch (mode) {
+            case 1: // random
+                idx = shuffle(find(e == max(e)));
+                break;
+            case 2: // first
+                idx = find(e == max(e), 1);
+                break;
+            case 3: // last
+                idx = find(e == max(e), 1, "last");
+                break;
+            }
+            if (idx.size() == 0) {
+                v[i] = arma::datum::nan;
+            } else {
+                v[i] = idx(0);
+            }
         }
         return(v);
     }
