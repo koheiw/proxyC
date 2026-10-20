@@ -155,12 +155,12 @@ proxy <- function(x, y = NULL, margin = 1,
         weight <- p
     }
 
-    x <- as_proxy_matrix(x, boolean)
+    x <- as_proxy_matrix(x)
     if (is.null(y)) {
         symm <- TRUE
         y <- x
     } else {
-        y <- as_proxy_matrix(y, boolean)
+        y <- as_proxy_matrix(y)
     }
 
     # the items to compare are rows (margin = 1) or columns (margin = 2); the C++ code
@@ -221,6 +221,7 @@ proxy <- function(x, y = NULL, margin = 1,
             s1 = x,
             s2 = y,
             margin = margin,
+            boolean = boolean,
             method = match(method, c("product", "cosine", "correlation", "euclidean", "dice", "edice")),
             mask = mask,
             rank = rank,
@@ -238,6 +239,7 @@ proxy <- function(x, y = NULL, margin = 1,
             s1 = x,
             s2 = y,
             margin = margin,
+            boolean = boolean,
             method = match(method, c("cosine", "correlation", "euclidean",
                                      "dice", "edice", "hamann", "simple matching",
                                      "faith", "ejaccard", "fjaccard",
@@ -270,19 +272,15 @@ proxy <- function(x, y = NULL, margin = 1,
 }
 
 # dense input stays a base double matrix, so it reaches C++ without a copy; everything else
-# becomes a dgCMatrix
-as_proxy_matrix <- function(x, boolean) {
+# becomes a dgCMatrix. The boolean methods binarise in C++, together with the transpose for
+# margin = 1, so that also takes no extra copy
+as_proxy_matrix <- function(x) {
     if (is(x, "denseMatrix"))
         x <- as.matrix(x)
     if (is.matrix(x)) {
-        if (boolean)
-            x <- x != 0
         if (!is.double(x))
             storage.mode(x) <- "double"
         return(x)
     }
-    x <- as(as(as(x, "CsparseMatrix"), "generalMatrix"), "dMatrix")
-    if (boolean)
-        x <- as(as(x, "lMatrix"), "dMatrix")
-    x
+    as(as(as(x, "CsparseMatrix"), "generalMatrix"), "dMatrix")
 }

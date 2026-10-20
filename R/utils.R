@@ -36,7 +36,7 @@ tcrossprod <- function(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14)
 #' apply(mt, 2, sd) # the same
 #' @export
 colSds <- function(x) {
-    x <- as_proxy_matrix(x, FALSE)
+    x <- as_proxy_matrix(x)
     result <- cpp_sd(x, margin = 2)
     names(result) <- colnames(x)
     return(result)
@@ -45,7 +45,7 @@ colSds <- function(x) {
 #' @rdname colSds
 #' @export
 rowSds <- function(x) {
-    x <- as_proxy_matrix(x, FALSE)
+    x <- as_proxy_matrix(x)
     result <- cpp_sd(x, margin = 1)
     names(result) <- rownames(x)
     return(result)
@@ -61,7 +61,7 @@ rowSds <- function(x) {
 #' apply(mt, 2, function(x) sum(x == 0)) # the same
 #' @export
 colZeros <- function(x) {
-    x <- as_proxy_matrix(x, FALSE)
+    x <- as_proxy_matrix(x)
     result <- nrow(x) - cpp_nz(x, margin = 2)
     names(result) <- colnames(x)
     return(result)
@@ -70,7 +70,7 @@ colZeros <- function(x) {
 #' @rdname colZeros
 #' @export
 rowZeros <- function(x) {
-    x <- as_proxy_matrix(x, FALSE)
+    x <- as_proxy_matrix(x)
     result <- ncol(x) - cpp_nz(x, margin = 1)
     names(result) <- rownames(x)
     return(result)

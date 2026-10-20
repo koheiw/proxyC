@@ -18,10 +18,11 @@ S4 cpp_linear(SEXP s1,
               const bool sparse = true,
               const int digits = 14,
               const int thread = -1,
-              const int margin = 2) {
+              const int margin = 2,
+              const bool boolean = false) {
 
-    return with_items(s1, margin, [&](const auto& mt1) {
-        return with_items(s2, margin, [&](const auto& mt2) {
+    return with_items(s1, margin, boolean, [&](const auto& mt1) {
+        return with_items(s2, margin, boolean, [&](const auto& mt2) {
             return iter_linear(mt1, mt2, method, mask, rank, limit, symm, drop0,
                                use_nan, use_mask, sparse, digits, thread);
         });
@@ -30,14 +31,14 @@ S4 cpp_linear(SEXP s1,
 
 // [[Rcpp::export]]
 NumericVector cpp_sd(SEXP s, const int margin = 2) {
-    return with_items(s, margin, [](const auto& mt) {
+    return with_items(s, margin, false, [](const auto& mt) {
         return NumericVector(wrap(to_vector(stddev(mt, 0))));
     });
 }
 
 // [[Rcpp::export]]
 NumericVector cpp_nz(SEXP s, const int margin = 2) {
-    return with_items(s, margin, [](const auto& mt) {
+    return with_items(s, margin, false, [](const auto& mt) {
         return NumericVector(wrap(to_vector(nnz(mt))));
     });
 }
