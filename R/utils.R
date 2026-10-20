@@ -61,7 +61,7 @@ rowZeros <- function(x) {
 #' @export
 colSds <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
-    check_use_nan(x, use_nan)
+    use_nan <- check_use_nan(x, use_nan)
     structure(cpp_sd(x, use_nan), names = colnames(x))
 }
 
@@ -69,7 +69,7 @@ colSds <- function(x, use_nan = FALSE) {
 #' @export
 rowSds <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
-    check_use_nan(x, use_nan)
+    use_nan <- check_use_nan(x, use_nan)
     structure(cpp_sd(t(x), use_nan), names = rownames(x))
 }
 
@@ -86,6 +86,7 @@ rowSds <- function(x, use_nan = FALSE) {
 #' @export
 colMaxs <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
+    use_nan <- check_use_nan(x, use_nan)
     structure(cpp_max(x, use_nan), names = colnames(x))
 }
 
@@ -93,7 +94,7 @@ colMaxs <- function(x, use_nan = FALSE) {
 #' @export
 rowMaxs <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
-    check_use_nan(x, use_nan)
+    use_nan <- check_use_nan(x, use_nan)
     structure(cpp_max(t(x), use_nan), names = rownames(x))
 }
 
@@ -101,7 +102,7 @@ rowMaxs <- function(x, use_nan = FALSE) {
 #' @export
 colMins <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
-    check_use_nan(x, use_nan)
+    use_nan <- check_use_nan(x, use_nan)
     structure(cpp_min(x, use_nan), names = colnames(x))
 }
 
@@ -109,7 +110,7 @@ colMins <- function(x, use_nan = FALSE) {
 #' @export
 rowMins <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
-    check_use_nan(x, use_nan)
+    use_nan <- check_use_nan(x, use_nan)
     structure(cpp_min(t(x), use_nan), names = rownames(x))
 }
 
@@ -134,7 +135,7 @@ maxCol <- function(x, ties_method = c("random", "first", "last"),
                    use_nan = FALSE) {
     x <- convertMatrix(x)
     ties_method <- match.arg(ties_method)
-    check_use_nan(x, use_nan)
+    use_nan <- check_use_nan(x, use_nan)
 
     mode <- match(ties_method, c("random", "first", "last"))
     structure(cpp_maxrow(t(x), mode, use_nan) + 1L, names = rownames(x))
@@ -146,7 +147,7 @@ maxRow <- function(x, ties_method = c("random", "first", "last"),
                    use_nan = FALSE) {
     x <- convertMatrix(x)
     ties_method <- match.arg(ties_method)
-    check_use_nan(x, use_nan)
+    use_nan <- check_use_nan(x, use_nan)
 
     mode <- match(ties_method, c("random", "first", "last"))
     structure(cpp_maxrow(x, mode, use_nan) + 1L, names = colnames(x))
@@ -181,6 +182,8 @@ convertMatrix <- function(x, boolean = FALSE) {
 }
 
 check_use_nan <- function(x, use_nan) {
+    use_nan <- quanteda::check_logical(use_nan)
     if (is.matrix(x) && use_nan)
         stop("use_nan applies only x is a sparse matrix")
+    return(use_nan)
 }
