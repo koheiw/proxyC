@@ -5,12 +5,16 @@
 \alias{maxRow}
 \title{Column or row indices of maximum values}
 \usage{
-maxCol(x, use_nan = FALSE)
+maxCol(x, ties_method = c("random", "first", "last"), use_nan = FALSE)
 
-maxRow(x, use_nan = FALSE)
+maxRow(x, ties_method = c("random", "first", "last"), use_nan = FALSE)
 }
 \arguments{
 \item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object.}
+
+\item{ties_method}{specify how to handle ties. If "random", choose an
+index randomly within the ties; if "first" or "last" returns the index of the
+first or the last tie elements, respectively.}
 
 \item{use_nan}{if \code{TRUE}, return \code{NA} for columns or rows with all zero.
 Applies only when \code{x} is a sparse matrix.}
@@ -19,12 +23,12 @@ Applies only when \code{x} is a sparse matrix.}
 an integer vector
 }
 \description{
-Find column or row indices of maximum values in sparse matrices. Works in a
-similar way as \code{base::max.col(ties.method = "first")} but without conversion
+Find column or row indices of maximum values in matrices. Works in a
+similar way as \code{base::max.col()} but without conversion of sparse matrices
 to dense matrices.
 }
 \examples{
 mt <- Matrix::rsparsematrix(100, 100, 0.9)
-maxCol(mt)
+maxCol(mt, ties_method = "first")
 max.col(mt, ties.method = "first") # the same
 }

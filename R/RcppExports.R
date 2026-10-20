@@ -37,7 +37,7 @@ cpp_min <- function(s, use_nan = FALSE) {
     .Call('_proxyC_cpp_min', PACKAGE = 'proxyC', s, use_nan)
 }
 
-cpp_maxrow <- function(s, use_nan = FALSE) {
-    .Call('_proxyC_cpp_maxrow', PACKAGE = 'proxyC', s, use_nan)
+cpp_maxrow <- function(s, mode = 1L, use_nan = FALSE) {
+    .Call('_proxyC_cpp_maxrow', PACKAGE = 'proxyC', s, mode, use_nan)
 }
 

@@ -115,16 +115,19 @@ rowMins <- function(x, use_nan = FALSE) {
 
 #' Column or row indices of maximum values
 #'
-#' Find column or row indices of maximum values in sparse matrices. Works in a
-#' similar way as `base::max.col(ties.method = "first")` but without conversion
+#' Find column or row indices of maximum values in matrices. Works in a
+#' similar way as `base::max.col()` but without conversion of sparse matrices
 #' to dense matrices.
 #' @param x a [base::matrix] or [Matrix::Matrix] object.
+#' @param ties_method specify how to handle ties. If "random", choose an
+#'   index randomly within the ties; if "first" or "last" returns the index of the
+#'   first or the last tie elements, respectively.
 #' @param use_nan if `TRUE`, return `NA` for columns or rows with all zero.
 #'   Applies only when `x` is a sparse matrix.
 #' @return an integer vector
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.9)
-#' maxCol(mt)
+#' maxCol(mt, ties_method = "first")
 #' max.col(mt, ties.method = "first") # the same
 #' @export
 maxCol <- function(x, ties_method = c("random", "first", "last"),

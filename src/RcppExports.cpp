@@ -141,14 +141,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_maxrow
-IntegerVector cpp_maxrow(SEXP s, const bool use_nan);
-RcppExport SEXP _proxyC_cpp_maxrow(SEXP sSEXP, SEXP use_nanSEXP) {
+IntegerVector cpp_maxrow(SEXP s, const int mode, const bool use_nan);
+RcppExport SEXP _proxyC_cpp_maxrow(SEXP sSEXP, SEXP modeSEXP, SEXP use_nanSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const int >::type mode(modeSEXP);
     Rcpp::traits::input_parameter< const bool >::type use_nan(use_nanSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_maxrow(s, use_nan));
+    rcpp_result_gen = Rcpp::wrap(cpp_maxrow(s, mode, use_nan));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -163,7 +164,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_proxyC_cpp_sd", (DL_FUNC) &_proxyC_cpp_sd, 2},
     {"_proxyC_cpp_max", (DL_FUNC) &_proxyC_cpp_max, 2},
     {"_proxyC_cpp_min", (DL_FUNC) &_proxyC_cpp_min, 2},
-    {"_proxyC_cpp_maxrow", (DL_FUNC) &_proxyC_cpp_maxrow, 2},
+    {"_proxyC_cpp_maxrow", (DL_FUNC) &_proxyC_cpp_maxrow, 3},
     {NULL, NULL, 0}
 };
 
