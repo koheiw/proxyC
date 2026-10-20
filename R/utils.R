@@ -208,7 +208,7 @@ check_integer <- function(x) {
     arg <- deparse(substitute(x))
     x <- as.integer(x)
     if (length(x) != 1 || is.na(x))
-        stop(arg, " must a single interger value", call. = FALSE)
+        stop(arg, " must a single integer value", call. = FALSE)
     return(x)
 }
 

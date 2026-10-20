@@ -215,3 +215,34 @@ test_that("C++ utility functions are working", {
 
 })
 
+test_that("input checks are working", {
+
+    expect_error(
+        proxyC:::proxy(mat_test, margin = c(1, 2)),
+        "margin must a single integer value"
+    )
+    expect_error(
+        proxyC:::proxy(mat_test, p = c(0.5, 1.5)),
+        "p must a single numeric value"
+    )
+    expect_error(
+        proxyC:::proxy(mat_test, smooth = c(0.5, 1.5)),
+        "smooth must a single numeric value"
+    )
+    expect_error(
+        proxyC:::proxy(mat_test, drop0 = "yes"),
+        "drop0 must a single logical value"
+    )
+    expect_error(
+        proxyC:::proxy(mat_test, diag = "yes"),
+        "diag must a single logical value"
+    )
+    expect_error(
+        proxyC:::proxy(mat_test, sparse = "yes"),
+        "sparse must a single logical value"
+    )
+    expect_error(
+        proxyC:::proxy(mat_test, digits = c(2, 3)),
+        "digits must a single integer value"
+    )
+})
