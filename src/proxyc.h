@@ -169,6 +169,14 @@ namespace proxyc{
         return arma::conv_to< std::vector<int> >::from(v);
     }
 
+    inline std::vector<double> to_vector(const arma::colvec& v) {
+        return arma::conv_to< std::vector<double> >::from(v);
+    }
+
+    inline std::vector<int> to_vector(const arma::ucolvec& v) {
+        return arma::conv_to< std::vector<int> >::from(v);
+    }
+
 }
 
 #endif

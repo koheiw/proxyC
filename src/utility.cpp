@@ -20,14 +20,14 @@ bool cpp_tbb_enabled(){
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_nz(SEXP s) {
+IntegerVector cpp_nz(SEXP s) {
     if (Rf_isS4(s)) {
         arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<double> v = to_vector(nnz(mt));
+        std::vector<int> v = to_vector(nnz(mt));
         return wrap(v);
     } else {
         arma::mat mt = Rcpp::as<arma::mat>(s);
-        std::vector<double> v = to_vector(nnz(mt));
+        std::vector<int> v = to_vector(nnz(mt));
         return wrap(v);
     }
 }

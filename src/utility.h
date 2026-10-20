@@ -6,8 +6,8 @@ using namespace arma;
 namespace proxyc{
 
     // nnz
-    inline rowvec nnz(const sp_mat& mt) {
-        rowvec v(mt.n_cols, fill::zeros);
+    inline urowvec nnz(const sp_mat& mt) {
+        urowvec v(mt.n_cols, fill::zeros);
         if (mt.is_empty()) return(v);
         for (uword i = 0; i < mt.n_cols; i++) {
             v[i] = arma::sum(colvec(mt.col(i)) != 0);
@@ -15,13 +15,8 @@ namespace proxyc{
         return(v);
     }
 
-    inline rowvec nnz(const mat& mt) {
-        rowvec v(mt.n_cols, fill::zeros);
-        if (mt.is_empty()) return(v);
-        for (uword i = 0; i < mt.n_cols; i++) {
-            v[i] = arma::sum(colvec(mt.col(i)) != 0);
-        }
-        return(v);
+    inline urowvec nnz(const mat& mt) {
+        return(arma::sum(mt != 0, 0));
     }
 
     // stddev
@@ -42,12 +37,7 @@ namespace proxyc{
     }
 
     inline rowvec stddev(const mat& mt, const int norm_type) {
-        rowvec v(mt.n_cols, fill::zeros);
-        if (mt.is_empty()) return(v);
-        for (uword i = 0; i < mt.n_cols; i++) {
-            v[i] = arma::stddev(colvec(mt.col(i)), norm_type);
-        }
-        return(v);
+        return(arma::stddev(mt, norm_type, 0));
     }
 
     // mean
@@ -67,12 +57,7 @@ namespace proxyc{
     }
 
     inline rowvec mean(const mat& mt) {
-        rowvec v(mt.n_cols, fill::zeros);
-        if (mt.is_empty()) return(v);
-        for (uword i = 0; i < mt.n_cols; i++) {
-            v[i] = arma::mean(colvec(mt.col(i)));
-        }
-        return(v);
+        return(arma::mean(mt, 0));
     }
 
     // max
@@ -92,12 +77,7 @@ namespace proxyc{
     }
 
     inline rowvec max(const mat& mt) {
-        rowvec v(mt.n_cols, fill::nan);
-        if (mt.is_empty()) return(v);
-        for (uword i = 0; i < mt.n_cols; i++) {
-            v[i] = arma::max(colvec(mt.col(i)));
-        }
-        return(v);
+        return(arma::max(mt, 0));
     }
 
     // min
@@ -117,12 +97,7 @@ namespace proxyc{
     }
 
     inline rowvec min(const mat& mt) {
-        rowvec v(mt.n_cols, fill::zeros);
-        if (mt.is_empty()) return(v);
-        for (uword i = 0; i < mt.n_cols; i++) {
-            v[i] = arma::min(colvec(mt.col(i)));
-        }
-        return(v);
+        return(arma::min(mt, 0));
     }
 
     // maxrow
