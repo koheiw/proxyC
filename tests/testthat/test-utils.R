@@ -105,7 +105,7 @@ test_that("colMax, rowMax, colMin, rowMin are working", {
 
 test_that("maxRow and maxCol works with sparse marix", {
 
-    mt <- rsparsematrix(100, 100, 0.1)
+    mt <- rsparsematrix(100, 100, 0.01)
     rownames(mt) <- paste0("row", 1:100)
     colnames(mt) <- paste0("col", 1:100)
 
@@ -164,6 +164,12 @@ test_that("maxRow and maxCol works with sparse marix", {
         colZeros(mt2) == 100
     )
 
+    # error
+    expect_error(
+        maxRow(mt, use_nan = c(TRUE, FALSE)),
+        "The length of use_nan must be 1"
+    )
+
     # extreme case
     mt2 <- Matrix::Matrix(rep(NA_real_, 6), nrow = 2, sparse = TRUE)
     expect_equal(
@@ -178,7 +184,7 @@ test_that("maxRow and maxCol works with sparse marix", {
 
 test_that("maxRow and maxCol works with dense marix", {
 
-    mt <- as.matrix(rsparsematrix(100, 100, 0.1))
+    mt <- as.matrix(rsparsematrix(100, 100, 0.01))
     rownames(mt) <- paste0("row", 1:100)
     colnames(mt) <- paste0("col", 1:100)
 
