@@ -32,10 +32,10 @@ namespace proxyc{
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
             e = colvec(mt.col(i));
-            if (arma::any(e)) {
-                v[i] = arma::stddev(e, norm_type);
-            } else if (use_nan) {
+            if (use_nan && !arma::any(e)) {
                 v[i] = arma::datum::nan;
+            } else {
+                v[i] = arma::stddev(e, norm_type);
             }
         }
         return(v);
@@ -57,10 +57,10 @@ namespace proxyc{
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
             e = colvec(mt.col(i));
-            if (arma::any(e)) {
-                v[i] = arma::mean(e);
-            } else if (use_nan) {
+            if (use_nan && !arma::any(e)) {
                 v[i] = arma::datum::nan;
+            } else {
+                v[i] = arma::mean(e);
             }
         }
         return(v);
@@ -82,10 +82,10 @@ namespace proxyc{
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
             e = colvec(mt.col(i));
-            if (arma::any(e)) {
-                v[i] = arma::max(e);
-            } else if (use_nan) {
+            if (use_nan && !arma::any(e)) {
                 v[i] = arma::datum::nan;
+            } else {
+                v[i] = arma::max(e);
             }
         }
         return(v);
@@ -107,10 +107,10 @@ namespace proxyc{
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
             e = colvec(mt.col(i));
-            if (arma::any(e)) {
-                v[i] = arma::min(e);
-            } else if (use_nan) {
+            if (use_nan && !arma::any(e)) {
                 v[i] = arma::datum::nan;
+            } else {
+                v[i] = arma::min(e);
             }
         }
         return(v);
@@ -133,7 +133,9 @@ namespace proxyc{
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
             e = colvec(mt.col(i));
-            if (arma::any(e)) {
+            if (use_nan && !arma::any(e)) {
+                v[i] = arma::datum::nan;
+            } else {
                 uvec idx;
                 switch (mode) {
                 case 1: // random
@@ -151,8 +153,6 @@ namespace proxyc{
                 } else {
                     v[i] = idx(0);
                 }
-            } else if (use_nan) {
-                v[i] = arma::datum::nan;
             }
         }
         return(v);
