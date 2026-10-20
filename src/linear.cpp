@@ -29,29 +29,17 @@ S4 cpp_linear(SEXP s1,
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_sd(SEXP s) {
-    if (Rf_isS4(s)) {
-        arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<double> sds = to_vector(stddev(mt, 0));
-        return wrap(sds);
-    } else {
-        arma::mat mt = Rcpp::as<arma::mat>(s);
-        std::vector<double> sds = to_vector(stddev(mt, 0));
-        return wrap(sds);
-    }
+NumericVector cpp_sd(SEXP s, const int margin = 2) {
+    return with_items(s, margin, [](const auto& mt) {
+        return NumericVector(wrap(to_vector(stddev(mt, 0))));
+    });
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_nz(SEXP s) {
-    if (Rf_isS4(s)) {
-        arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<double> nzs = to_vector(nnz(mt));
-        return wrap(nzs);
-    } else {
-        arma::mat mt = Rcpp::as<arma::mat>(s);
-        std::vector<double> nzs = to_vector(nnz(mt));
-        return wrap(nzs);
-    }
+NumericVector cpp_nz(SEXP s, const int margin = 2) {
+    return with_items(s, margin, [](const auto& mt) {
+        return NumericVector(wrap(to_vector(nnz(mt))));
+    });
 }
 
 

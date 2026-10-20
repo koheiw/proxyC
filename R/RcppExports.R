@@ -5,12 +5,12 @@ cpp_linear <- function(s1, s2, method, mask, rank, limit = -1.0, symm = FALSE, d
     .Call('_proxyC_cpp_linear', PACKAGE = 'proxyC', s1, s2, method, mask, rank, limit, symm, drop0, use_nan, use_mask, sparse, digits, thread, margin)
 }
 
-cpp_sd <- function(s) {
-    .Call('_proxyC_cpp_sd', PACKAGE = 'proxyC', s)
+cpp_sd <- function(s, margin = 2L) {
+    .Call('_proxyC_cpp_sd', PACKAGE = 'proxyC', s, margin)
 }
 
-cpp_nz <- function(s) {
-    .Call('_proxyC_cpp_nz', PACKAGE = 'proxyC', s)
+cpp_nz <- function(s, margin = 2L) {
+    .Call('_proxyC_cpp_nz', PACKAGE = 'proxyC', s, margin)
 }
 
 cpp_mask <- function(v1_, v2_, thread = -1L) {

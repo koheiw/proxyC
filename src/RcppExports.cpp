@@ -36,24 +36,26 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_sd
-NumericVector cpp_sd(SEXP s);
-RcppExport SEXP _proxyC_cpp_sd(SEXP sSEXP) {
+NumericVector cpp_sd(SEXP s, const int margin);
+RcppExport SEXP _proxyC_cpp_sd(SEXP sSEXP, SEXP marginSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_sd(s));
+    Rcpp::traits::input_parameter< const int >::type margin(marginSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_sd(s, margin));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_nz
-NumericVector cpp_nz(SEXP s);
-RcppExport SEXP _proxyC_cpp_nz(SEXP sSEXP) {
+NumericVector cpp_nz(SEXP s, const int margin);
+RcppExport SEXP _proxyC_cpp_nz(SEXP sSEXP, SEXP marginSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_nz(s));
+    Rcpp::traits::input_parameter< const int >::type margin(marginSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_nz(s, margin));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -120,8 +122,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_proxyC_cpp_linear", (DL_FUNC) &_proxyC_cpp_linear, 14},
-    {"_proxyC_cpp_sd", (DL_FUNC) &_proxyC_cpp_sd, 1},
-    {"_proxyC_cpp_nz", (DL_FUNC) &_proxyC_cpp_nz, 1},
+    {"_proxyC_cpp_sd", (DL_FUNC) &_proxyC_cpp_sd, 2},
+    {"_proxyC_cpp_nz", (DL_FUNC) &_proxyC_cpp_nz, 2},
     {"_proxyC_cpp_mask", (DL_FUNC) &_proxyC_cpp_mask, 3},
     {"_proxyC_cpp_pair", (DL_FUNC) &_proxyC_cpp_pair, 17},
     {"_proxyC_cpp_get_max_thread", (DL_FUNC) &_proxyC_cpp_get_max_thread, 0},
