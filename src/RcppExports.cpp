@@ -94,7 +94,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_nz
-NumericVector cpp_nz(SEXP s);
+IntegerVector cpp_nz(SEXP s);
 RcppExport SEXP _proxyC_cpp_nz(SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
