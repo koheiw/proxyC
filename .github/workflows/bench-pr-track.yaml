@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Download benchmark results and PR event
-        uses: dawidd6/action-download-artifact@v21
+        uses: dawidd6/action-download-artifact@v27
         with:
           run_id: ${{ github.event.workflow_run.id }}
           name: '^(results-.*|event)$'
@@ -82,11 +82,11 @@ jobs:
             core.exportVariable('PR_BASE_SHA', pr.base.sha);
             core.exportVariable('PR_NUMBER', String(number));
 
-      - uses: bencherdev/bencher@v0.6.11
+      - uses: bencherdev/bencher@v0.6.13
 
       - name: Track benchmarks with Bencher
         env:
-          BENCHER_API_TOKEN: ${{ secrets.BENCHER_API_TOKEN }}
+          BENCHER_API_KEY: ${{ secrets.BENCHER_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           shopt -s globstar nullglob
@@ -109,7 +109,6 @@ jobs:
             echo "::group::bencher run ($tb)"
             bencher run \
               --project proxyc \
-              --token "$BENCHER_API_TOKEN" \
               --branch "$PR_HEAD" \
               --hash "$PR_HEAD_SHA" \
               --start-point "$PR_BASE" \
