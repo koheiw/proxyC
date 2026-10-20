@@ -250,8 +250,8 @@ void calc_pair(const uword i,
 }
 
 template <typename M1, typename M2>
-S4 iter_pair(M1& mt1,
-                   M2& mt2,
+S4 iter_pair(const M1& mt1,
+                   const M2& mt2,
                    const int method,
                    arma::sp_mat& mask,
                    unsigned int rank,

@@ -155,38 +155,34 @@ proxy <- function(x, y = NULL, margin = 1,
         weight <- p
     }
 
-    x <- as(as(x, "generalMatrix"), "dMatrix")
-    if (boolean)
-        x <- as(as(x, "lMatrix"), "dMatrix")
-    if (is(x, "dgeMatrix")) {
-        x <- as.matrix(x)
-    } else {
-        x <- as(x, "CsparseMatrix")
-    }
-
+    x <- as_proxy_matrix(x, boolean)
     if (is.null(y)) {
         symm <- TRUE
         y <- x
     } else {
-        y <- as(as(y, "generalMatrix"), "dMatrix")
-        if (boolean)
-            y <- as(as(y, "lMatrix"), "dMatrix")
-        if (is(y, "dgeMatrix")) {
-            y <- as.matrix(y)
-        } else {
-            y <- as(y, "CsparseMatrix")
-        }
+        y <- as_proxy_matrix(y, boolean)
     }
+
+    # the items to compare are rows (margin = 1) or columns (margin = 2); the C++ code
+    # transposes for margin = 1, so dense input isn't copied here
     if (!margin %in% c(1, 2))
         stop("Matrgin must be 1 (row) or 2 (column)")
     if (margin == 1) {
         if (ncol(x) != ncol(y))
             stop("x and y must have the same number of columns")
-        x <- t(x)
-        y <- t(y)
+        n_x <- nrow(x)
+        n_y <- nrow(y)
+        n_features <- ncol(x)
+        item_sds <- rowSds
+        item_zeros <- rowZeros
     } else {
         if (nrow(x) != nrow(y))
             stop("x and y must have the same number of rows")
+        n_x <- ncol(x)
+        n_y <- ncol(y)
+        n_features <- nrow(x)
+        item_sds <- colSds
+        item_zeros <- colZeros
     }
     if (is.null(mask)) {
         mask <- as(Matrix(numeric(), nrow = 0, ncol = 0, sparse = TRUE), "CsparseMatrix")
@@ -194,24 +190,24 @@ proxy <- function(x, y = NULL, margin = 1,
     } else {
         mask <- as(as(as(mask, "CsparseMatrix"), "generalMatrix"), "dMatrix")
         use_mask <- TRUE
-        if (nrow(mask) != ncol(x) || ncol(mask) != ncol(y))
-            stop(sprintf("The shape of mask must be %d x %d.", ncol(x), ncol(y)))
+        if (nrow(mask) != n_x || ncol(mask) != n_y)
+            stop(sprintf("The shape of mask must be %d x %d.", n_x, n_y))
     }
     if (is.null(min_proxy))
         min_proxy <- -1.0
     if (is.null(rank))
-        rank <- ncol(x)
+        rank <- n_x
     if (rank < 1)
         stop("rank must be great than or equal to 1")
     if (is.null(use_nan)) {
-        if (method == "correlation" && (any(colSds(x) == 0) || any(colSds(y) == 0))) {
+        if (method == "correlation" && (any(item_sds(x) == 0) || any(item_sds(y) == 0))) {
             warning(paste0(
                 "x or y has vectors with zero standard deviation; ",
                 "consider setting use_nan = TRUE to set these values to NaN ",
                 "or use_nan = FALSE to suppress this warning"), call. = FALSE)
         } else if (
             method %in% c("cosine", "kullback", "chisquared", "jeffreys", "jensen") &&
-            (any(colZeros(x) == nrow(x)) || any(colZeros(y) == nrow(y)))) {
+            (any(item_zeros(x) == n_features) || any(item_zeros(y) == n_features))) {
             warning(paste0(
                 "x or y has vectors with all zero; ",
                 "consider setting use_nan = TRUE to set these values to NaN ",
@@ -224,6 +220,7 @@ proxy <- function(x, y = NULL, margin = 1,
         result <- cpp_linear(
             s1 = x,
             s2 = y,
+            margin = margin,
             method = match(method, c("product", "cosine", "correlation", "euclidean", "dice", "edice")),
             mask = mask,
             rank = rank,
@@ -240,6 +237,7 @@ proxy <- function(x, y = NULL, margin = 1,
         result <- cpp_pair(
             s1 = x,
             s2 = y,
+            margin = margin,
             method = match(method, c("cosine", "correlation", "euclidean",
                                      "dice", "edice", "hamann", "simple matching",
                                      "faith", "ejaccard", "fjaccard",
@@ -263,6 +261,28 @@ proxy <- function(x, y = NULL, margin = 1,
     }
     if (diag)
         result <- as(as(result, "diagonalMatrix"), "ddiMatrix")
-    dimnames(result) <- list(colnames(x), colnames(y))
+    if (margin == 1) {
+        dimnames(result) <- list(rownames(x), rownames(y))
+    } else {
+        dimnames(result) <- list(colnames(x), colnames(y))
+    }
     return(result)
+}
+
+# dense input stays a base double matrix, so it reaches C++ without a copy; everything else
+# becomes a dgCMatrix
+as_proxy_matrix <- function(x, boolean) {
+    if (is(x, "denseMatrix"))
+        x <- as.matrix(x)
+    if (is.matrix(x)) {
+        if (boolean)
+            x <- x != 0
+        if (!is.double(x))
+            storage.mode(x) <- "double"
+        return(x)
+    }
+    x <- as(as(as(x, "CsparseMatrix"), "generalMatrix"), "dMatrix")
+    if (boolean)
+        x <- as(as(x, "lMatrix"), "dMatrix")
+    x
 }

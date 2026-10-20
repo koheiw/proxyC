@@ -165,6 +165,24 @@ namespace proxyc{
         return arma::conv_to< std::vector<double> >::from(v);
     }
 
+    // call f() with an R matrix as an armadillo matrix that has the items to compare as
+    // columns; a dense matrix with margin = 2 is a view on R's memory, not a copy
+    template <typename F>
+    inline auto with_items(SEXP s, const int margin, F&& f) {
+        if (Rf_isS4(s)) {
+            const arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
+            if (margin == 1)
+                return f(arma::sp_mat(mt.t()));
+            return f(mt);
+        }
+        if (TYPEOF(s) != REALSXP)
+            throw std::invalid_argument("dense input must be a double matrix");
+        const arma::mat mt(REAL(s), Rf_nrows(s), Rf_ncols(s), false, true);
+        if (margin == 1)
+            return f(arma::mat(mt.t()));
+        return f(mt);
+    }
+
 }
 
 #endif

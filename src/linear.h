@@ -111,8 +111,8 @@ void calc_linear(const uword i,
 }
 
 template <typename M1, typename M2>
-S4 iter_linear(M1& mt1,
-                   M2& mt2,
+S4 iter_linear(const M1& mt1,
+                   const M2& mt2,
                    const int method,
                    arma::sp_mat& mask,
                    unsigned int rank,
@@ -175,14 +175,14 @@ S4 iter_linear(M1& mt1,
     //dev::start_timer("Compute similarity", timer);
 
     Triplets simil_tri;
-    mt1 = trans(mt1);
+    const M1 mt1t = trans(mt1);
     std::size_t I = ncol2;
 #if PROXYC_USE_TBB
     tbb::task_arena arena(thread);
     arena.execute([&]{
         tbb::parallel_for(tbb::blocked_range<int>(0, I), [&](tbb::blocked_range<int> r) {
             for (int i = r.begin(); i < r.end(); i++) {
-                calc_linear(i, mt1, mt2, mask, simil_tri,
+                calc_linear(i, mt1t, mt2, mask, simil_tri,
                              square1, center1, sum1, square2, center2, sum2,
                              method, rank, limit, symm, drop0, use_nan, use_mask, digits);
             }
@@ -190,7 +190,7 @@ S4 iter_linear(M1& mt1,
     });
 # else
     for (std::size_t i = 0; i < I; i++) {
-        calc_linear(i, mt1, mt2, mask, simil_tri,
+        calc_linear(i, mt1t, mt2, mask, simil_tri,
                      square1, center1, sum1, square2, center2, sum2,
                      method, rank, limit, symm, drop0, use_nan, use_mask, digits);
     }
