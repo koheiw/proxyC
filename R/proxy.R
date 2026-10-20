@@ -134,6 +134,14 @@ proxy <- function(x, y = NULL, margin = 1,
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
 
+    margin <- check_integer(margin)
+    p <- check_numeric(p)
+    smooth <- check_numeric(smooth)
+    drop0 <- check_logical(drop0)
+    diag <- check_logical(diag)
+    sparse <- check_logical(sparse)
+    digits <- check_integer(digits)
+
     symm <- FALSE
     boolean <- FALSE
     weight <- 1
@@ -204,6 +212,8 @@ proxy <- function(x, y = NULL, margin = 1,
                 "or use_nan = FALSE to suppress this warning"), call. = FALSE)
         }
         use_nan <- FALSE
+    } else {
+        use_nan <- check_logical(use_nan)
     }
 
     if (method %in% c("cosine", "correlation", "euclidean", "product", "dice", "edice") && !diag) {

@@ -167,7 +167,7 @@ test_that("maxRow and maxCol works with sparse marix", {
     # error
     expect_error(
         maxRow(mt, use_nan = c(TRUE, FALSE)),
-        "The length of use_nan must be 1"
+        "use_nan must a single logical value"
     )
 
     # extreme case

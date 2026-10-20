@@ -182,8 +182,34 @@ convertMatrix <- function(x, boolean = FALSE) {
 }
 
 check_use_nan <- function(x, use_nan) {
-    use_nan <- quanteda::check_logical(use_nan)
+    use_nan <- check_logical(use_nan)
     if (is.matrix(x) && use_nan)
-        stop("use_nan applies only x is a sparse matrix")
+        stop("use_nan applies only x is a sparse matrix", call. = FALSE)
     return(use_nan)
 }
+
+check_logical <- function(x) {
+    arg <- deparse(substitute(x))
+    x <- as.logical(x)
+    if (length(x) != 1 || !x %in% c(FALSE, TRUE))
+        stop(arg, " must a single logical value", call. = FALSE)
+    return(x)
+}
+
+check_numeric <- function(x) {
+    arg <- deparse(substitute(x))
+    x <- as.numeric(x)
+    if (length(x) != 1 || is.na(x))
+        stop(arg, " must a single numeric value", call. = FALSE)
+    return(x)
+}
+
+check_integer <- function(x) {
+    arg <- deparse(substitute(x))
+    x <- as.integer(x)
+    if (length(x) != 1 || is.na(x))
+        stop(arg, " must a single interger value", call. = FALSE)
+    return(x)
+}
+
+
