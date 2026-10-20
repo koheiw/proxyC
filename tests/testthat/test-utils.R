@@ -116,6 +116,13 @@ test_that("maxRow and maxCol works with sparse marix", {
     expect_false(
         all(maxCol(mt) == maxCol(mt, ties_method = "last"))
     )
+    expect_false(
+        all(maxCol(mt) == maxCol(mt))
+    )
+    expect_identical(
+        {set.seed(1234); maxCol(mt)},
+        {set.seed(1234); maxCol(mt)}
+    )
 
     # first
     expect_identical(
@@ -181,6 +188,13 @@ test_that("maxRow and maxCol works with dense marix", {
     )
     expect_false(
         all(maxCol(mt) == maxCol(mt, ties_method = "last"))
+    )
+    expect_false(
+        all(maxCol(mt) == maxCol(mt))
+    )
+    expect_identical(
+        {set.seed(1234); maxCol(mt)},
+        {set.seed(1234); maxCol(mt)}
     )
 
     # first
