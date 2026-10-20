@@ -8,11 +8,11 @@ namespace proxyc{
     // nnz
     inline urowvec nnz(const sp_mat& mt) {
         urowvec v(mt.n_cols, fill::zeros);
-        if (mt.is_empty()) return(v);
+        if (mt.is_empty()) return v;
         for (uword i = 0; i < mt.n_cols; i++) {
             v[i] = arma::sum(colvec(mt.col(i)) != 0);
         }
-        return(v);
+        return v;
     }
 
     inline urowvec nnz(const mat& mt) {
@@ -23,7 +23,7 @@ namespace proxyc{
     inline rowvec stddev(const sp_mat& mt, const int norm_type,
                          const bool use_nan = false) {
         rowvec v(mt.n_cols, fill::zeros);
-        if (mt.is_empty()) return(v);
+        if (mt.is_empty()) return v;
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
             e = colvec(mt.col(i));
@@ -33,7 +33,7 @@ namespace proxyc{
                 v[i] = arma::stddev(e, norm_type);
             }
         }
-        return(v);
+        return v;
     }
 
     inline rowvec stddev(const mat& mt, const int norm_type) {
@@ -43,7 +43,7 @@ namespace proxyc{
     // mean
     inline rowvec mean(const sp_mat& mt, const bool use_nan = false) {
         rowvec v(mt.n_cols, fill::zeros);
-        if (mt.is_empty()) return(v);
+        if (mt.is_empty()) return v;
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
             e = colvec(mt.col(i));
@@ -53,7 +53,7 @@ namespace proxyc{
                 v[i] = arma::mean(e);
             }
         }
-        return(v);
+        return v;
     }
 
     inline rowvec mean(const mat& mt) {
@@ -63,7 +63,7 @@ namespace proxyc{
     // max
     inline rowvec max(const sp_mat& mt, const bool use_nan = false) {
         rowvec v(mt.n_cols, fill::zeros);
-        if (mt.is_empty()) return(v);
+        if (mt.is_empty()) return v;
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
             e = colvec(mt.col(i));
@@ -73,7 +73,7 @@ namespace proxyc{
                 v[i] = arma::max(e);
             }
         }
-        return(v);
+        return v;
     }
 
     inline rowvec max(const mat& mt) {
@@ -83,7 +83,7 @@ namespace proxyc{
     // min
     inline rowvec min(const sp_mat& mt, const bool use_nan = false) {
         rowvec v(mt.n_cols, fill::zeros);
-        if (mt.is_empty()) return(v);
+        if (mt.is_empty()) return v;
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
             e = colvec(mt.col(i));
@@ -93,7 +93,7 @@ namespace proxyc{
                 v[i] = arma::min(e);
             }
         }
-        return(v);
+        return v;
     }
 
     inline rowvec min(const mat& mt) {
@@ -104,7 +104,7 @@ namespace proxyc{
     inline rowvec maxrow(const sp_mat& mt, const int mode = 1,
                          const bool use_nan = false) {
         rowvec v(mt.n_cols, fill::zeros);
-        if (mt.is_empty()) return(v);
+        if (mt.is_empty()) return v;
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
             e = colvec(mt.col(i));
@@ -130,12 +130,12 @@ namespace proxyc{
                 }
             }
         }
-        return(v);
+        return v;
     }
 
     inline rowvec maxrow(const mat& mt, const int mode = 1) {
         rowvec v(mt.n_cols, fill::zeros);
-        if (mt.is_empty()) return(v);
+        if (mt.is_empty()) return v;
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
             e = colvec(mt.col(i));
@@ -157,7 +157,7 @@ namespace proxyc{
                 v[i] = idx(0);
             }
         }
-        return(v);
+        return v;
     }
 
 }
