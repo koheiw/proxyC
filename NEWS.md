@@ -3,8 +3,8 @@
 ## New features and improvements
 
 - Significantly reduces the computation time and storage when dense matrices are 
-  given to `simil()` or`dist()`. They no longer convert dense matrices to sparse 
-  matrices internally.
+  given to `simil()` or `dist()`. They no longer automatically convert dense matrices 
+  to sparse matrices.
 - Add `maxCol()` and `maxRow()` to replace `base::max.col()` for sparse matrices.
 - Add `colMaxs()`, `rowMaxs()`, `colMins()` and `rowMins()` to avoid the use of `apply()`.
 
