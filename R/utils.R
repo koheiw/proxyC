@@ -178,9 +178,9 @@ convertMatrix <- function(x) {
     if (is.matrix(x)) {
         if (!is.double(x))
             storage.mode(x) <- "double"
-        return(x)
+    } else {
+        x <- as(as(as(x, "CsparseMatrix"), "generalMatrix"), "dMatrix")
     }
-    x <- as(as(as(x, "CsparseMatrix"), "generalMatrix"), "dMatrix")
     return(x)
 }
 
