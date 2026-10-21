@@ -122,29 +122,6 @@ test_that("digits is working", {
     expect_identical(as.numeric(as.matrix(sim3)), c(1.0, 0.9, 0.9, 1.0))
 })
 
-test_that("colSds and rowSds are working", {
-    mt <- rsparsematrix(100, 100, 0.01)
-    dimnames(mt) <- list(paste0("row", seq_len(nrow(mt))),
-                         paste0("col", seq_len(ncol(mt))))
-    expect_equal(rowSds(mt), apply(mt, 1, sd))
-    expect_equal(colSds(mt), apply(mt, 2, sd))
-    expect_equal(rowSds(as.matrix(mt)), apply(mt, 1, sd))
-    expect_equal(colSds(as.matrix(mt)), apply(mt, 2, sd))
-})
-
-test_that("colZeros and rowZeros are working", {
-    mt <- rsparsematrix(100, 100, 0.01)
-    dimnames(mt) <- list(paste0("row", seq_len(nrow(mt))),
-                         paste0("col", seq_len(ncol(mt))))
-    expect_equal(names(rowZeros(mt)), rownames(mt))
-    expect_equal(names(colZeros(mt)), colnames(mt))
-    expect_equal(names(rowSds(mt)), rownames(mt))
-    expect_equal(names(colSds(mt)), colnames(mt))
-    expect_equal(rowZeros(mt), apply(mt, 1, function(x) sum(x == 0)))
-    expect_equal(colZeros(mt), apply(mt, 2, function(x) sum(x == 0)))
-    expect_equal(rowZeros(as.matrix(mt)), apply(mt, 1, function(x) sum(x == 0)))
-    expect_equal(colZeros(as.matrix(mt)), apply(mt, 2, function(x) sum(x == 0)))
-})
 
 test_that("diag is working", {
     sim1 <- proxyC:::proxy(mat_test[11:20,], mat_test[1:10,], diag = TRUE)
@@ -238,3 +215,34 @@ test_that("C++ utility functions are working", {
 
 })
 
+test_that("input checks are working", {
+
+    expect_error(
+        proxyC:::proxy(mat_test, margin = c(1, 2)),
+        "margin must a single integer value"
+    )
+    expect_error(
+        proxyC:::proxy(mat_test, p = c(0.5, 1.5)),
+        "p must a single numeric value"
+    )
+    expect_error(
+        proxyC:::proxy(mat_test, smooth = c(0.5, 1.5)),
+        "smooth must a single numeric value"
+    )
+    expect_error(
+        proxyC:::proxy(mat_test, drop0 = "yes"),
+        "drop0 must a single logical value"
+    )
+    expect_error(
+        proxyC:::proxy(mat_test, diag = "yes"),
+        "diag must a single logical value"
+    )
+    expect_error(
+        proxyC:::proxy(mat_test, sparse = "yes"),
+        "sparse must a single logical value"
+    )
+    expect_error(
+        proxyC:::proxy(mat_test, digits = c(2, 3)),
+        "digits must a single integer value"
+    )
+})

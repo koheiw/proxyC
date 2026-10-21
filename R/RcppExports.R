@@ -5,14 +5,6 @@ cpp_linear <- function(s1, s2, method, mask, rank, limit = -1.0, symm = FALSE, d
     .Call('_proxyC_cpp_linear', PACKAGE = 'proxyC', s1, s2, method, mask, rank, limit, symm, drop0, use_nan, use_mask, sparse, digits, thread)
 }
 
-cpp_sd <- function(s) {
-    .Call('_proxyC_cpp_sd', PACKAGE = 'proxyC', s)
-}
-
-cpp_nz <- function(s) {
-    .Call('_proxyC_cpp_nz', PACKAGE = 'proxyC', s)
-}
-
 cpp_mask <- function(v1_, v2_, thread = -1L) {
     .Call('_proxyC_cpp_mask', PACKAGE = 'proxyC', v1_, v2_, thread)
 }
@@ -27,5 +19,25 @@ cpp_get_max_thread <- function() {
 
 cpp_tbb_enabled <- function() {
     .Call('_proxyC_cpp_tbb_enabled', PACKAGE = 'proxyC')
+}
+
+cpp_nz <- function(s) {
+    .Call('_proxyC_cpp_nz', PACKAGE = 'proxyC', s)
+}
+
+cpp_sd <- function(s, use_nan = FALSE) {
+    .Call('_proxyC_cpp_sd', PACKAGE = 'proxyC', s, use_nan)
+}
+
+cpp_max <- function(s, use_nan = FALSE) {
+    .Call('_proxyC_cpp_max', PACKAGE = 'proxyC', s, use_nan)
+}
+
+cpp_min <- function(s, use_nan = FALSE) {
+    .Call('_proxyC_cpp_min', PACKAGE = 'proxyC', s, use_nan)
+}
+
+cpp_maxrow <- function(s, mode = 1L, use_nan = FALSE) {
+    .Call('_proxyC_cpp_maxrow', PACKAGE = 'proxyC', s, mode, use_nan)
 }
 

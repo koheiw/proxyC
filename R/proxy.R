@@ -80,6 +80,7 @@
 #'
 #' @import methods Matrix
 #' @seealso zapsmall
+#' @return a [Matrix::Matrix] object
 #' @export
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
@@ -133,6 +134,14 @@ proxy <- function(x, y = NULL, margin = 1,
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
 
+    margin <- check_integer(margin)
+    p <- check_numeric(p)
+    smooth <- check_numeric(smooth)
+    drop0 <- check_logical(drop0)
+    diag <- check_logical(diag)
+    sparse <- check_logical(sparse)
+    digits <- check_integer(digits)
+
     symm <- FALSE
     boolean <- FALSE
     weight <- 1
@@ -155,27 +164,12 @@ proxy <- function(x, y = NULL, margin = 1,
         weight <- p
     }
 
-    x <- as(as(x, "generalMatrix"), "dMatrix")
-    if (boolean)
-        x <- as(as(x, "lMatrix"), "dMatrix")
-    if (is(x, "dgeMatrix")) {
-        x <- as.matrix(x)
-    } else {
-        x <- as(x, "CsparseMatrix")
-    }
-
+    x <- convertMatrix(x, boolean)
     if (is.null(y)) {
         symm <- TRUE
         y <- x
     } else {
-        y <- as(as(y, "generalMatrix"), "dMatrix")
-        if (boolean)
-            y <- as(as(y, "lMatrix"), "dMatrix")
-        if (is(y, "dgeMatrix")) {
-            y <- as.matrix(y)
-        } else {
-            y <- as(y, "CsparseMatrix")
-        }
+        y <- convertMatrix(y, boolean)
     }
     if (!margin %in% c(1, 2))
         stop("Matrgin must be 1 (row) or 2 (column)")
@@ -218,6 +212,8 @@ proxy <- function(x, y = NULL, margin = 1,
                 "or use_nan = FALSE to suppress this warning"), call. = FALSE)
         }
         use_nan <- FALSE
+    } else {
+        use_nan <- check_logical(use_nan)
     }
 
     if (method %in% c("cosine", "correlation", "euclidean", "product", "dice", "edice") && !diag) {
