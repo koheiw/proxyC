@@ -57,7 +57,7 @@ void calc_linear(const uword i,
 }
 
 template <typename M1, typename M2>
-S4 iter_linear(const M1& mt1,
+S4 iter_linear(M1& mt1,
                    const M2& mt2,
                    const int method,
                    arma::sp_mat& mask,
@@ -121,7 +121,10 @@ S4 iter_linear(const M1& mt1,
     //dev::start_timer("Compute similarity", timer);
 
     Triplets simil_tri;
-    const M1 mt1t = trans(mt1);
+    // an owned copy of x is freed once transposed, as only the transpose is used from here
+    const std::remove_const_t<M1> mt1t = trans(mt1);
+    if constexpr (!std::is_const_v<M1>)
+        mt1.reset();
     std::size_t I = ncol2;
 #if PROXYC_USE_TBB
     tbb::task_arena arena(thread);
