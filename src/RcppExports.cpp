@@ -12,13 +12,13 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // cpp_linear
-S4 cpp_linear(arma::sp_mat& mt1, arma::sp_mat& mt2, const int method, arma::sp_mat& mask, unsigned int rank, const double limit, bool symm, const bool drop0, const bool use_nan, const bool use_mask, const bool sparse, const int digits, const int thread);
-RcppExport SEXP _proxyC_cpp_linear(SEXP mt1SEXP, SEXP mt2SEXP, SEXP methodSEXP, SEXP maskSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP symmSEXP, SEXP drop0SEXP, SEXP use_nanSEXP, SEXP use_maskSEXP, SEXP sparseSEXP, SEXP digitsSEXP, SEXP threadSEXP) {
+S4 cpp_linear(SEXP s1, SEXP s2, const int method, arma::sp_mat& mask, unsigned int rank, const double limit, bool symm, const bool drop0, const bool use_nan, const bool use_mask, const bool sparse, const int digits, const int thread);
+RcppExport SEXP _proxyC_cpp_linear(SEXP s1SEXP, SEXP s2SEXP, SEXP methodSEXP, SEXP maskSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP symmSEXP, SEXP drop0SEXP, SEXP use_nanSEXP, SEXP use_maskSEXP, SEXP sparseSEXP, SEXP digitsSEXP, SEXP threadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type mt1(mt1SEXP);
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type mt2(mt2SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type s1(s1SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type s2(s2SEXP);
     Rcpp::traits::input_parameter< const int >::type method(methodSEXP);
     Rcpp::traits::input_parameter< arma::sp_mat& >::type mask(maskSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type rank(rankSEXP);
@@ -30,29 +30,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const bool >::type sparse(sparseSEXP);
     Rcpp::traits::input_parameter< const int >::type digits(digitsSEXP);
     Rcpp::traits::input_parameter< const int >::type thread(threadSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_linear(mt1, mt2, method, mask, rank, limit, symm, drop0, use_nan, use_mask, sparse, digits, thread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cpp_sd
-NumericVector cpp_sd(arma::sp_mat& mt);
-RcppExport SEXP _proxyC_cpp_sd(SEXP mtSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type mt(mtSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_sd(mt));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cpp_nz
-NumericVector cpp_nz(arma::sp_mat& mt);
-RcppExport SEXP _proxyC_cpp_nz(SEXP mtSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type mt(mtSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_nz(mt));
+    rcpp_result_gen = Rcpp::wrap(cpp_linear(s1, s2, method, mask, rank, limit, symm, drop0, use_nan, use_mask, sparse, digits, thread));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -70,13 +48,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_pair
-S4 cpp_pair(arma::sp_mat& mt1, arma::sp_mat& mt2, const int method, arma::sp_mat& mask, unsigned int rank, const double limit, const double weight, const double smooth, bool symm, const bool diag, const bool drop0, const bool use_nan, const bool use_mask, const bool sparse, const int digits, const int thread);
-RcppExport SEXP _proxyC_cpp_pair(SEXP mt1SEXP, SEXP mt2SEXP, SEXP methodSEXP, SEXP maskSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP weightSEXP, SEXP smoothSEXP, SEXP symmSEXP, SEXP diagSEXP, SEXP drop0SEXP, SEXP use_nanSEXP, SEXP use_maskSEXP, SEXP sparseSEXP, SEXP digitsSEXP, SEXP threadSEXP) {
+S4 cpp_pair(SEXP s1, SEXP s2, const int method, arma::sp_mat& mask, unsigned int rank, const double limit, const double weight, const double smooth, bool symm, const bool diag, const bool drop0, const bool use_nan, const bool use_mask, const bool sparse, const int digits, const int thread);
+RcppExport SEXP _proxyC_cpp_pair(SEXP s1SEXP, SEXP s2SEXP, SEXP methodSEXP, SEXP maskSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP weightSEXP, SEXP smoothSEXP, SEXP symmSEXP, SEXP diagSEXP, SEXP drop0SEXP, SEXP use_nanSEXP, SEXP use_maskSEXP, SEXP sparseSEXP, SEXP digitsSEXP, SEXP threadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type mt1(mt1SEXP);
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type mt2(mt2SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type s1(s1SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type s2(s2SEXP);
     Rcpp::traits::input_parameter< const int >::type method(methodSEXP);
     Rcpp::traits::input_parameter< arma::sp_mat& >::type mask(maskSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type rank(rankSEXP);
@@ -91,7 +69,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const bool >::type sparse(sparseSEXP);
     Rcpp::traits::input_parameter< const int >::type digits(digitsSEXP);
     Rcpp::traits::input_parameter< const int >::type thread(threadSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_pair(mt1, mt2, method, mask, rank, limit, weight, smooth, symm, diag, drop0, use_nan, use_mask, sparse, digits, thread));
+    rcpp_result_gen = Rcpp::wrap(cpp_pair(s1, s2, method, mask, rank, limit, weight, smooth, symm, diag, drop0, use_nan, use_mask, sparse, digits, thread));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -115,15 +93,78 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_nz
+IntegerVector cpp_nz(SEXP s);
+RcppExport SEXP _proxyC_cpp_nz(SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_nz(s));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_sd
+NumericVector cpp_sd(SEXP s, const bool use_nan);
+RcppExport SEXP _proxyC_cpp_sd(SEXP sSEXP, SEXP use_nanSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const bool >::type use_nan(use_nanSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_sd(s, use_nan));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_max
+NumericVector cpp_max(SEXP s, const bool use_nan);
+RcppExport SEXP _proxyC_cpp_max(SEXP sSEXP, SEXP use_nanSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const bool >::type use_nan(use_nanSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_max(s, use_nan));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_min
+NumericVector cpp_min(SEXP s, const bool use_nan);
+RcppExport SEXP _proxyC_cpp_min(SEXP sSEXP, SEXP use_nanSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const bool >::type use_nan(use_nanSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_min(s, use_nan));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_maxrow
+IntegerVector cpp_maxrow(SEXP s, const int mode, const bool use_nan);
+RcppExport SEXP _proxyC_cpp_maxrow(SEXP sSEXP, SEXP modeSEXP, SEXP use_nanSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const int >::type mode(modeSEXP);
+    Rcpp::traits::input_parameter< const bool >::type use_nan(use_nanSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_maxrow(s, mode, use_nan));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_proxyC_cpp_linear", (DL_FUNC) &_proxyC_cpp_linear, 13},
-    {"_proxyC_cpp_sd", (DL_FUNC) &_proxyC_cpp_sd, 1},
-    {"_proxyC_cpp_nz", (DL_FUNC) &_proxyC_cpp_nz, 1},
     {"_proxyC_cpp_mask", (DL_FUNC) &_proxyC_cpp_mask, 3},
     {"_proxyC_cpp_pair", (DL_FUNC) &_proxyC_cpp_pair, 16},
     {"_proxyC_cpp_get_max_thread", (DL_FUNC) &_proxyC_cpp_get_max_thread, 0},
     {"_proxyC_cpp_tbb_enabled", (DL_FUNC) &_proxyC_cpp_tbb_enabled, 0},
+    {"_proxyC_cpp_nz", (DL_FUNC) &_proxyC_cpp_nz, 1},
+    {"_proxyC_cpp_sd", (DL_FUNC) &_proxyC_cpp_sd, 2},
+    {"_proxyC_cpp_max", (DL_FUNC) &_proxyC_cpp_max, 2},
+    {"_proxyC_cpp_min", (DL_FUNC) &_proxyC_cpp_min, 2},
+    {"_proxyC_cpp_maxrow", (DL_FUNC) &_proxyC_cpp_maxrow, 3},
     {NULL, NULL, 0}
 };
 

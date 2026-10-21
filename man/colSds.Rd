@@ -5,20 +5,26 @@
 \alias{rowSds}
 \title{Standard deviation of columns and rows of large matrices}
 \usage{
-colSds(x)
+colSds(x, use_nan = FALSE)
 
-rowSds(x)
+rowSds(x, use_nan = FALSE)
 }
 \arguments{
 \item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object.}
+
+\item{use_nan}{if \code{TRUE}, return \code{NaN} for columns or rows with all zero.
+Only used when \code{x} is a sparse matrix.}
+}
+\value{
+a numeric vector
 }
 \description{
-Produces the same result as \code{apply(x, 1, sd)} or \code{apply(x, 2, sd)}
+Produce the same result as \code{apply(x, 2, sd)} and \code{apply(x, 1, sd)}, respectively.
 without coercing matrix to dense matrix. Values are not identical to
 \code{sd()} because of the floating point precision issue in C++.
 }
 \examples{
-mt <- Matrix::rsparsematrix(100, 100, 0.01)
+mt <- Matrix::rsparsematrix(100, 100, 0.9)
 colSds(mt)
 apply(mt, 2, sd) # the same
 }

@@ -151,13 +151,32 @@ namespace proxyc{
         return simil;
     }
 
-    inline std::vector<double> to_vector(const arma::sp_mat& mt) {
-        return arma::conv_to< std::vector<double> >::from(arma::mat(mt));
+    template <typename T>
+    inline std::vector<double> to_vector(const arma::Base<double, T>& expr) {
+        return arma::conv_to<std::vector<double>>::from(arma::mat(expr.get_ref()));
+    }
+
+    template <typename T>
+    inline std::vector<double> to_vector(const arma::SpBase<double, T>& expr) {
+        return arma::conv_to<std::vector<double>>::from(arma::mat(arma::sp_mat(expr.get_ref())));
     }
 
     inline std::vector<double> to_vector(const arma::rowvec& v) {
         return arma::conv_to< std::vector<double> >::from(v);
     }
+
+    inline std::vector<int> to_vector(const arma::urowvec& v) {
+        return arma::conv_to< std::vector<int> >::from(v);
+    }
+
+    inline std::vector<double> to_vector(const arma::colvec& v) {
+        return arma::conv_to< std::vector<double> >::from(v);
+    }
+
+    inline std::vector<int> to_vector(const arma::ucolvec& v) {
+        return arma::conv_to< std::vector<int> >::from(v);
+    }
+
 }
 
 #endif
