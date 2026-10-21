@@ -3,60 +3,6 @@
 using namespace proxyc;
 using namespace arma;
 
-rowvec nnz(const sp_mat& mt) {
-    rowvec v(mt.n_cols, fill::zeros);
-    if (mt.is_empty()) return(v);
-    for (uword i = 0; i < mt.n_cols; i++) {
-        v[i] = sum(colvec(mt.col(i)) != 0);
-    }
-    return(v);
-}
-
-rowvec nnz(const mat& mt) {
-    rowvec v(mt.n_cols, fill::zeros);
-    if (mt.is_empty()) return(v);
-    for (uword i = 0; i < mt.n_cols; i++) {
-        v[i] = arma::sum(colvec(mt.col(i)) != 0);
-    }
-    return(v);
-}
-
-rowvec stddev(const sp_mat& mt, const int norm_type) {
-    rowvec v(mt.n_cols, fill::zeros);
-    if (mt.is_empty()) return(v);
-    for (uword i = 0; i < mt.n_cols; i++) {
-        v[i] = stddev(colvec(mt.col(i)), norm_type);
-    }
-    return(v);
-}
-
-rowvec stddev(const mat& mt, const int norm_type) {
-    rowvec v(mt.n_cols, fill::zeros);
-    if (mt.is_empty()) return(v);
-    for (uword i = 0; i < mt.n_cols; i++) {
-        v[i] = arma::stddev(colvec(mt.col(i)), norm_type);
-    }
-    return(v);
-}
-
-rowvec mean(const sp_mat& mt) {
-    rowvec v(mt.n_cols, fill::zeros);
-    if (mt.is_empty()) return(v);
-    for (uword i = 0; i < mt.n_cols; i++) {
-        v[i] = mean(colvec(mt.col(i)));
-    }
-    return(v);
-}
-
-rowvec mean(const mat& mt) {
-    rowvec v(mt.n_cols, fill::zeros);
-    if (mt.is_empty()) return(v);
-    for (uword i = 0; i < mt.n_cols; i++) {
-        v[i] = arma::mean(colvec(mt.col(i)));
-    }
-    return(v);
-}
-
 template <typename M1, typename M2>
 void calc_linear(const uword i,
                  const M1& mt1t, const M2& mt2, const sp_mat& mask,
@@ -99,7 +45,7 @@ void calc_linear(const uword i,
     if (use_mask)
         simils = replace_masked(simils, mask.col(i));
     simils = round(simils, digits);
-    double l = get_limit(simils, rank, limit);
+    double l = get_limit(simils, rank, limit); // NOTE: use arma::sort_index()?
     for (std::size_t k = 0; k < simils.size(); k++) {
         double s = simils[k];
         if (symm && k > i) continue;

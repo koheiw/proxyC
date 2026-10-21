@@ -80,6 +80,7 @@
 #'
 #' @import methods Matrix
 #' @seealso zapsmall
+#' @return a [Matrix::Matrix] object
 #' @export
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
@@ -133,6 +134,14 @@ proxy <- function(x, y = NULL, margin = 1,
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
 
+    margin <- check_integer(margin)
+    p <- check_numeric(p)
+    smooth <- check_numeric(smooth)
+    drop0 <- check_logical(drop0)
+    diag <- check_logical(diag)
+    sparse <- check_logical(sparse)
+    digits <- check_integer(digits)
+
     symm <- FALSE
     boolean <- FALSE
     weight <- 1
@@ -155,12 +164,12 @@ proxy <- function(x, y = NULL, margin = 1,
         weight <- p
     }
 
-    x <- as_proxy_matrix(x)
+    x <- convertMatrix(x)
     if (is.null(y)) {
         symm <- TRUE
         y <- x
     } else {
-        y <- as_proxy_matrix(y)
+        y <- convertMatrix(y)
     }
 
     # the items to compare are rows (margin = 1) or columns (margin = 2); the C++ code
@@ -214,6 +223,8 @@ proxy <- function(x, y = NULL, margin = 1,
                 "or use_nan = FALSE to suppress this warning"), call. = FALSE)
         }
         use_nan <- FALSE
+    } else {
+        use_nan <- check_logical(use_nan)
     }
 
     if (method %in% c("cosine", "correlation", "euclidean", "product", "dice", "edice") && !diag) {
@@ -269,18 +280,4 @@ proxy <- function(x, y = NULL, margin = 1,
         dimnames(result) <- list(colnames(x), colnames(y))
     }
     return(result)
-}
-
-# dense input stays a base double matrix, so it reaches C++ without a copy; everything else
-# becomes a dgCMatrix. The boolean methods binarise in C++, together with the transpose for
-# margin = 1, so that also takes no extra copy
-as_proxy_matrix <- function(x) {
-    if (is(x, "denseMatrix"))
-        x <- as.matrix(x)
-    if (is.matrix(x)) {
-        if (!is.double(x))
-            storage.mode(x) <- "double"
-        return(x)
-    }
-    as(as(as(x, "CsparseMatrix"), "generalMatrix"), "dMatrix")
 }

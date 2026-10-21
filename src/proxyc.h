@@ -165,6 +165,18 @@ namespace proxyc{
         return arma::conv_to< std::vector<double> >::from(v);
     }
 
+    inline std::vector<int> to_vector(const arma::urowvec& v) {
+        return arma::conv_to< std::vector<int> >::from(v);
+    }
+
+    inline std::vector<double> to_vector(const arma::colvec& v) {
+        return arma::conv_to< std::vector<double> >::from(v);
+    }
+
+    inline std::vector<int> to_vector(const arma::ucolvec& v) {
+        return arma::conv_to< std::vector<int> >::from(v);
+    }
+
     // non-zero values become 1 for the boolean methods; NaN stays NaN
     inline double binarise(const double v) {
         return (std::isnan(v) || v == 0) ? v : 1.0;
@@ -193,6 +205,9 @@ namespace proxyc{
             mt.transform(binarise);
         return f(mt);
     }
+
+    template <typename M>
+    constexpr bool is_sparse = std::is_same_v<std::decay_t<M>, arma::sp_mat>;
 
 }
 

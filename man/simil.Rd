@@ -84,6 +84,9 @@ way as \link[base:zapsmall]{base::zapsmall}.}
 \item{smooth}{adds a  fixed value to all the cells to avoid division by zero.
 Only used when \code{method} is "chisquared", "kullback", "jeffreys" or "jensen".}
 }
+\value{
+a \link[Matrix:Matrix]{Matrix::Matrix} object
+}
 \description{
 Fast similarity/distance computation function for large matrices using multiple
 processors. To save computation time and storage, it can also apply arbitrary

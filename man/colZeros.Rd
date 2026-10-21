@@ -12,11 +12,14 @@ rowZeros(x)
 \arguments{
 \item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object.}
 }
+\value{
+an integer vector
+}
 \description{
-Produces the same result as applying \code{sum(x == 0)} to each row or column.
+Produce the same result as applying \code{sum(x == 0)} to each row or column.
 }
 \examples{
-mt <- Matrix::rsparsematrix(100, 100, 0.01)
+mt <- Matrix::rsparsematrix(100, 100, 0.9)
 colZeros(mt)
 apply(mt, 2, function(x) sum(x == 0)) # the same
 }

@@ -29,20 +29,6 @@ S4 cpp_linear(SEXP s1,
     });
 }
 
-// [[Rcpp::export]]
-NumericVector cpp_sd(SEXP s, const int margin = 2) {
-    return with_items(s, margin, false, [](const auto& mt) {
-        return NumericVector(wrap(to_vector(stddev(mt, 0))));
-    });
-}
-
-// [[Rcpp::export]]
-NumericVector cpp_nz(SEXP s, const int margin = 2) {
-    return with_items(s, margin, false, [](const auto& mt) {
-        return NumericVector(wrap(to_vector(nnz(mt))));
-    });
-}
-
 
 /***R
 mt1 <- Matrix::rsparsematrix(100, 2, 1)
