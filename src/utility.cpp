@@ -20,67 +20,53 @@ bool cpp_tbb_enabled(){
 }
 
 // [[Rcpp::export]]
-IntegerVector cpp_nz(SEXP s) {
-    if (Rf_isS4(s)) {
-        arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<int> v = to_vector(nnz(mt));
-        return wrap(v);
-    } else {
-        arma::mat mt = Rcpp::as<arma::mat>(s);
-        std::vector<int> v = to_vector(nnz(mt));
-        return wrap(v);
-    }
+IntegerVector cpp_nz(SEXP s, const int margin = 2) {
+    return with_items(s, margin, false, [](const auto& mt) {
+        return IntegerVector(wrap(to_vector(nnz(mt))));
+    });
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_sd(SEXP s, const bool use_nan = false) {
-    if (Rf_isS4(s)) {
-        arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<double> v = to_vector(stddev(mt, 0, use_nan));
-        return wrap(v);
-    } else {
-        arma::mat mt = Rcpp::as<arma::mat>(s);
-        std::vector<double> v = to_vector(stddev(mt, 0));
-        return wrap(v);
-    }
+NumericVector cpp_sd(SEXP s, const bool use_nan = false, const int margin = 2) {
+    return with_items(s, margin, false, [&](const auto& mt) {
+        if constexpr (is_sparse<decltype(mt)>) {
+            return NumericVector(wrap(to_vector(stddev(mt, 0, use_nan))));
+        } else {
+            return NumericVector(wrap(to_vector(stddev(mt, 0))));
+        }
+    });
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_max(SEXP s, const bool use_nan = false) {
-    if (Rf_isS4(s)) {
-        arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<double> v = to_vector(max(mt, use_nan));
-        return wrap(v);
-    } else {
-        arma::mat mt = Rcpp::as<arma::mat>(s);
-        std::vector<double> v = to_vector(max(mt));
-        return wrap(v);
-    }
+NumericVector cpp_max(SEXP s, const bool use_nan = false, const int margin = 2) {
+    return with_items(s, margin, false, [&](const auto& mt) {
+        if constexpr (is_sparse<decltype(mt)>) {
+            return NumericVector(wrap(to_vector(max(mt, use_nan))));
+        } else {
+            return NumericVector(wrap(to_vector(max(mt))));
+        }
+    });
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_min(SEXP s, const bool use_nan = false) {
-    if (Rf_isS4(s)) {
-        arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<double> v = to_vector(min(mt, use_nan));
-        return wrap(v);
-    } else {
-        arma::mat mt = Rcpp::as<arma::mat>(s);
-        std::vector<double> v = to_vector(min(mt));
-        return wrap(v);
-    }
+NumericVector cpp_min(SEXP s, const bool use_nan = false, const int margin = 2) {
+    return with_items(s, margin, false, [&](const auto& mt) {
+        if constexpr (is_sparse<decltype(mt)>) {
+            return NumericVector(wrap(to_vector(min(mt, use_nan))));
+        } else {
+            return NumericVector(wrap(to_vector(min(mt))));
+        }
+    });
 }
 
 // [[Rcpp::export]]
 IntegerVector cpp_maxrow(SEXP s, const int mode = 1,
-                         const bool use_nan = false) {
-    if (Rf_isS4(s)) {
-        arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
-        std::vector<double> v = to_vector(maxrow(mt, mode, use_nan));
-        return wrap(v);
-    } else {
-        arma::mat mt = Rcpp::as<arma::mat>(s);
-        std::vector<double> v = to_vector(maxrow(mt, mode));
-        return wrap(v);
-    }
+                         const bool use_nan = false, const int margin = 2) {
+    return with_items(s, margin, false, [&](const auto& mt) {
+        if constexpr (is_sparse<decltype(mt)>) {
+            return IntegerVector(wrap(to_vector(maxrow(mt, mode, use_nan))));
+        } else {
+            return IntegerVector(wrap(to_vector(maxrow(mt, mode))));
+        }
+    });
 }

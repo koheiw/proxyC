@@ -177,6 +177,38 @@ namespace proxyc{
         return arma::conv_to< std::vector<int> >::from(v);
     }
 
+    // non-zero values become 1 for the boolean methods; NaN stays NaN
+    inline double binarise(const double v) {
+        return (std::isnan(v) || v == 0) ? v : 1.0;
+    }
+
+    // call f() with an R matrix as an armadillo matrix that has the items to compare as
+    // columns; a dense matrix with margin = 2 that needn't be binarised is a view on R's
+    // memory, otherwise there is exactly one copy
+    template <typename F>
+    inline auto with_items(SEXP s, const int margin, const bool boolean, F&& f) {
+        if (Rf_isS4(s)) {
+            arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
+            if (margin == 1)
+                mt = mt.t();
+            if (boolean)
+                mt.transform(binarise);
+            return f(mt);
+        }
+        if (TYPEOF(s) != REALSXP)
+            throw std::invalid_argument("dense input must be a double matrix");
+        const arma::mat view(REAL(s), Rf_nrows(s), Rf_ncols(s), false, true);
+        if (margin == 2 && !boolean)
+            return f(view);
+        arma::mat mt = margin == 1 ? arma::mat(view.t()) : view;
+        if (boolean)
+            mt.transform(binarise);
+        return f(mt);
+    }
+
+    template <typename M>
+    constexpr bool is_sparse = std::is_same_v<std::decay_t<M>, arma::sp_mat>;
+
 }
 
 #endif

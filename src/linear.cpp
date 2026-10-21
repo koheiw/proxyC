@@ -17,29 +17,16 @@ S4 cpp_linear(SEXP s1,
               const bool use_mask = false,
               const bool sparse = true,
               const int digits = 14,
-              const int thread = -1) {
+              const int thread = -1,
+              const int margin = 2,
+              const bool boolean = false) {
 
-    if (Rf_isS4(s1) && Rf_isS4(s2)) {
-        arma::sp_mat mt1 = Rcpp::as<arma::sp_mat>(s1);
-        arma::sp_mat mt2 = Rcpp::as<arma::sp_mat>(s2);
-        return iter_linear(mt1, mt2, method, mask, rank, limit, symm, drop0,
-                           use_nan, use_mask, sparse, digits, thread);
-    } else if (Rf_isS4(s1) && !Rf_isS4(s2)) {
-        arma::sp_mat mt1 = Rcpp::as<arma::sp_mat>(s1);
-        arma::mat mt2 = Rcpp::as<arma::mat>(s2);
-        return iter_linear(mt1, mt2, method, mask, rank, limit, symm, drop0,
-                           use_nan, use_mask, sparse, digits, thread);
-    } else if (!Rf_isS4(s1) && Rf_isS4(s2)) {
-        arma::mat mt1 = Rcpp::as<arma::mat>(s1);
-        arma::sp_mat mt2 = Rcpp::as<arma::sp_mat>(s2);
-        return iter_linear(mt1, mt2, method, mask, rank, limit, symm, drop0,
-                           use_nan, use_mask, sparse, digits, thread);
-    } else {
-        arma::mat mt1 = Rcpp::as<arma::mat>(s1);
-        arma::mat mt2 = Rcpp::as<arma::mat>(s2);
-        return iter_linear(mt1, mt2, method, mask, rank, limit, symm, drop0,
-                           use_nan, use_mask, sparse, digits, thread);
-    }
+    return with_items(s1, margin, boolean, [&](auto& mt1) {
+        return with_items(s2, margin, boolean, [&](const auto& mt2) {
+            return iter_linear(mt1, mt2, method, mask, rank, limit, symm, drop0,
+                               use_nan, use_mask, sparse, digits, thread);
+        });
+    });
 }
 
 

@@ -35,14 +35,14 @@ tcrossprod <- function(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14)
 #' @export
 colZeros <- function(x) {
     x <- convertMatrix(x)
-    structure(nrow(x) - cpp_nz(x), names = colnames(x))
+    structure(nrow(x) - cpp_nz(x, margin = 2), names = colnames(x))
 }
 
 #' @rdname colZeros
 #' @export
 rowZeros <- function(x) {
     x <- convertMatrix(x)
-    structure(ncol(x) - cpp_nz(t(x)), names = rownames(x))
+    structure(ncol(x) - cpp_nz(x, margin = 1), names = rownames(x))
 }
 
 #' Standard deviation of columns and rows of large matrices
@@ -62,7 +62,7 @@ rowZeros <- function(x) {
 colSds <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
     use_nan <- check_use_nan(x, use_nan)
-    structure(cpp_sd(x, use_nan), names = colnames(x))
+    structure(cpp_sd(x, use_nan, margin = 2), names = colnames(x))
 }
 
 #' @rdname colSds
@@ -70,7 +70,7 @@ colSds <- function(x, use_nan = FALSE) {
 rowSds <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
     use_nan <- check_use_nan(x, use_nan)
-    structure(cpp_sd(t(x), use_nan), names = rownames(x))
+    structure(cpp_sd(x, use_nan, margin = 1), names = rownames(x))
 }
 
 #' Maximum/minimum values in columns or rows
@@ -87,7 +87,7 @@ rowSds <- function(x, use_nan = FALSE) {
 colMaxs <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
     use_nan <- check_use_nan(x, use_nan)
-    structure(cpp_max(x, use_nan), names = colnames(x))
+    structure(cpp_max(x, use_nan, margin = 2), names = colnames(x))
 }
 
 #' @rdname colMaxs
@@ -95,7 +95,7 @@ colMaxs <- function(x, use_nan = FALSE) {
 rowMaxs <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
     use_nan <- check_use_nan(x, use_nan)
-    structure(cpp_max(t(x), use_nan), names = rownames(x))
+    structure(cpp_max(x, use_nan, margin = 1), names = rownames(x))
 }
 
 #' @rdname colMaxs
@@ -103,7 +103,7 @@ rowMaxs <- function(x, use_nan = FALSE) {
 colMins <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
     use_nan <- check_use_nan(x, use_nan)
-    structure(cpp_min(x, use_nan), names = colnames(x))
+    structure(cpp_min(x, use_nan, margin = 2), names = colnames(x))
 }
 
 #' @rdname colMaxs
@@ -111,7 +111,7 @@ colMins <- function(x, use_nan = FALSE) {
 rowMins <- function(x, use_nan = FALSE) {
     x <- convertMatrix(x)
     use_nan <- check_use_nan(x, use_nan)
-    structure(cpp_min(t(x), use_nan), names = rownames(x))
+    structure(cpp_min(x, use_nan, margin = 1), names = rownames(x))
 }
 
 #' Column or row indices of maximum values
@@ -138,7 +138,7 @@ maxCol <- function(x, ties_method = c("random", "first", "last"),
     use_nan <- check_use_nan(x, use_nan)
 
     mode <- match(ties_method, c("random", "first", "last"))
-    structure(cpp_maxrow(t(x), mode, use_nan) + 1L, names = rownames(x))
+    structure(cpp_maxrow(x, mode, use_nan, margin = 1) + 1L, names = rownames(x))
 }
 
 #' @rdname maxCol
@@ -150,7 +150,7 @@ maxRow <- function(x, ties_method = c("random", "first", "last"),
     use_nan <- check_use_nan(x, use_nan)
 
     mode <- match(ties_method, c("random", "first", "last"))
-    structure(cpp_maxrow(x, mode, use_nan) + 1L, names = colnames(x))
+    structure(cpp_maxrow(x, mode, use_nan, margin = 2) + 1L, names = colnames(x))
 }
 
 getThreads <- function() {
@@ -169,14 +169,17 @@ getThreads <- function() {
     return(value)
 }
 
-convertMatrix <- function(x, boolean = FALSE) {
-    x <- as(as(x, "generalMatrix"), "dMatrix")
-    if (boolean)
-        x <- as(as(x, "lMatrix"), "dMatrix")
-    if (is(x, "dgeMatrix")) {
+# dense input stays a base double matrix, so it reaches C++ without a copy; everything else
+# becomes a dgCMatrix. The boolean methods binarise in C++, together with the transpose for
+# margin = 1, so that also takes no extra copy
+convertMatrix <- function(x) {
+    if (is(x, "denseMatrix") || is.vector(x))
         x <- as.matrix(x)
+    if (is.matrix(x)) {
+        if (!is.double(x))
+            storage.mode(x) <- "double"
     } else {
-        x <- as(x, "CsparseMatrix")
+        x <- as(as(as(x, "CsparseMatrix"), "generalMatrix"), "dMatrix")
     }
     return(x)
 }
