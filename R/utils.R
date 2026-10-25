@@ -176,6 +176,8 @@ convertMatrix <- function(x) {
     if (is(x, "denseMatrix") || is.vector(x))
         x <- as.matrix(x)
     if (is.matrix(x)) {
+        if (!is.numeric(x) && !is.logical(x))
+            stop("x must be a numeric or logical matrix", call. = FALSE)
         if (!is.double(x))
             storage.mode(x) <- "double"
     } else {
