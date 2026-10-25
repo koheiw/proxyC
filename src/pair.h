@@ -137,14 +137,15 @@ inline double dist_minkowski(const colvec& col_i, const colvec& col_j, double p 
     return pow(accu(pow(abs(col_i - col_j), p)), 1 / p);
 }
 
-// a column as a dense vector: a view for dense matrices, a copy into buf for sparse ones
-inline const colvec column(const mat& m, const uword j, colvec& buf) {
-    return colvec(const_cast<double*>(m.colptr(j)), m.n_rows, false, true);
+// a column as a dense vector. For a dense matrix the vector refers to the matrix's memory
+// instead of copying it (unsafe_col() is safe here, as the matrix outlives the vector and
+// isn't modified); a sparse column has to be copied
+inline colvec column(const mat& m, const uword j) {
+    return m.unsafe_col(j);
 }
 
-inline const colvec& column(const sp_mat& m, const uword j, colvec& buf) {
-    buf = m.col(j);
-    return buf;
+inline colvec column(const sp_mat& m, const uword j) {
+    return colvec(m.col(j));
 }
 
 template <typename M1, typename M2>
@@ -157,14 +158,11 @@ void calc_pair(const uword i,
                 const bool drop0, const bool use_nan, const bool use_mask,
                 const int digits) {
 
-    uword nrow = mt1.n_rows;
     uword ncol = mt1.n_cols;
 
-    colvec buf_i(nrow);
-    colvec buf_j(nrow);
     double simil = 0;
     std::vector<double> simils;
-    const colvec& col_i = column(mt2, i, buf_i);
+    const colvec col_i = column(mt2, i);
     if (diag) {
         simils.reserve(1);
     } else {
@@ -180,7 +178,7 @@ void calc_pair(const uword i,
         };
         if (diag && j != i) continue;
         if (symm && j > i) continue;
-        const colvec& col_j = column(mt1, j, buf_j);
+        const colvec col_j = column(mt1, j);
         switch (method) {
         case 1:
             simil = simil_cosine(col_i, col_j);
