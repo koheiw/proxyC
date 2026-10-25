@@ -121,10 +121,9 @@ S4 iter_linear(M1& mt1,
     //dev::start_timer("Compute similarity", timer);
 
     Triplets simil_tri;
-    // an owned copy of x is freed once transposed, as only the transpose is used from here
-    const std::remove_const_t<M1> mt1t = trans(mt1);
-    if constexpr (!std::is_const_v<M1>)
-        mt1.reset();
+    // only the transpose is used from here on
+    M1 mt1t = trans(mt1);
+    release(mt1);
     std::size_t I = ncol2;
 #if PROXYC_USE_TBB
     tbb::task_arena arena(thread);
