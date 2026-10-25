@@ -21,12 +21,27 @@ S4 cpp_linear(SEXP s1,
               const int margin = 2,
               const bool boolean = false) {
 
-    return with_items(s1, margin, boolean, [&](auto& mt1) {
-        return with_items(s2, margin, boolean, [&](const auto& mt2) {
-            return iter_linear(mt1, mt2, method, mask, rank, limit, symm, drop0,
-                               use_nan, use_mask, sparse, digits, thread);
-        });
-    });
+    if (Rf_isS4(s1) && Rf_isS4(s2)) {
+        arma::sp_mat mt1 = to_sparse(s1, margin, boolean);
+        const arma::sp_mat mt2 = to_sparse(s2, margin, boolean);
+        return iter_linear(mt1, mt2, method, mask, rank, limit, symm, drop0,
+                           use_nan, use_mask, sparse, digits, thread);
+    } else if (Rf_isS4(s1) && !Rf_isS4(s2)) {
+        arma::sp_mat mt1 = to_sparse(s1, margin, boolean);
+        const arma::mat mt2 = to_dense(s2, margin, boolean);
+        return iter_linear(mt1, mt2, method, mask, rank, limit, symm, drop0,
+                           use_nan, use_mask, sparse, digits, thread);
+    } else if (!Rf_isS4(s1) && Rf_isS4(s2)) {
+        const arma::mat mt1 = to_dense(s1, margin, boolean);
+        const arma::sp_mat mt2 = to_sparse(s2, margin, boolean);
+        return iter_linear(mt1, mt2, method, mask, rank, limit, symm, drop0,
+                           use_nan, use_mask, sparse, digits, thread);
+    } else {
+        const arma::mat mt1 = to_dense(s1, margin, boolean);
+        const arma::mat mt2 = to_dense(s2, margin, boolean);
+        return iter_linear(mt1, mt2, method, mask, rank, limit, symm, drop0,
+                           use_nan, use_mask, sparse, digits, thread);
+    }
 }
 
 
