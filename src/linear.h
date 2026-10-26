@@ -123,7 +123,7 @@ S4 iter_linear(M1& mt1,
     Triplets simil_tri;
     // only the transpose is used from here on
     M1 mt1t = trans(mt1);
-    release(mt1);
+    free_if_owned(mt1);
     std::size_t I = ncol2;
 #if PROXYC_USE_TBB
     tbb::task_arena arena(thread);

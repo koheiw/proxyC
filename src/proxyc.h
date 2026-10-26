@@ -214,12 +214,12 @@ namespace proxyc{
     }
 
     // free a matrix that is no longer needed
-    inline void release(arma::sp_mat& mt) {
+    inline void free_if_owned(arma::sp_mat& mt) {
         mt.reset();
     }
 
     // a dense matrix that is a view on R's memory (see to_dense()) is left alone
-    inline void release(arma::mat& mt) {
+    inline void free_if_owned(arma::mat& mt) {
         if (mt.mem_state == 0)
             mt.reset();
     }
