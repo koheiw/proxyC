@@ -172,8 +172,8 @@ proxy <- function(x, y = NULL, margin = 1,
         y <- convertMatrix(y)
     }
 
-    # the items to compare are rows (margin = 1) or columns (margin = 2); the C++ code
-    # transposes for margin = 1, so dense input isn't copied here
+    # the items to compare are rows (margin = 1) or columns (margin = 2)
+    # the C++ code transposes for margin = 1, so dense input doesn't need to be copied.
     if (!margin %in% c(1, 2))
         stop("Margin must be 1 (row) or 2 (column)")
     if (margin == 1) {

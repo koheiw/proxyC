@@ -169,9 +169,8 @@ getThreads <- function() {
     return(value)
 }
 
-# dense input stays a base double matrix, so it reaches C++ without a copy; everything else
-# becomes a dgCMatrix. The boolean methods binarise in C++, together with the transpose for
-# margin = 1, so that also takes no extra copy
+# dense input stays a base double matrix, so it reaches C++ without a copy;
+# everything else becomes a dgCMatrix. Boolean methods are binarised in C++.
 convertMatrix <- function(x) {
     if (is(x, "denseMatrix") || is.vector(x))
         x <- as.matrix(x)
