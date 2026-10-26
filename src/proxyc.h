@@ -182,43 +182,46 @@ namespace proxyc{
         return (std::isnan(v) || v == 0) ? v : 1.0;
     }
 
-    // a sparse R matrix as an armadillo matrix with the items to compare as columns
+    // a sparse R matrix as an armadillo matrix with the items to compare as columns; always
+    // a copy, as the sparse formats of R and armadillo differ
     inline arma::sp_mat to_sparse(SEXP s, const int margin, const bool boolean) {
-        arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s);
+        arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s); // copy
         if (margin == 1)
-            mt = mt.t();
+            mt = mt.t(); // transposed copy replaces the first one
         if (boolean)
-            mt.transform(binarise);
+            mt.transform(binarise); // in place
         return mt;
     }
 
-    // a dense R matrix as an armadillo matrix with the items to compare as columns. With
-    // margin = 2 and no binarisation the matrix refers to R's memory instead of copying it,
+    // a dense R matrix as an armadillo matrix with the items to compare as columns.
+    // With margin = 2 and no binarisation, the matrix is a view on R's memory (no copy),
     // so it must not be modified; otherwise it is a copy
     inline arma::mat to_dense(SEXP s, const int margin, const bool boolean) {
         if (TYPEOF(s) != REALSXP)
             throw std::invalid_argument("dense input must be a double matrix");
         if (margin == 2 && !boolean)
-            return arma::mat(REAL(s), Rf_nrows(s), Rf_ncols(s), false, true);
-        const arma::mat x(REAL(s), Rf_nrows(s), Rf_ncols(s), false, true);
+            return arma::mat(REAL(s), Rf_nrows(s), Rf_ncols(s), false, true); // view
+        const arma::mat x(REAL(s), Rf_nrows(s), Rf_ncols(s), false, true); // view, read only
         arma::mat mt;
         if (margin == 1) {
-            mt = x.t();
+            mt = x.t(); // copy
         } else {
-            mt = x;
+            mt = x; // copy
         }
         if (boolean)
-            mt.transform(binarise);
+            mt.transform(binarise); // in place, on the copy
         return mt;
     }
 
-    // free a matrix that is no longer needed. A dense matrix can refer to R's memory (see
-    // to_dense()), so only sparse matrices are freed
+    // free a matrix that is no longer needed
     inline void release(arma::sp_mat& mt) {
         mt.reset();
     }
 
-    inline void release(const arma::mat& mt) {
+    // a dense matrix that is a view on R's memory (see to_dense()) is left alone
+    inline void release(arma::mat& mt) {
+        if (mt.mem_state == 0)
+            mt.reset();
     }
 
 }

@@ -130,4 +130,11 @@ test_that("dense input is not modified", {
     simil(i$dx, margin = 1, method = "jaccard")
     simil(i$dx, margin = 1, method = "cosine")
     expect_identical(i$dx, before)
+
+    # a square matrix with margin = 2 is read in place, so a transpose there would hit it
+    sq <- as.matrix(rsparsematrix(30, 30, 0.5))
+    before <- sq + 0
+    simil(sq, margin = 2, method = "cosine")
+    dist(sq, margin = 2, method = "euclidean")
+    expect_identical(sq, before)
 })
