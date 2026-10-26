@@ -145,7 +145,7 @@ inline colvec column(const mat& m, const uword j) {
 }
 
 inline colvec column(const sp_mat& m, const uword j) {
-    return colvec(m.col(j));
+    return m.col(j).as_dense();
 }
 
 template <typename M1, typename M2>
@@ -170,7 +170,7 @@ void calc_pair(const uword i,
     }
     colvec mask_i;
     if (use_mask)
-        mask_i = colvec(mask.col(i));
+        mask_i = mask.col(i).as_dense();
     for (uword j = 0; j < ncol; j++) {
         if (use_mask && mask_i.at(j) == 0) {
             simils.push_back(std::numeric_limits<double>::quiet_NaN());
