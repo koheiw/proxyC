@@ -175,7 +175,7 @@ proxy <- function(x, y = NULL, margin = 1,
     # the items to compare are rows (margin = 1) or columns (margin = 2); the C++ code
     # transposes for margin = 1, so dense input isn't copied here
     if (!margin %in% c(1, 2))
-        stop("Matrgin must be 1 (row) or 2 (column)")
+        stop("Margin must be 1 (row) or 2 (column)")
     if (margin == 1) {
         if (ncol(x) != ncol(y))
             stop("x and y must have the same number of columns")
