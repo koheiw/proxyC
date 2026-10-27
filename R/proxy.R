@@ -6,7 +6,7 @@
 #' return them in a sparse matrix.
 #'
 #' @param x a [base::matrix] or [Matrix::Matrix] object. Only sparse matrices are
-#' covered to the [Matrix::CsparseMatrix-class] internally.
+#' converted to the [Matrix::CsparseMatrix-class] internally.
 #' @param y if a [base::matrix] or [Matrix::Matrix] object is provided, proximity
 #'   between documents or features in `x` and `y` is computed.
 #' @param margin integer indicating margin of similarity/distance computation. 1
