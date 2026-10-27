@@ -58,7 +58,7 @@ void calc_linear(const uword i,
 
 template <typename M1, typename M2>
 S4 iter_linear(M1& mt1,
-                   M2& mt2,
+                   const M2& mt2,
                    const int method,
                    arma::sp_mat& mask,
                    unsigned int rank,
