@@ -38,8 +38,8 @@ dist(
 )
 }
 \arguments{
-\item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object. Dense matrices are covered to
-the \link[Matrix:CsparseMatrix-class]{Matrix::CsparseMatrix} internally.}
+\item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object. Only sparse matrices are
+covered to the \link[Matrix:CsparseMatrix-class]{Matrix::CsparseMatrix} internally.}
 
 \item{y}{if a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object is provided, proximity
 between documents or features in \code{x} and \code{y} is computed.}
@@ -84,12 +84,14 @@ way as \link[base:zapsmall]{base::zapsmall}.}
 \item{smooth}{adds a  fixed value to all the cells to avoid division by zero.
 Only used when \code{method} is "chisquared", "kullback", "jeffreys" or "jensen".}
 }
+\value{
+a \link[Matrix:Matrix]{Matrix::Matrix} object
+}
 \description{
-Fast similarity/distance computation function for large sparse matrices. You
-can floor small similarity value to to save computation time and storage
-space by an arbitrary threshold (\code{min_simil}) or rank (\code{rank}). You
-can specify the number of threads for parallel computing via
-\code{options(proxyC.threads)}.
+Fast similarity/distance computation function for large matrices using multiple
+processors. To save computation time and storage, it can also apply arbitrary
+threshold (\code{min_simil}) or rank (\code{rank}) to the similarity/distance scores and
+return them in a sparse matrix.
 }
 \details{
 \subsection{Available Methods}{

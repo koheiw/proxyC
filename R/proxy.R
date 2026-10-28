@@ -1,13 +1,12 @@
 #' Compute similarity/distance between rows or columns of large matrices
 #'
-#' Fast similarity/distance computation function for large sparse matrices. You
-#' can floor small similarity value to to save computation time and storage
-#' space by an arbitrary threshold (`min_simil`) or rank (`rank`). You
-#' can specify the number of threads for parallel computing via
-#' `options(proxyC.threads)`.
+#' Fast similarity/distance computation function for large matrices using multiple
+#' processors. To save computation time and storage, it can also apply arbitrary
+#' threshold (`min_simil`) or rank (`rank`) to the similarity/distance scores and
+#' return them in a sparse matrix.
 #'
-#' @param x a [base::matrix] or [Matrix::Matrix] object. Dense matrices are covered to
-#'   the [Matrix::CsparseMatrix-class] internally.
+#' @param x a [base::matrix] or [Matrix::Matrix] object. Only sparse matrices are
+#' covered to the [Matrix::CsparseMatrix-class] internally.
 #' @param y if a [base::matrix] or [Matrix::Matrix] object is provided, proximity
 #'   between documents or features in `x` and `y` is computed.
 #' @param margin integer indicating margin of similarity/distance computation. 1
@@ -36,7 +35,9 @@
 #' @param digits determines rounding of small values towards zero. Use primarily
 #'   to correct floating point errors. Rounding is performed in C++ in a similar
 #'   way as [base::zapsmall].
-#' @details ## Available Methods
+#' @details
+#'
+#'   ## Available Methods
 #'
 #'   Similarity:
 #' \itemize{
@@ -79,6 +80,7 @@
 #'
 #' @import methods Matrix
 #' @seealso zapsmall
+#' @return a [Matrix::Matrix] object
 #' @export
 #' @examples
 #' mt <- Matrix::rsparsematrix(100, 100, 0.01)
@@ -131,15 +133,43 @@ proxy <- function(x, y = NULL, margin = 1,
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
-    #x <- as(as(x, "CsparseMatrix"), "dgCMatrix")
-    x <- as(as(as(x, "CsparseMatrix"), "generalMatrix"), "dMatrix") # for Matrix v1.4-2 or later
-    symm <- is.null(y)
 
+    margin <- check_integer(margin)
+    p <- check_numeric(p)
+    smooth <- check_numeric(smooth)
+    drop0 <- check_logical(drop0)
+    diag <- check_logical(diag)
+    sparse <- check_logical(sparse)
+    digits <- check_integer(digits)
+
+    symm <- FALSE
+    boolean <- FALSE
+    weight <- 1
+    if (method == "jaccard") {
+        boolean <- TRUE
+        method <- "ejaccard"
+    } else if (method == "ejaccard") {
+        weight <- 2
+    } else if (method == "dice") {
+        boolean <- TRUE
+    } else if (method == "hamann") {
+        boolean <- TRUE
+    } else if (method == "faith") {
+        boolean <- TRUE
+    } else if (method == "simple matching") {
+        boolean <- TRUE
+    } else if (method == "minkowski") {
+        if (p <= 0)
+            stop("p must be greater than zero")
+        weight <- p
+    }
+
+    x <- convertMatrix(x, boolean)
     if (is.null(y)) {
+        symm <- TRUE
         y <- x
     } else {
-        #y <- as(as(y, "CsparseMatrix"), "dgCMatrix")
-        y <- as(as(as(y, "CsparseMatrix"), "generalMatrix"), "dMatrix") # for Matrix v1.4-2 or later
+        y <- convertMatrix(y, boolean)
     }
     if (!margin %in% c(1, 2))
         stop("Matrgin must be 1 (row) or 2 (column)")
@@ -182,35 +212,14 @@ proxy <- function(x, y = NULL, margin = 1,
                 "or use_nan = FALSE to suppress this warning"), call. = FALSE)
         }
         use_nan <- FALSE
+    } else {
+        use_nan <- check_logical(use_nan)
     }
-    boolean <- FALSE
-    weight <- 1
-    if (method == "jaccard") {
-        boolean <- TRUE
-        method <- "ejaccard"
-    } else if (method == "ejaccard") {
-        weight <- 2
-    } else if (method == "dice") {
-        boolean <- TRUE
-    } else if (method == "hamann") {
-        boolean <- TRUE
-    } else if (method == "faith") {
-        boolean <- TRUE
-    } else if (method == "simple matching") {
-        boolean <- TRUE
-    } else if (method == "minkowski") {
-        if (p <= 0)
-            stop("p must be greater than zero")
-        weight <- p
-    }
-    if (boolean) {
-        x <- as(as(x, "lMatrix"), "dMatrix")
-        y <- as(as(y, "lMatrix"), "dMatrix")
-    }
+
     if (method %in% c("cosine", "correlation", "euclidean", "product", "dice", "edice") && !diag) {
         result <- cpp_linear(
-            mt1 = x,
-            mt2 = y,
+            s1 = x,
+            s2 = y,
             method = match(method, c("product", "cosine", "correlation", "euclidean", "dice", "edice")),
             mask = mask,
             rank = rank,
@@ -225,8 +234,8 @@ proxy <- function(x, y = NULL, margin = 1,
         )
     } else {
         result <- cpp_pair(
-            mt1 = x,
-            mt2 = y,
+            s1 = x,
+            s2 = y,
             method = match(method, c("cosine", "correlation", "euclidean",
                                      "dice", "edice", "hamann", "simple matching",
                                      "faith", "ejaccard", "fjaccard",

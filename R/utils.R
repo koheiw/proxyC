@@ -5,75 +5,152 @@
 #' @inheritParams simil
 #' @param min_prod the minimum product to be recorded.
 #' @export
-crossprod <- function(x, y = NULL, min_prod = NULL, digits = 14) {
+crossprod <- function(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14) {
 
     if (is.null(min_prod))
         min_prod <- -Inf
     proxy(x, y, margin = 2, method = "product", min_proxy = min_prod,
-          digits = digits)
+          sparse = sparse, digits = digits)
 }
 
 #' @rdname crossprod
 #' @export
-tcrossprod <- function(x, y = NULL, min_prod = NULL, digits = 14) {
+tcrossprod <- function(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14) {
 
     if (is.null(min_prod))
         min_prod <- -Inf
     proxy(x, y, margin = 1, method = "product", min_proxy = min_prod,
-          digits = digits)
-}
-
-
-#' Standard deviation of columns and rows of large matrices
-#'
-#' Produces the same result as `apply(x, 1, sd)` or `apply(x, 2, sd)`
-#' without coercing matrix to dense matrix. Values are not identical to
-#' `sd()` because of the floating point precision issue in C++.
-#' @param x a [base::matrix] or [Matrix::Matrix] object.
-#' @examples
-#' mt <- Matrix::rsparsematrix(100, 100, 0.01)
-#' colSds(mt)
-#' apply(mt, 2, sd) # the same
-#' @export
-colSds <- function(x) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    result <- cpp_sd(x)
-    names(result) <- colnames(x)
-    return(result)
-}
-
-#' @rdname colSds
-#' @export
-rowSds <- function(x) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    result <- cpp_sd(t(x))
-    names(result) <- rownames(x)
-    return(result)
+          sparse = sparse, digits = digits)
 }
 
 #' Number of zeros in columns and rows of large matrices
 #'
-#' Produces the same result as applying `sum(x == 0)` to each row or column.
+#' Produce the same result as applying `sum(x == 0)` to each row or column.
 #' @param x a [base::matrix] or [Matrix::Matrix] object.
+#' @return an integer vector
 #' @examples
-#' mt <- Matrix::rsparsematrix(100, 100, 0.01)
+#' mt <- Matrix::rsparsematrix(100, 100, 0.9)
 #' colZeros(mt)
 #' apply(mt, 2, function(x) sum(x == 0)) # the same
 #' @export
 colZeros <- function(x) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    result <- nrow(x) - cpp_nz(x)
-    names(result) <- colnames(x)
-    return(result)
+    x <- convertMatrix(x)
+    structure(nrow(x) - cpp_nz(x), names = colnames(x))
 }
 
 #' @rdname colZeros
 #' @export
 rowZeros <- function(x) {
-    x <- as(as(x, "CsparseMatrix"), "dMatrix")
-    result <- ncol(x) - cpp_nz(t(x))
-    names(result) <- rownames(x)
-    return(result)
+    x <- convertMatrix(x)
+    structure(ncol(x) - cpp_nz(t(x)), names = rownames(x))
+}
+
+#' Standard deviation of columns and rows of large matrices
+#'
+#' Produce the same result as `apply(x, 2, sd)` and `apply(x, 1, sd)`, respectively.
+#' without coercing matrix to dense matrix. Values are not identical to
+#' `sd()` because of the floating point precision issue in C++.
+#' @param x a [base::matrix] or [Matrix::Matrix] object.
+#' @param use_nan if `TRUE`, return `NaN` for columns or rows with all zero.
+#'   Only used when `x` is a sparse matrix.
+#' @return a numeric vector
+#' @examples
+#' mt <- Matrix::rsparsematrix(100, 100, 0.9)
+#' colSds(mt)
+#' apply(mt, 2, sd) # the same
+#' @export
+colSds <- function(x, use_nan = FALSE) {
+    x <- convertMatrix(x)
+    use_nan <- check_use_nan(x, use_nan)
+    structure(cpp_sd(x, use_nan), names = colnames(x))
+}
+
+#' @rdname colSds
+#' @export
+rowSds <- function(x, use_nan = FALSE) {
+    x <- convertMatrix(x)
+    use_nan <- check_use_nan(x, use_nan)
+    structure(cpp_sd(t(x), use_nan), names = rownames(x))
+}
+
+#' Maximum/minimum values in columns or rows
+#'
+#' Produce the same result as `apply(x, 2, max)`, `apply(x, 1, max)`,
+#' `apply(x, 2, min)` and `apply(x, 1, min)`, respectively, but ignore `NA`.
+#' @inheritParams colSds
+#' @return a numeric vector
+#' @examples
+#'   mt <- Matrix::rsparsematrix(100, 100, 0.9)
+#'   colMaxs(mt)
+#'   apply(mt, 2, max) # the same
+#' @export
+colMaxs <- function(x, use_nan = FALSE) {
+    x <- convertMatrix(x)
+    use_nan <- check_use_nan(x, use_nan)
+    structure(cpp_max(x, use_nan), names = colnames(x))
+}
+
+#' @rdname colMaxs
+#' @export
+rowMaxs <- function(x, use_nan = FALSE) {
+    x <- convertMatrix(x)
+    use_nan <- check_use_nan(x, use_nan)
+    structure(cpp_max(t(x), use_nan), names = rownames(x))
+}
+
+#' @rdname colMaxs
+#' @export
+colMins <- function(x, use_nan = FALSE) {
+    x <- convertMatrix(x)
+    use_nan <- check_use_nan(x, use_nan)
+    structure(cpp_min(x, use_nan), names = colnames(x))
+}
+
+#' @rdname colMaxs
+#' @export
+rowMins <- function(x, use_nan = FALSE) {
+    x <- convertMatrix(x)
+    use_nan <- check_use_nan(x, use_nan)
+    structure(cpp_min(t(x), use_nan), names = rownames(x))
+}
+
+#' Column or row indices of maximum values
+#'
+#' Find column or row indices of maximum values in matrices. Works in a
+#' similar way as `base::max.col()` but without conversion of sparse matrices
+#' to dense matrices.
+#' @param x a [base::matrix] or [Matrix::Matrix] object.
+#' @param ties_method specify how to handle ties. If "random", choose an
+#'   index randomly within the ties; if "first" or "last" returns the index of the
+#'   first or the last tie elements, respectively.
+#' @param use_nan if `TRUE`, return `NA` for columns or rows with all zero.
+#'   Applies only when `x` is a sparse matrix.
+#' @return an integer vector
+#' @examples
+#' mt <- Matrix::rsparsematrix(100, 100, 0.9)
+#' maxCol(mt, ties_method = "first")
+#' max.col(mt, ties.method = "first") # the same
+#' @export
+maxCol <- function(x, ties_method = c("random", "first", "last"),
+                   use_nan = FALSE) {
+    x <- convertMatrix(x)
+    ties_method <- match.arg(ties_method)
+    use_nan <- check_use_nan(x, use_nan)
+
+    mode <- match(ties_method, c("random", "first", "last"))
+    structure(cpp_maxrow(t(x), mode, use_nan) + 1L, names = rownames(x))
+}
+
+#' @rdname maxCol
+#' @export
+maxRow <- function(x, ties_method = c("random", "first", "last"),
+                   use_nan = FALSE) {
+    x <- convertMatrix(x)
+    ties_method <- match.arg(ties_method)
+    use_nan <- check_use_nan(x, use_nan)
+
+    mode <- match(ties_method, c("random", "first", "last"))
+    structure(cpp_maxrow(x, mode, use_nan) + 1L, names = colnames(x))
 }
 
 getThreads <- function() {
@@ -91,4 +168,48 @@ getThreads <- function() {
     }
     return(value)
 }
+
+convertMatrix <- function(x, boolean = FALSE) {
+    x <- as(as(x, "generalMatrix"), "dMatrix")
+    if (boolean)
+        x <- as(as(x, "lMatrix"), "dMatrix")
+    if (is(x, "dgeMatrix")) {
+        x <- as.matrix(x)
+    } else {
+        x <- as(x, "CsparseMatrix")
+    }
+    return(x)
+}
+
+check_use_nan <- function(x, use_nan) {
+    use_nan <- check_logical(use_nan)
+    if (is.matrix(x) && use_nan)
+        stop("use_nan applies only x is a sparse matrix", call. = FALSE)
+    return(use_nan)
+}
+
+check_logical <- function(x) {
+    arg <- deparse(substitute(x))
+    x <- as.logical(x)
+    if (length(x) != 1 || !x %in% c(FALSE, TRUE))
+        stop(arg, " must a single logical value", call. = FALSE)
+    return(x)
+}
+
+check_numeric <- function(x) {
+    arg <- deparse(substitute(x))
+    x <- as.numeric(x)
+    if (length(x) != 1 || is.na(x))
+        stop(arg, " must a single numeric value", call. = FALSE)
+    return(x)
+}
+
+check_integer <- function(x) {
+    arg <- deparse(substitute(x))
+    x <- as.integer(x)
+    if (length(x) != 1 || is.na(x))
+        stop(arg, " must a single integer value", call. = FALSE)
+    return(x)
+}
+
 
