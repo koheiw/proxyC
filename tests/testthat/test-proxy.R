@@ -24,8 +24,15 @@ test_that("porxy stops as expected for methods not supported",{
 })
 
 test_that("raises error when p is smaller than 1", {
-    expect_error(proxyC:::proxy(mat_test, method = "minkowski", p = 0))
-    expect_error(proxyC:::proxy(mat_test, method = "minkowski", p = -1))
+    expect_error(proxyC:::proxy(mat_test, method = "minkowski", p = 0),
+                 "p must be greater than zero")
+    expect_error(proxyC:::proxy(mat_test, method = "minkowski", p = -1),
+                 "p must be greater than zero")
+})
+
+test_that("raises error when min_simil is not numeric", {
+    expect_error(proxyC:::proxy(mat_test, min_simil = c(1, 2)),
+                 "min_simil must a single numeric value")
 })
 
 test_that("sparse objects are of expected class and occur when expected", {

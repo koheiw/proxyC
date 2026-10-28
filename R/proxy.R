@@ -12,8 +12,9 @@
 #' @param margin integer indicating margin of similarity/distance computation. 1
 #'   indicates rows or 2 indicates columns.
 #' @param method method to compute similarity or distance
-#' @param mask a pattern matrix created using [mask()] for masked similarity/distance computation.
-#'  The shape of the matrix must be the same as the resulting matrix.
+#' @param mask a pattern matrix created using [mask()] for masked similarity/distance
+#'  computation. The shape of the matrix must be the same as the resulting matrix.
+#'  Cannot be used when `diag = TRUE`.
 #' @param min_simil the minimum similarity value to be recorded.
 #' @param rank an integer value specifying top-n most similarity values to be
 #'   recorded.
@@ -95,7 +96,7 @@ simil <- function(x, y = NULL, margin = 1,
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
-    proxy(x, y, margin, method, mask = mask, min_proxy = min_simil, rank = rank, drop0 = drop0,
+    proxy(x, y, margin, method, mask = mask, min_simil = min_simil, rank = rank, drop0 = drop0,
           diag = diag, use_nan = use_nan, sparse = sparse, digits = digits)
 
 }
@@ -128,13 +129,13 @@ proxy <- function(x, y = NULL, margin = 1,
                              "euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                              "manhattan", "maximum", "canberra", "minkowski", "hamming"),
                   mask = NULL,
-                  p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE,
+                  p = 2, smooth = 0, min_simil = NULL, rank = NULL, drop0 = FALSE,
                   diag = FALSE, use_nan = NULL, sparse = TRUE, digits = 14) {
 
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
 
-    margin <- check_integer(margin, min = 1, max = 2)
+    margin <- check_integer(margin)
     p <- check_numeric(p)
     smooth <- check_numeric(smooth)
     drop0 <- check_logical(drop0)
@@ -186,13 +187,18 @@ proxy <- function(x, y = NULL, margin = 1,
         mask <- as(Matrix(numeric(), nrow = 0, ncol = 0, sparse = TRUE), "CsparseMatrix")
         use_mask <- FALSE
     } else {
+        if (diag)
+            stop("Cannot use mask when diag = TRUE")
         mask <- as(as(as(mask, "CsparseMatrix"), "generalMatrix"), "dMatrix")
         use_mask <- TRUE
         if (nrow(mask) != ncol(x) || ncol(mask) != ncol(y))
             stop(sprintf("The shape of mask must be %d x %d.", ncol(x), ncol(y)))
     }
-    if (is.null(min_proxy))
-        min_proxy <- -1.0
+    if (is.null(min_simil)) {
+        min_simil <- -1.0
+    } else {
+        min_simil <- check_numeric(min_simil)
+    }
     if (is.null(rank))
         rank <- ncol(x)
     if (rank < 1)
@@ -223,7 +229,7 @@ proxy <- function(x, y = NULL, margin = 1,
             method = match(method, c("product", "cosine", "correlation", "euclidean", "dice", "edice")),
             mask = mask,
             rank = rank,
-            limit = min_proxy,
+            limit = min_simil,
             symm = symm,
             drop0 = drop0,
             use_nan = use_nan,
@@ -244,7 +250,7 @@ proxy <- function(x, y = NULL, margin = 1,
                                      "jeffreys", "jensen")),
             mask = mask,
             rank = rank,
-            limit = min_proxy,
+            limit = min_simil,
             weight = weight,
             smooth = smooth,
             symm = symm,

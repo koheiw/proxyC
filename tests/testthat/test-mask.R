@@ -91,6 +91,11 @@ test_that("mask works with simil linear", {
         simil(mat1_test, mat2_test, margin = 2, mask = msk_test[,-1]),
         "The shape of mask must be 20 x 5"
     )
+
+    expect_error(
+        simil(mat1_test, mat2_test, diag = TRUE, mask = msk_test),
+        "Cannot use mask when diag = TRUE"
+    )
 })
 
 test_that("mask works with simil pair", {
