@@ -134,7 +134,7 @@ proxy <- function(x, y = NULL, margin = 1,
     method[method == "hamman"] <- "hamann" # for transition
     method <- match.arg(method)
 
-    margin <- check_integer(margin)
+    margin <- check_integer(margin, min = 1, max = 2)
     p <- check_numeric(p)
     smooth <- check_numeric(smooth)
     drop0 <- check_logical(drop0)
@@ -171,8 +171,8 @@ proxy <- function(x, y = NULL, margin = 1,
     } else {
         y <- convertMatrix(y, boolean)
     }
-    if (!margin %in% c(1, 2))
-        stop("Matrgin must be 1 (row) or 2 (column)")
+    if (!margin %in% c(1L, 2L))
+        stop("Margin must be 1 (row) or 2 (column)")
     if (margin == 1) {
         if (ncol(x) != ncol(y))
             stop("x and y must have the same number of columns")

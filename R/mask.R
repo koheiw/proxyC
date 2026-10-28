@@ -26,7 +26,7 @@ mask <- function(x, y = NULL) {
     result <- as(result, "lMatrix")
     if (is.character(x) || is.factor(x))
         rownames(result) <- as.character(x)
-    if (is.character(y) || is.factor(x))
+    if (is.character(y) || is.factor(y))
         colnames(result) <- as.character(y)
 
     return(result)
