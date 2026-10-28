@@ -5,13 +5,17 @@ TIERS <- list(   # nf = features; nx/ny = items compared (ny NA -> y = NULL)
 )
 VARIANTS <- list(base = list(), diag = list(diag = TRUE), rank = list(rank = 10L),
                  min_simil = list(min_simil = 0.5), mask = list(mask = TRUE))  # mask built in child from labels
-LINEAR   <- list(simil = c("cosine", "correlation", "dice", "edice"), dist = "euclidean")
-PAIR     <- list(simil = c("jaccard", "ejaccard", "fjaccard", "hamann", "faith", "simple matching"),
-                 dist  = c("chisquared", "kullback", "jeffreys", "jensen", "manhattan", "maximum",
-                           "canberra", "minkowski", "hamming"))
-BINARY   <- c("jaccard", "hamann", "faith", "simple matching", "hamming")   # 0/1 data
-SMOOTHED <- c("chisquared", "kullback", "jeffreys", "jensen")  # smooth = 0 returns NaN early on any zero
-IMPLIED  <- c(crossprod = 2, tcrossprod = 1, colSds = 2, rowSds = 1, colZeros = 2, rowZeros = 1)  # margin from fn name
+# LINEAR   <- list(simil = c("cosine", "correlation", "dice", "edice"), dist = "euclidean")
+LINEAR <- list(simil = c("cosine"))
+# PAIR     <- list(simil = c("jaccard", "ejaccard", "fjaccard", "hamann", "faith", "simple matching"),
+#                  dist  = c("chisquared", "kullback", "jeffreys", "jensen", "manhattan", "maximum",
+#                            "canberra", "minkowski", "hamming"))
+PAIR <- list(dist  = c("chisquared"))
+# BINARY   <- c("jaccard", "hamann", "faith", "simple matching", "hamming")   # 0/1 data
+# SMOOTHED <- c("chisquared", "kullback", "jeffreys", "jensen")  # smooth = 0 returns NaN early on any zero
+SMOOTHED <- "chisquared"
+# IMPLIED  <- c(crossprod = 2, tcrossprod = 1, colSds = 2, rowSds = 1, colZeros = 2, rowZeros = 1)  # margin from fn name
+IMPLIED <- "colZeros"
 
 spec <- function(fn, method, tier, variant = "base") {
     expand.grid(fn = fn, method = method, tier = tier, variant = variant, stringsAsFactors = FALSE)
