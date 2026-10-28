@@ -8,7 +8,7 @@ using namespace arma;
 S4 cpp_pair(SEXP s1,
             SEXP s2,
                   const int method,
-                  arma::sp_mat& mask,
+                  const arma::sp_mat& mask,
                   unsigned int rank,
                   const double limit = -1.0,
                   const double weight = 1.0,

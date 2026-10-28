@@ -60,7 +60,7 @@ template <typename M1, typename M2>
 S4 iter_linear(M1& mt1,
                    const M2& mt2,
                    const int method,
-                   arma::sp_mat& mask,
+                   const arma::sp_mat& mask,
                    unsigned int rank,
                    const double limit = -1.0,
                    bool symm = false,
