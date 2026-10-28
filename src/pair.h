@@ -253,7 +253,7 @@ template <typename M1, typename M2>
 S4 iter_pair(M1& mt1,
                    M2& mt2,
                    const int method,
-                   arma::sp_mat& mask,
+                   const arma::sp_mat& mask,
                    unsigned int rank,
                    const double limit = -1.0,
                    const double weight = 1.0,
