@@ -8,9 +8,9 @@ the same infrastructure as
 ## Usage
 
 ``` r
-crossprod(x, y = NULL, min_prod = NULL, digits = 14)
+crossprod(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14)
 
-tcrossprod(x, y = NULL, min_prod = NULL, digits = 14)
+tcrossprod(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14)
 ```
 
 ## Arguments
@@ -19,7 +19,7 @@ tcrossprod(x, y = NULL, min_prod = NULL, digits = 14)
 
   a [base::matrix](https://rdrr.io/r/base/matrix.html) or
   [Matrix::Matrix](https://rdrr.io/pkg/Matrix/man/Matrix.html) object.
-  Dense matrices are covered to the
+  Only sparse matrices are covered to the
   [Matrix::CsparseMatrix](https://rdrr.io/pkg/Matrix/man/CsparseMatrix-class.html)
   internally.
 
@@ -33,6 +33,13 @@ tcrossprod(x, y = NULL, min_prod = NULL, digits = 14)
 - min_prod:
 
   the minimum product to be recorded.
+
+- sparse:
+
+  if `TRUE`, returns
+  [Matrix::sparseMatrix](https://rdrr.io/pkg/Matrix/man/sparseMatrix.html)
+  object. When neither `min_simil` nor `rank` is used, dense matrices
+  require less space in RAM.
 
 - digits:
 

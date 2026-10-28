@@ -1,5 +1,26 @@
 # Changelog
 
+## proxyC 0.6.0
+
+### New features and improvements
+
+- Significantly reduces the computation time and storage when dense
+  matrices are given to
+  [`simil()`](https://koheiw.github.io/proxyC/reference/simil.md) or
+  [`dist()`](https://koheiw.github.io/proxyC/reference/simil.md). They
+  no longer automatically convert dense matrices to sparse matrices.
+- Add [`maxCol()`](https://koheiw.github.io/proxyC/reference/maxCol.md)
+  and [`maxRow()`](https://koheiw.github.io/proxyC/reference/maxCol.md)
+  to replace [`base::max.col()`](https://rdrr.io/r/base/maxCol.html) for
+  sparse matrices.
+- Add
+  [`colMaxs()`](https://koheiw.github.io/proxyC/reference/colMaxs.md),
+  [`rowMaxs()`](https://koheiw.github.io/proxyC/reference/colMaxs.md),
+  [`colMins()`](https://koheiw.github.io/proxyC/reference/colMaxs.md)
+  and
+  [`rowMins()`](https://koheiw.github.io/proxyC/reference/colMaxs.md) to
+  avoid the use of [`apply()`](https://rdrr.io/r/base/apply.html).
+
 ## proxyC 0.5.2
 
 CRAN release: 2025-04-25

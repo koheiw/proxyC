@@ -1,10 +1,9 @@
 # Compute similarity/distance between rows or columns of large matrices
 
-Fast similarity/distance computation function for large sparse matrices.
-You can floor small similarity value to to save computation time and
-storage space by an arbitrary threshold (`min_simil`) or rank (`rank`).
-You can specify the number of threads for parallel computing via
-`options(proxyC.threads)`.
+Fast similarity/distance computation function for large matrices using
+multiple processors. To save computation time and storage, it can also
+apply arbitrary threshold (`min_simil`) or rank (`rank`) to the
+similarity/distance scores and return them in a sparse matrix.
 
 ## Usage
 
@@ -48,7 +47,7 @@ dist(
 
   a [base::matrix](https://rdrr.io/r/base/matrix.html) or
   [Matrix::Matrix](https://rdrr.io/pkg/Matrix/man/Matrix.html) object.
-  Dense matrices are covered to the
+  Only sparse matrices are covered to the
   [Matrix::CsparseMatrix](https://rdrr.io/pkg/Matrix/man/CsparseMatrix-class.html)
   internally.
 
@@ -128,6 +127,10 @@ dist(
   used when `method` is "chisquared", "kullback", "jeffreys" or
   "jensen".
 
+## Value
+
+a [Matrix::Matrix](https://rdrr.io/pkg/Matrix/man/Matrix.html) object
+
 ## Details
 
 ### Available Methods
@@ -201,18 +204,18 @@ simil(mt, method = "cosine")[1:5, 1:5]
 #> Warning: x or y has vectors with all zero; consider setting use_nan = TRUE to set these values to NaN or use_nan = FALSE to suppress this warning
 #> 5 x 5 sparse Matrix of class "dsTMatrix"
 #>               
-#> [1,] 1 0 0 0 0
-#> [2,] 0 1 0 0 0
-#> [3,] 0 0 1 0 0
-#> [4,] 0 0 0 1 0
-#> [5,] 0 0 0 0 1
+#> [1,] . . . . .
+#> [2,] . 1 0 0 0
+#> [3,] . 0 1 0 0
+#> [4,] . 0 0 1 0
+#> [5,] . 0 0 0 1
 mt <- Matrix::rsparsematrix(100, 100, 0.01)
 dist(mt, method = "euclidean")[1:5, 1:5]
 #> 5 x 5 sparse Matrix of class "dsTMatrix"
-#>                                        
-#> [1,] 0.00 0.3300000 0.00 0.8200000 0.00
-#> [2,] 0.33 0.0000000 0.33 0.8839118 0.33
-#> [3,] 0.00 0.3300000 0.00 0.8200000 0.00
-#> [4,] 0.82 0.8839118 0.82 0.0000000 0.82
-#> [5,] 0.00 0.3300000 0.00 0.8200000 0.00
+#>                                                  
+#> [1,] 0.000000 2.680019 2.830300 3.586712 3.074183
+#> [2,] 2.680019 0.000000 0.910000 2.383695 1.506021
+#> [3,] 2.830300 0.910000 0.000000 2.551490 1.759602
+#> [4,] 3.586712 2.383695 2.551490 0.000000 2.819592
+#> [5,] 3.074183 1.506021 1.759602 2.819592 0.000000
 ```
