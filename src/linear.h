@@ -126,8 +126,8 @@ S4 iter_linear(M1& mt1,
 #if PROXYC_USE_TBB
     tbb::task_arena arena(thread);
     arena.execute([&]{
-        tbb::parallel_for(tbb::blocked_range<int>(0, I), [&](tbb::blocked_range<int> r) {
-            for (int i = r.begin(); i < r.end(); i++) {
+        tbb::parallel_for(tbb::blocked_range<std::size_t>(0, I), [&](tbb::blocked_range<std::size_t> r) {
+            for (std::size_t i = r.begin(); i < r.end(); i++) {
                 calc_linear(i, mt1, mt2, mask, simil_tri,
                              square1, center1, sum1, square2, center2, sum2,
                              method, rank, limit, symm, drop0, use_nan, use_mask, digits);
