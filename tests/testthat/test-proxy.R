@@ -254,4 +254,20 @@ test_that("input checks are working", {
         proxyC:::proxy(mat_test, min_proxy = c(-1, 0)),
         "min_proxy must a single numeric value"
     )
+    expect_error(
+        proxyC:::proxy(mat_test, rank = c(1, 2)),
+        "rank must a single integer value"
+    )
+})
+
+
+test_that("works empty matrices", {
+
+    smat <- rsparsematrix(0, 10, 0)
+    dmat <- as.matrix(smat)
+
+    proxyC:::proxy(dmat, dmat, rank = 0)
+
+    expect_equal(as.matrix(proxyC:::proxy(dmat, dmat)), as.matrix(s))
+    expect_equal(as.matrix(proxyC:::proxy(emat, emat)), as.matrix(s))
 })

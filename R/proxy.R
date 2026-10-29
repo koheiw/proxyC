@@ -203,10 +203,13 @@ proxy <- function(x, y = NULL, margin = 1,
     } else {
         min_proxy <- check_numeric(min_proxy)
     }
-    if (is.null(rank))
+    if (is.null(rank)) {
         rank <- ncol(x)
-    if (rank < 1)
-        stop("rank must be great than or equal to 1")
+    } else {
+        rank <- check_integer(rank)
+        if (rank < 1)
+            stop("rank must be great than or equal to 1")
+    }
     if (is.null(use_nan)) {
         if (method == "correlation" && (any(colSds(x) == 0) || any(colSds(y) == 0))) {
             warning(paste0(
