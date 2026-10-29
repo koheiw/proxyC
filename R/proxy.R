@@ -12,8 +12,9 @@
 #' @param margin integer indicating margin of similarity/distance computation. 1
 #'   indicates rows or 2 indicates columns.
 #' @param method method to compute similarity or distance
-#' @param mask a pattern matrix created using [mask()] for masked similarity/distance computation.
-#'  The shape of the matrix must be the same as the resulting matrix.
+#' @param mask a pattern matrix created using [mask()] for masked similarity/distance
+#'  computation. The shape of the matrix must be the same as the resulting matrix.
+#'  Cannot be used when `diag = TRUE`.
 #' @param min_simil the minimum similarity value to be recorded.
 #' @param rank an integer value specifying top-n most similarity values to be
 #'   recorded.
@@ -94,6 +95,10 @@ simil <- function(x, y = NULL, margin = 1,
                   use_nan = NULL, sparse = TRUE, digits = 14) {
 
     method[method == "hamman"] <- "hamann" # for transition
+
+    if (!is.null(min_simil))
+        min_simil <- check_numeric(min_simil)
+
     method <- match.arg(method)
     proxy(x, y, margin, method, mask = mask, min_proxy = min_simil, rank = rank, drop0 = drop0,
           diag = diag, use_nan = use_nan, sparse = sparse, digits = digits)
@@ -171,8 +176,8 @@ proxy <- function(x, y = NULL, margin = 1,
     } else {
         y <- convertMatrix(y, boolean)
     }
-    if (!margin %in% c(1, 2))
-        stop("Matrgin must be 1 (row) or 2 (column)")
+    if (!margin %in% c(1L, 2L))
+        stop("Margin must be 1 (row) or 2 (column)")
     if (margin == 1) {
         if (ncol(x) != ncol(y))
             stop("x and y must have the same number of columns")
@@ -186,13 +191,18 @@ proxy <- function(x, y = NULL, margin = 1,
         mask <- as(Matrix(numeric(), nrow = 0, ncol = 0, sparse = TRUE), "CsparseMatrix")
         use_mask <- FALSE
     } else {
+        if (diag)
+            stop("Cannot use mask when diag = TRUE")
         mask <- as(as(as(mask, "CsparseMatrix"), "generalMatrix"), "dMatrix")
         use_mask <- TRUE
         if (nrow(mask) != ncol(x) || ncol(mask) != ncol(y))
             stop(sprintf("The shape of mask must be %d x %d.", ncol(x), ncol(y)))
     }
-    if (is.null(min_proxy))
-        min_proxy <- -1.0
+    if (is.null(min_proxy)) {
+        min_proxy <- -Inf
+    } else {
+        min_proxy <- check_numeric(min_proxy)
+    }
     if (is.null(rank))
         rank <- ncol(x)
     if (rank < 1)

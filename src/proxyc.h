@@ -31,7 +31,7 @@ namespace proxyc{
     typedef std::vector<Triplet> Triplets;
 #endif
 
-    inline S4 to_matrix(Triplets& tri, int nrow, int ncol, bool symmetric, bool sparse) {
+    inline S4 to_matrix(Triplets& tri, std::size_t nrow, std::size_t ncol, bool symmetric, bool sparse) {
 
         IntegerVector dim_ = IntegerVector::create(nrow, ncol);
         if (!sparse) {

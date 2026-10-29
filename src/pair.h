@@ -253,7 +253,7 @@ template <typename M1, typename M2>
 S4 iter_pair(M1& mt1,
                    M2& mt2,
                    const int method,
-                   arma::sp_mat& mask,
+                   const arma::sp_mat& mask,
                    unsigned int rank,
                    const double limit = -1.0,
                    const double weight = 1.0,
@@ -283,8 +283,8 @@ S4 iter_pair(M1& mt1,
 #if PROXYC_USE_TBB
     tbb::task_arena arena(thread);
     arena.execute([&]{
-        tbb::parallel_for(tbb::blocked_range<int>(0, I), [&](tbb::blocked_range<int> r) {
-            for (int i = r.begin(); i < r.end(); i++) {
+        tbb::parallel_for(tbb::blocked_range<std::size_t>(0, I), [&](tbb::blocked_range<std::size_t> r) {
+            for (std::size_t i = r.begin(); i < r.end(); i++) {
                 calc_pair(i, mt1, mt2, mask, simil_tri, method, rank, limit, symm,
                            diag, weight, smooth, drop0, use_nan, use_mask, digits);
             }

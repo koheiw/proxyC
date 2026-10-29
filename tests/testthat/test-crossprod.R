@@ -1,5 +1,5 @@
 
-test_that("test crossprod", {
+test_that("crossprod works", {
 
     mat1 <- Matrix::rsparsematrix(500, 100, 0.5)
     mat2 <- Matrix::rsparsematrix(500, 1000, 0.5)
@@ -34,6 +34,23 @@ test_that("test crossprod", {
     expect_equal(
         as.matrix(prod2),
         as.matrix(prod0)
+    )
+
+    # large values
+
+    mat10 <- mat1 * 10000
+    mat20 <- mat2 * 10000
+
+    prod00 <- Matrix::crossprod(mat10, mat20)
+    prod10 <- proxyC::crossprod(mat10, mat20)
+
+    expect_identical(
+        dim(prod10), dim(prod00)
+    )
+
+    expect_equal(
+        as.matrix(prod10), as.matrix(prod00),
+        tol = 1e-10
     )
 
 })

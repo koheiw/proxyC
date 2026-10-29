@@ -12,18 +12,18 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // cpp_linear
-S4 cpp_linear(SEXP s1, SEXP s2, const int method, arma::sp_mat& mask, unsigned int rank, const double limit, bool symm, const bool drop0, const bool use_nan, const bool use_mask, const bool sparse, const int digits, const int thread);
+S4 cpp_linear(const SEXP s1, const SEXP s2, const int method, const arma::sp_mat& mask, const unsigned int rank, const double limit, const bool symm, const bool drop0, const bool use_nan, const bool use_mask, const bool sparse, const int digits, const int thread);
 RcppExport SEXP _proxyC_cpp_linear(SEXP s1SEXP, SEXP s2SEXP, SEXP methodSEXP, SEXP maskSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP symmSEXP, SEXP drop0SEXP, SEXP use_nanSEXP, SEXP use_maskSEXP, SEXP sparseSEXP, SEXP digitsSEXP, SEXP threadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type s1(s1SEXP);
-    Rcpp::traits::input_parameter< SEXP >::type s2(s2SEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type s1(s1SEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type s2(s2SEXP);
     Rcpp::traits::input_parameter< const int >::type method(methodSEXP);
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type mask(maskSEXP);
-    Rcpp::traits::input_parameter< unsigned int >::type rank(rankSEXP);
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type mask(maskSEXP);
+    Rcpp::traits::input_parameter< const unsigned int >::type rank(rankSEXP);
     Rcpp::traits::input_parameter< const double >::type limit(limitSEXP);
-    Rcpp::traits::input_parameter< bool >::type symm(symmSEXP);
+    Rcpp::traits::input_parameter< const bool >::type symm(symmSEXP);
     Rcpp::traits::input_parameter< const bool >::type drop0(drop0SEXP);
     Rcpp::traits::input_parameter< const bool >::type use_nan(use_nanSEXP);
     Rcpp::traits::input_parameter< const bool >::type use_mask(use_maskSEXP);
@@ -48,20 +48,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_pair
-S4 cpp_pair(SEXP s1, SEXP s2, const int method, arma::sp_mat& mask, unsigned int rank, const double limit, const double weight, const double smooth, bool symm, const bool diag, const bool drop0, const bool use_nan, const bool use_mask, const bool sparse, const int digits, const int thread);
+S4 cpp_pair(const SEXP s1, const SEXP s2, const int method, const arma::sp_mat& mask, const unsigned int rank, const double limit, const double weight, const double smooth, const bool symm, const bool diag, const bool drop0, const bool use_nan, const bool use_mask, const bool sparse, const int digits, const int thread);
 RcppExport SEXP _proxyC_cpp_pair(SEXP s1SEXP, SEXP s2SEXP, SEXP methodSEXP, SEXP maskSEXP, SEXP rankSEXP, SEXP limitSEXP, SEXP weightSEXP, SEXP smoothSEXP, SEXP symmSEXP, SEXP diagSEXP, SEXP drop0SEXP, SEXP use_nanSEXP, SEXP use_maskSEXP, SEXP sparseSEXP, SEXP digitsSEXP, SEXP threadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type s1(s1SEXP);
-    Rcpp::traits::input_parameter< SEXP >::type s2(s2SEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type s1(s1SEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type s2(s2SEXP);
     Rcpp::traits::input_parameter< const int >::type method(methodSEXP);
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type mask(maskSEXP);
-    Rcpp::traits::input_parameter< unsigned int >::type rank(rankSEXP);
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type mask(maskSEXP);
+    Rcpp::traits::input_parameter< const unsigned int >::type rank(rankSEXP);
     Rcpp::traits::input_parameter< const double >::type limit(limitSEXP);
     Rcpp::traits::input_parameter< const double >::type weight(weightSEXP);
     Rcpp::traits::input_parameter< const double >::type smooth(smoothSEXP);
-    Rcpp::traits::input_parameter< bool >::type symm(symmSEXP);
+    Rcpp::traits::input_parameter< const bool >::type symm(symmSEXP);
     Rcpp::traits::input_parameter< const bool >::type diag(diagSEXP);
     Rcpp::traits::input_parameter< const bool >::type drop0(drop0SEXP);
     Rcpp::traits::input_parameter< const bool >::type use_nan(use_nanSEXP);

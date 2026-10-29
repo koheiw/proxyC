@@ -49,8 +49,9 @@ indicates rows or 2 indicates columns.}
 
 \item{method}{method to compute similarity or distance}
 
-\item{mask}{a pattern matrix created using \code{\link[=mask]{mask()}} for masked similarity/distance computation.
-The shape of the matrix must be the same as the resulting matrix.}
+\item{mask}{a pattern matrix created using \code{\link[=mask]{mask()}} for masked similarity/distance
+computation. The shape of the matrix must be the same as the resulting matrix.
+Cannot be used when \code{diag = TRUE}.}
 
 \item{min_simil}{the minimum similarity value to be recorded.}
 

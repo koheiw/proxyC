@@ -18,8 +18,8 @@ S4 cpp_mask(IntegerVector v1_,
 #if PROXYC_USE_TBB
     tbb::task_arena arena(thread);
     arena.execute([&]{
-        tbb::parallel_for(tbb::blocked_range<int>(0, I), [&](tbb::blocked_range<int> r) {
-            for (int i = r.begin(); i < r.end(); i++) {
+        tbb::parallel_for(tbb::blocked_range<std::size_t>(0, I), [&](tbb::blocked_range<std::size_t> r) {
+            for (std::size_t i = r.begin(); i < r.end(); i++) {
                 for (std::size_t j = 0; j < J; j++) {
                     if (v1[i] == v2[j])
                         simil_tri.push_back(std::make_tuple(i, j, 1.0));
