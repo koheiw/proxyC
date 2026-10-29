@@ -5,13 +5,13 @@ using namespace proxyc;
 using namespace arma;
 
 // [[Rcpp::export]]
-S4 cpp_linear(SEXP s1,
-              SEXP s2,
+S4 cpp_linear(const SEXP s1,
+              const SEXP s2,
               const int method,
-              arma::sp_mat& mask,
-              unsigned int rank,
+              const arma::sp_mat& mask,
+              const unsigned int rank,
               const double limit = -1.0,
-              bool symm = false,
+              const bool symm = false,
               const bool drop0 = false,
               const bool use_nan = false,
               const bool use_mask = false,
