@@ -4,6 +4,7 @@
 #' infrastructure as [simil()] and [dist()].
 #' @inheritParams simil
 #' @param min_prod the minimum product to be recorded.
+#' @return a [Matrix::Matrix] object
 #' @export
 crossprod <- function(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14) {
 
