@@ -93,7 +93,7 @@ test_that("mask works with simil linear", {
     )
 
     expect_error(
-        simil(mat1_test, mat2_test, diag = TRUE, mask = msk_test),
+        simil(mat1_test, mat2_test, margin = 2, diag = TRUE, mask = msk_test),
         "Cannot use mask when diag = TRUE"
     )
 })

@@ -18,9 +18,12 @@ test_that("raise error if the number of rows are different",{
 })
 
 test_that("porxy stops as expected for methods not supported",{
-    expect_error(simil(mat_test, method = "Yule"))
-    expect_error(dist(mat_test, method = "Yule"))
-    expect_error(proxyC:::proxy(mat_test, method = "Yule"))
+    expect_error(simil(mat_test, method = "Yule"),
+                 "'arg' should be one of")
+    expect_error(dist(mat_test, method = "Yule"),
+                 "'arg' should be one of")
+    expect_error(proxyC:::proxy(mat_test, method = "Yule"),
+                 "'arg' should be one of")
 })
 
 test_that("raises error when p is smaller than 1", {
@@ -28,11 +31,6 @@ test_that("raises error when p is smaller than 1", {
                  "p must be greater than zero")
     expect_error(proxyC:::proxy(mat_test, method = "minkowski", p = -1),
                  "p must be greater than zero")
-})
-
-test_that("raises error when min_simil is not numeric", {
-    expect_error(proxyC:::proxy(mat_test, min_simil = c(1, 2)),
-                 "min_simil must a single numeric value")
 })
 
 test_that("sparse objects are of expected class and occur when expected", {
@@ -251,5 +249,9 @@ test_that("input checks are working", {
     expect_error(
         proxyC:::proxy(mat_test, digits = c(2, 3)),
         "digits must a single integer value"
+    )
+    expect_error(
+        proxyC:::proxy(mat_test, min_proxy = c(-1, 0)),
+        "min_proxy must a single numeric value"
     )
 })

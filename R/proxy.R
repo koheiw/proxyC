@@ -95,8 +95,12 @@ simil <- function(x, y = NULL, margin = 1,
                   use_nan = NULL, sparse = TRUE, digits = 14) {
 
     method[method == "hamman"] <- "hamann" # for transition
+
+    if (!is.null(min_simil))
+        min_simil <- check_numeric(min_simil)
+
     method <- match.arg(method)
-    proxy(x, y, margin, method, mask = mask, min_simil = min_simil, rank = rank, drop0 = drop0,
+    proxy(x, y, margin, method, mask = mask, min_proxy = min_simil, rank = rank, drop0 = drop0,
           diag = diag, use_nan = use_nan, sparse = sparse, digits = digits)
 
 }
@@ -129,7 +133,7 @@ proxy <- function(x, y = NULL, margin = 1,
                              "euclidean", "chisquared", "kullback", "jeffreys", "jensen",
                              "manhattan", "maximum", "canberra", "minkowski", "hamming"),
                   mask = NULL,
-                  p = 2, smooth = 0, min_simil = NULL, rank = NULL, drop0 = FALSE,
+                  p = 2, smooth = 0, min_proxy = NULL, rank = NULL, drop0 = FALSE,
                   diag = FALSE, use_nan = NULL, sparse = TRUE, digits = 14) {
 
     method[method == "hamman"] <- "hamann" # for transition
@@ -194,10 +198,10 @@ proxy <- function(x, y = NULL, margin = 1,
         if (nrow(mask) != ncol(x) || ncol(mask) != ncol(y))
             stop(sprintf("The shape of mask must be %d x %d.", ncol(x), ncol(y)))
     }
-    if (is.null(min_simil)) {
-        min_simil <- -1.0
+    if (is.null(min_proxy)) {
+        min_proxy <- -Inf
     } else {
-        min_simil <- check_numeric(min_simil)
+        min_proxy <- check_numeric(min_proxy)
     }
     if (is.null(rank))
         rank <- ncol(x)
@@ -229,7 +233,7 @@ proxy <- function(x, y = NULL, margin = 1,
             method = match(method, c("product", "cosine", "correlation", "euclidean", "dice", "edice")),
             mask = mask,
             rank = rank,
-            limit = min_simil,
+            limit = min_proxy,
             symm = symm,
             drop0 = drop0,
             use_nan = use_nan,
@@ -250,7 +254,7 @@ proxy <- function(x, y = NULL, margin = 1,
                                      "jeffreys", "jensen")),
             mask = mask,
             rank = rank,
-            limit = min_simil,
+            limit = min_proxy,
             weight = weight,
             smooth = smooth,
             symm = symm,
