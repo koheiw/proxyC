@@ -7,6 +7,7 @@
   to sparse matrices.
 - Add `maxCol()` and `maxRow()` to replace `base::max.col()` for sparse matrices.
 - Add `colMaxs()`, `rowMaxs()`, `colMins()` and `rowMins()` to avoid the use of `apply()`.
+- Fix `colSds()` and `rowSds()` to return `NaN` for empty matrices.
 
 # proxyC 0.5.2
 
