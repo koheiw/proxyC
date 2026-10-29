@@ -190,38 +190,6 @@ test_that("functions works with different matrices", {
     expect_silent(colZeros(forceSymmetric(emat)))
 })
 
-test_that("functions works with empty matrices", {
-
-    smat <- rsparsematrix(0, 0, 0)
-    dmat <- as.matrix(smat)
-
-    expect_identical(rowSds(smat), numeric())
-    expect_identical(colSds(smat), numeric())
-    expect_identical(rowSds(dmat), numeric())
-    expect_identical(colSds(dmat), numeric())
-
-    expect_identical(rowZeros(smat), integer())
-    expect_identical(colZeros(smat), integer())
-    expect_identical(rowZeros(dmat), integer())
-    expect_identical(colZeros(dmat), integer())
-
-    expect_identical(rowMins(smat), numeric())
-    expect_identical(colMins(smat), numeric())
-    expect_identical(rowMins(dmat), numeric())
-    expect_identical(colMins(dmat), numeric())
-
-    expect_identical(rowMaxs(smat), numeric())
-    expect_identical(colMaxs(smat), numeric())
-    expect_identical(rowMaxs(dmat), numeric())
-    expect_identical(colMaxs(dmat), numeric())
-
-    expect_identical(maxRow(smat), integer())
-    expect_identical(maxCol(smat), integer())
-    expect_identical(maxRow(dmat), integer())
-    expect_identical(maxCol(dmat), integer())
-
-})
-
 test_that("options are working", {
 
     smat <- rsparsematrix(50, 50, 0.5)

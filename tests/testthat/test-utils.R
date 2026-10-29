@@ -339,3 +339,35 @@ test_that("convertMatrix works", {
         "matrix"
     )
 })
+
+test_that("functions works with empty matrices", {
+
+    smat <- rsparsematrix(0, 10, 0)
+    dmat <- as.matrix(smat)
+
+    expect_identical(rowSds(smat), numeric())
+    expect_identical(colSds(smat), rep(NaN, 10))
+    expect_identical(rowSds(dmat), numeric())
+    expect_identical(colSds(dmat), rep(NaN, 10))
+
+    expect_identical(rowZeros(smat), integer())
+    expect_identical(colZeros(smat), integer(10))
+    expect_identical(rowZeros(dmat), integer())
+    expect_identical(colZeros(dmat), integer(10))
+
+    expect_identical(rowMins(smat), numeric())
+    expect_identical(colMins(smat), rep(Inf, 10))
+    expect_identical(rowMins(dmat), numeric())
+    expect_identical(colMins(dmat), rep(Inf, 10))
+
+    expect_identical(rowMaxs(smat), numeric())
+    expect_identical(colMaxs(smat), rep(-Inf, 10))
+    expect_identical(rowMaxs(dmat), numeric())
+    expect_identical(colMaxs(dmat), rep(-Inf, 10))
+
+    expect_identical(maxRow(smat), rep(NA_integer_, 10))
+    expect_identical(maxCol(smat), integer())
+    expect_identical(maxRow(dmat), rep(NA_integer_, 10))
+    expect_identical(maxCol(dmat), integer())
+
+})

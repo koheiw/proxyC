@@ -20,7 +20,7 @@ bool cpp_tbb_enabled(){
 }
 
 // [[Rcpp::export]]
-IntegerVector cpp_nz(SEXP s) {
+IntegerVector cpp_nz(const SEXP s) {
     if (Rf_isS4(s)) {
         arma::sp_mat mt = to_sparse(s);
         std::vector<int> v = to_vector(nnz(mt));
@@ -33,7 +33,7 @@ IntegerVector cpp_nz(SEXP s) {
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_sd(SEXP s, const bool use_nan = false) {
+NumericVector cpp_sd(const SEXP s, const bool use_nan = false) {
     if (Rf_isS4(s)) {
         arma::sp_mat mt = to_sparse(s);
         std::vector<double> v = to_vector(stddev(mt, 0, use_nan));
@@ -46,7 +46,7 @@ NumericVector cpp_sd(SEXP s, const bool use_nan = false) {
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_max(SEXP s, const bool use_nan = false) {
+NumericVector cpp_max(const SEXP s, const bool use_nan = false) {
     if (Rf_isS4(s)) {
         arma::sp_mat mt = to_sparse(s);
         std::vector<double> v = to_vector(max(mt, use_nan));
@@ -59,7 +59,7 @@ NumericVector cpp_max(SEXP s, const bool use_nan = false) {
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_min(SEXP s, const bool use_nan = false) {
+NumericVector cpp_min(const SEXP s, const bool use_nan = false) {
     if (Rf_isS4(s)) {
         arma::sp_mat mt = to_sparse(s);
         std::vector<double> v = to_vector(min(mt, use_nan));
@@ -72,7 +72,7 @@ NumericVector cpp_min(SEXP s, const bool use_nan = false) {
 }
 
 // [[Rcpp::export]]
-IntegerVector cpp_maxrow(SEXP s, const int mode = 1,
+IntegerVector cpp_maxrow(const SEXP s, const int mode = 1,
                          const bool use_nan = false) {
     if (Rf_isS4(s)) {
         arma::sp_mat mt = to_sparse(s);

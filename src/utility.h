@@ -16,17 +16,19 @@ namespace proxyc{
     }
 
     inline urowvec nnz(const mat& mt) {
+        urowvec v(mt.n_cols, fill::zeros);
+        if (mt.is_empty()) return v;
         return(arma::sum(mt != 0, 0));
     }
 
     // stddev
     inline rowvec stddev(const sp_mat& mt, const int norm_type,
                          const bool use_nan = false) {
-        rowvec v(mt.n_cols, fill::zeros);
+        rowvec v(mt.n_cols, fill::nan);
         if (mt.is_empty()) return v;
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
-            e = colvec(mt.col(i));
+            e = mt.col(i).as_dense();
             if (use_nan && !arma::any(e)) {
                 v[i] = arma::datum::nan;
             } else {
@@ -37,16 +39,18 @@ namespace proxyc{
     }
 
     inline rowvec stddev(const mat& mt, const int norm_type) {
+        rowvec v(mt.n_cols, fill::nan);
+        if (mt.is_empty()) return v;
         return(arma::stddev(mt, norm_type, 0));
     }
 
     // mean
     inline rowvec mean(const sp_mat& mt, const bool use_nan = false) {
-        rowvec v(mt.n_cols, fill::zeros);
+        rowvec v(mt.n_cols, fill::nan);
         if (mt.is_empty()) return v;
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
-            e = colvec(mt.col(i));
+            e = mt.col(i).as_dense();
             if (use_nan && !arma::any(e)) {
                 v[i] = arma::datum::nan;
             } else {
@@ -57,16 +61,18 @@ namespace proxyc{
     }
 
     inline rowvec mean(const mat& mt) {
+        rowvec v(mt.n_cols, fill::nan);
+        if (mt.is_empty()) return v;
         return(arma::mean(mt, 0));
     }
 
     // max
     inline rowvec max(const sp_mat& mt, const bool use_nan = false) {
-        rowvec v(mt.n_cols, fill::zeros);
+        rowvec v(mt.n_cols, fill::neg_inf);
         if (mt.is_empty()) return v;
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
-            e = colvec(mt.col(i));
+            e = mt.col(i).as_dense();;
             if (use_nan && !arma::any(e)) {
                 v[i] = arma::datum::nan;
             } else {
@@ -77,16 +83,18 @@ namespace proxyc{
     }
 
     inline rowvec max(const mat& mt) {
+        rowvec v(mt.n_cols, fill::neg_inf);
+        if (mt.is_empty()) return v;
         return(arma::max(mt, 0));
     }
 
     // min
     inline rowvec min(const sp_mat& mt, const bool use_nan = false) {
-        rowvec v(mt.n_cols, fill::zeros);
+        rowvec v(mt.n_cols, fill::inf);
         if (mt.is_empty()) return v;
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
-            e = colvec(mt.col(i));
+            e = mt.col(i).as_dense();
             if (use_nan && !arma::any(e)) {
                 v[i] = arma::datum::nan;
             } else {
@@ -97,17 +105,19 @@ namespace proxyc{
     }
 
     inline rowvec min(const mat& mt) {
+        rowvec v(mt.n_cols, fill::inf);
+        if (mt.is_empty()) return v;
         return(arma::min(mt, 0));
     }
 
     // maxrow
     inline rowvec maxrow(const sp_mat& mt, const int mode = 1,
                          const bool use_nan = false) {
-        rowvec v(mt.n_cols, fill::zeros);
+        rowvec v(mt.n_cols, fill::nan);
         if (mt.is_empty()) return v;
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
-            e = colvec(mt.col(i));
+            e = mt.col(i).as_dense();
             if (use_nan && !arma::any(e)) {
                 v[i] = arma::datum::nan;
             } else {
@@ -134,11 +144,11 @@ namespace proxyc{
     }
 
     inline rowvec maxrow(const mat& mt, const int mode = 1) {
-        rowvec v(mt.n_cols, fill::zeros);
+        rowvec v(mt.n_cols, fill::nan);
         if (mt.is_empty()) return v;
         colvec e(mt.n_rows);
         for (uword i = 0; i < mt.n_cols; i++) {
-            e = colvec(mt.col(i));
+            e = mt.col(i);
             uvec idx;
             switch (mode) {
             case 1: // random
