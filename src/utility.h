@@ -16,7 +16,12 @@ namespace proxyc{
     }
 
     inline urowvec nnz(const mat& mt) {
-        return(arma::sum(mt != 0, 0));
+        urowvec v(mt.n_cols, fill::zeros);
+        if (mt.is_empty()) return v;
+        for (uword i = 0; i < mt.n_cols; i++) {
+            v[i] = arma::accu(mt.col(i) != 0);
+        }
+        return v;
     }
 
     // stddev

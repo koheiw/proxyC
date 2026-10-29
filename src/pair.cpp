@@ -20,34 +20,35 @@ S4 cpp_pair(SEXP s1,
                   const bool use_mask = false,
                   const bool sparse = true,
                   const int digits = 14,
-                  const int thread = -1) {
+                  const int thread = -1,
+                  const int margin = 2,
+                  const bool boolean = false) {
 
     if (Rf_isS4(s1) && Rf_isS4(s2)) {
-        arma::sp_mat mt1 = Rcpp::as<arma::sp_mat>(s1);
-        arma::sp_mat mt2 = Rcpp::as<arma::sp_mat>(s2);
+        const arma::sp_mat mt1 = to_sparse(s1, margin, boolean);
+        const arma::sp_mat mt2 = to_sparse(s2, margin, boolean);
         return iter_pair(mt1, mt2, method, mask, rank, limit,
                          weight, smooth, symm, diag, drop0,
                          use_nan, use_mask, sparse, digits, thread);
     } else if (Rf_isS4(s1) && !Rf_isS4(s2)) {
-        arma::sp_mat mt1 = Rcpp::as<arma::sp_mat>(s1);
-        arma::mat mt2 = Rcpp::as<arma::mat>(s2);
+        const arma::sp_mat mt1 = to_sparse(s1, margin, boolean);
+        const arma::mat mt2 = to_dense(s2, margin, boolean);
         return iter_pair(mt1, mt2, method, mask, rank, limit,
                          weight, smooth, symm, diag, drop0,
                          use_nan, use_mask, sparse, digits, thread);
     } else if (!Rf_isS4(s1) && Rf_isS4(s2)) {
-        arma::mat mt1 = Rcpp::as<arma::mat>(s1);
-        arma::sp_mat mt2 = Rcpp::as<arma::sp_mat>(s2);
+        const arma::mat mt1 = to_dense(s1, margin, boolean);
+        const arma::sp_mat mt2 = to_sparse(s2, margin, boolean);
         return iter_pair(mt1, mt2, method, mask, rank, limit,
                          weight, smooth, symm, diag, drop0,
                          use_nan, use_mask, sparse, digits, thread);
     } else {
-        arma::mat mt1 = Rcpp::as<arma::mat>(s1);
-        arma::mat mt2 = Rcpp::as<arma::mat>(s2);
+        const arma::mat mt1 = to_dense(s1, margin, boolean);
+        const arma::mat mt2 = to_dense(s2, margin, boolean);
         return iter_pair(mt1, mt2, method, mask, rank, limit,
                          weight, smooth, symm, diag, drop0,
                          use_nan, use_mask, sparse, digits, thread);
     }
-
 }
 
 /***R

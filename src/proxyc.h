@@ -177,6 +177,53 @@ namespace proxyc{
         return arma::conv_to< std::vector<int> >::from(v);
     }
 
+    // non-zero values become 1 for the boolean methods; NaN stays NaN
+    inline double binarise(const double v) {
+        return (std::isnan(v) || v == 0) ? v : 1.0;
+    }
+
+    // a sparse R matrix as an armadillo matrix with the items to compare as columns; always
+    // a copy, as the sparse formats of R and armadillo differ
+    inline arma::sp_mat to_sparse(SEXP s, const int margin, const bool boolean) {
+        arma::sp_mat mt = Rcpp::as<arma::sp_mat>(s); // copy
+        if (margin == 1)
+            mt = mt.t(); // transposed copy replaces the first one
+        if (boolean)
+            mt.transform(binarise); // in place
+        return mt;
+    }
+
+    // a dense R matrix as an armadillo matrix with the items to compare as columns.
+    // With margin = 2 and no binarisation, the matrix is a view on R's memory (no copy),
+    // so it must not be modified; otherwise it is a copy
+    inline arma::mat to_dense(SEXP s, const int margin, const bool boolean) {
+        if (TYPEOF(s) != REALSXP)
+            throw std::invalid_argument("dense input must be a double matrix");
+        if (margin == 2 && !boolean)
+            return arma::mat(REAL(s), Rf_nrows(s), Rf_ncols(s), false, true); // view
+        const arma::mat x(REAL(s), Rf_nrows(s), Rf_ncols(s), false, true); // view, read only
+        arma::mat mt;
+        if (margin == 1) {
+            mt = x.t(); // copy
+        } else {
+            mt = x; // copy
+        }
+        if (boolean)
+            mt.transform(binarise); // in place, on the copy
+        return mt;
+    }
+
+    // free a matrix that is no longer needed
+    inline void free_if_owned(arma::sp_mat& mt) {
+        mt.reset();
+    }
+
+    // a dense matrix that is a view on R's memory (see to_dense()) is left alone
+    inline void free_if_owned(arma::mat& mt) {
+        if (mt.mem_state == 0)
+            mt.reset();
+    }
+
 }
 
 #endif

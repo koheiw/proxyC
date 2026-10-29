@@ -39,7 +39,7 @@ dist(
 }
 \arguments{
 \item{x}{a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object. Only sparse matrices are
-covered to the \link[Matrix:CsparseMatrix-class]{Matrix::CsparseMatrix} internally.}
+converted to the \link[Matrix:CsparseMatrix-class]{Matrix::CsparseMatrix} internally.}
 
 \item{y}{if a \link[base:matrix]{base::matrix} or \link[Matrix:Matrix]{Matrix::Matrix} object is provided, proximity
 between documents or features in \code{x} and \code{y} is computed.}

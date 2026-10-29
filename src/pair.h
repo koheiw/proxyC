@@ -3,11 +3,11 @@
 using namespace proxyc;
 using namespace arma;
 
-inline double simil_cosine(colvec& col_i, colvec& col_j) {
+inline double simil_cosine(const colvec& col_i, const colvec& col_j) {
     return accu(sum(col_i % col_j) / sqrt(sum(square(col_i)) * sum(square(col_j))));
 }
 
-inline double simil_correlation(colvec& col_i, colvec& col_j) {
+inline double simil_correlation(const colvec& col_i, const colvec& col_j) {
     double sd_i = stddev(col_i, 1);
     double sd_j = stddev(col_j, 1);
     double v1 = accu(col_i.t() * col_j);
@@ -20,13 +20,13 @@ inline double simil_correlation(colvec& col_i, colvec& col_j) {
 
 }
 
-inline double simil_ejaccard(colvec& col_i, colvec& col_j, double weight = 1) {
+inline double simil_ejaccard(const colvec& col_i, const colvec& col_j, double weight = 1) {
     double e = accu(col_i % col_j);
     if (e == 0) return 0;
     return e / (accu(pow(col_i, weight)) + accu(pow(col_j, weight)) - e);
 }
 
-inline double simil_fjaccard(colvec& col_i, colvec& col_j) {
+inline double simil_fjaccard(const colvec& col_i, const colvec& col_j) {
     if (any(col_i < 0) || any(1.0 < col_i) ||
         any(col_j < 0) || any(1.0 < col_j))
         return std::numeric_limits<double>::quiet_NaN();
@@ -38,42 +38,42 @@ inline double simil_fjaccard(colvec& col_i, colvec& col_j) {
     return accu(min) / accu(max);
 }
 
-inline double simil_dice(colvec& col_i, colvec& col_j) {
+inline double simil_dice(const colvec& col_i, const colvec& col_j) {
     double e = accu(col_i % col_j);
     if (e == 0) return 0;
     return (2 * e) / (accu(col_i) + accu(col_j));
 }
 
-inline double simil_edice(colvec& col_i, colvec& col_j) {
+inline double simil_edice(const colvec& col_i, const colvec& col_j) {
     double e = accu(col_i % col_j);
     if (e == 0) return 0;
     return (2 * e) / (accu(square(col_i)) + accu(square(col_j)));
 }
 
-inline double simil_hamann(colvec& col_i, colvec& col_j) {
+inline double simil_hamann(const colvec& col_i, const colvec& col_j) {
     double e = accu(col_i == col_j);
     double u = col_i.n_rows - e;
     return (e - u) / (e + u);
 }
 
-inline double simil_faith(colvec& col_i, colvec& col_j) {
+inline double simil_faith(const colvec& col_i, const colvec& col_j) {
     double t = accu(col_i == 1 && col_j == 1);
     double f = accu(col_i == 0 && col_j == 0);
     double n = col_i.n_rows;
     return (t + (f / 2)) / n;
 }
 
-inline double simil_matching(colvec& col_i, colvec& col_j) {
+inline double simil_matching(const colvec& col_i, const colvec& col_j) {
     uvec m = col_i == col_j;
     double n = m.n_rows;
     return accu(m) / n;
 }
 
-inline double dist_euclidean(colvec& col_i, colvec& col_j) {
+inline double dist_euclidean(const colvec& col_i, const colvec& col_j) {
     return sqrt(accu(square(col_i - col_j)));
 }
 
-inline double dist_chisquare(colvec& col_i, colvec& col_j, double smooth) {
+inline double dist_chisquare(const colvec& col_i, const colvec& col_j, double smooth) {
     if (smooth == 0 && (any(col_i == 0) || any(col_j == 0)))
         return std::numeric_limits<double>::quiet_NaN();
     mat m = join_rows(col_i, col_j) + smooth;
@@ -83,7 +83,7 @@ inline double dist_chisquare(colvec& col_i, colvec& col_j, double smooth) {
     return accu(d);
 }
 
-inline double dist_kullback(colvec& col_i, colvec& col_j, double smooth) {
+inline double dist_kullback(const colvec& col_i, const colvec& col_j, double smooth) {
     if (smooth == 0 && (any(col_i == 0) || any(col_j == 0)))
         return std::numeric_limits<double>::quiet_NaN();
     double s1 = accu(col_i) + smooth * col_i.n_rows;
@@ -93,7 +93,7 @@ inline double dist_kullback(colvec& col_i, colvec& col_j, double smooth) {
     return accu(trans(p2) * log(p2 / p1));
 }
 
-inline double dist_jeffreys(colvec& col_i, colvec& col_j, double smooth) {
+inline double dist_jeffreys(const colvec& col_i, const colvec& col_j, double smooth) {
     if (smooth == 0 && (any(col_i == 0) || any(col_j == 0)))
         return std::numeric_limits<double>::quiet_NaN();
     double s1 = accu(col_i) + smooth * col_i.n_rows;
@@ -103,7 +103,7 @@ inline double dist_jeffreys(colvec& col_i, colvec& col_j, double smooth) {
     return accu(trans(p2 - p1) * log(p2 / p1));
 }
 
-inline double dist_jensen(colvec& col_i, colvec& col_j, double smooth) {
+inline double dist_jensen(const colvec& col_i, const colvec& col_j, double smooth) {
     if (smooth == 0 && (any(col_i == 0) || any(col_j == 0)))
         return std::numeric_limits<double>::quiet_NaN();
     double s1 = accu(col_i) + smooth * col_i.n_rows;
@@ -114,27 +114,38 @@ inline double dist_jensen(colvec& col_i, colvec& col_j, double smooth) {
     return (accu(trans(p1) * log(p1 / m)) + accu(trans(p2) * log(p2 / m))) / 2;
 }
 
-inline double dist_manhattan(colvec& col_i, colvec& col_j) {
+inline double dist_manhattan(const colvec& col_i, const colvec& col_j) {
     return accu(abs(col_i - col_j));
 }
 
-inline double dist_hamming(colvec& col_i, colvec& col_j) {
+inline double dist_hamming(const colvec& col_i, const colvec& col_j) {
     return accu(col_i != col_j);
 }
 
-inline double dist_maximum(colvec& col_i, colvec& col_j) {
+inline double dist_maximum(const colvec& col_i, const colvec& col_j) {
     return accu(max(abs(col_i - col_j)));
 }
 
-inline double dist_canberra(colvec& col_i, colvec& col_j) {
+inline double dist_canberra(const colvec& col_i, const colvec& col_j) {
     colvec b = abs(col_i - col_j);
     colvec m = abs(col_i) + abs(col_j);
     uvec nz = find(m > 0);
     return accu(b(nz) / m(nz));
 }
 
-inline double dist_minkowski(colvec& col_i, colvec& col_j, double p = 1) {
+inline double dist_minkowski(const colvec& col_i, const colvec& col_j, double p = 1) {
     return pow(accu(pow(abs(col_i - col_j), p)), 1 / p);
+}
+
+// a column as a dense vector. For a dense matrix the vector refers to the matrix's memory
+// instead of copying it (unsafe_col() is safe here, as the matrix outlives the vector and
+// isn't modified); a sparse column has to be copied
+inline colvec column(const mat& m, const uword j) {
+    return m.unsafe_col(j);
+}
+
+inline colvec column(const sp_mat& m, const uword j) {
+    return m.col(j).as_dense();
 }
 
 template <typename M1, typename M2>
@@ -147,14 +158,11 @@ void calc_pair(const uword i,
                 const bool drop0, const bool use_nan, const bool use_mask,
                 const int digits) {
 
-    uword nrow = mt1.n_rows;
     uword ncol = mt1.n_cols;
 
-    colvec col_i(nrow);
-    colvec col_j(nrow);
     double simil = 0;
     std::vector<double> simils;
-    col_i = mt2.col(i);
+    const colvec col_i = column(mt2, i);
     if (diag) {
         simils.reserve(1);
     } else {
@@ -162,7 +170,7 @@ void calc_pair(const uword i,
     }
     colvec mask_i;
     if (use_mask)
-        mask_i = colvec(mask.col(i));
+        mask_i = mask.col(i).as_dense();
     for (uword j = 0; j < ncol; j++) {
         if (use_mask && mask_i.at(j) == 0) {
             simils.push_back(std::numeric_limits<double>::quiet_NaN());
@@ -170,7 +178,7 @@ void calc_pair(const uword i,
         };
         if (diag && j != i) continue;
         if (symm && j > i) continue;
-        col_j = mt1.col(j);
+        const colvec col_j = column(mt1, j);
         switch (method) {
         case 1:
             simil = simil_cosine(col_i, col_j);
@@ -250,8 +258,8 @@ void calc_pair(const uword i,
 }
 
 template <typename M1, typename M2>
-S4 iter_pair(M1& mt1,
-                   M2& mt2,
+S4 iter_pair(const M1& mt1,
+                   const M2& mt2,
                    const int method,
                    arma::sp_mat& mask,
                    unsigned int rank,

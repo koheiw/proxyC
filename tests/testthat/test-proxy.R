@@ -185,6 +185,63 @@ test_that("functions works with different matrices", {
     expect_silent(colZeros(forceSymmetric(emat)))
 })
 
+test_that("convertMatrix is working", {
+
+    smat <- rsparsematrix(6, 4, 0.5)
+    dimnames(smat) <- list(letters[1:6], LETTERS[1:4])
+    dmat <- as.matrix(smat)
+    ssym <- forceSymmetric(rsparsematrix(5, 5, 0.5))
+    dsym <- as.matrix(ssym)
+    sdiag <- Diagonal(4, 1:4)
+
+    # sparse input becomes a dgCMatrix
+    expect_identical(proxyC:::convertMatrix(smat), smat)
+    expect_identical(proxyC:::convertMatrix(as(smat, "TsparseMatrix")), smat)
+    expect_identical(proxyC:::convertMatrix(as(smat, "RsparseMatrix")), smat)
+    expect_identical(proxyC:::convertMatrix(smat != 0), as(smat != 0, "dMatrix"))
+    expect_s4_class(proxyC:::convertMatrix(ssym), "dgCMatrix")
+    expect_identical(as.matrix(proxyC:::convertMatrix(ssym)), dsym)
+    expect_s4_class(proxyC:::convertMatrix(sdiag), "dgCMatrix")
+    expect_identical(as.matrix(proxyC:::convertMatrix(sdiag)), as.matrix(sdiag))
+
+    # dense input becomes a base double matrix
+    expect_identical(proxyC:::convertMatrix(dmat), dmat)
+    expect_identical(proxyC:::convertMatrix(matrix(1:12, 3, 4)), matrix(as.numeric(1:12), 3, 4))
+    expect_identical(proxyC:::convertMatrix(dmat != 0), (dmat != 0) * 1)
+    expect_identical(proxyC:::convertMatrix(Matrix(dmat, sparse = FALSE)), dmat)
+    expect_identical(proxyC:::convertMatrix(forceSymmetric(Matrix(dsym, sparse = FALSE))), dsym)
+    expect_identical(proxyC:::convertMatrix(Matrix(dmat != 0, sparse = FALSE)), (dmat != 0) * 1)
+
+    # vectors become single-column matrices
+    expect_identical(proxyC:::convertMatrix(c(1, 0, 2.5)), matrix(c(1, 0, 2.5), 3, 1))
+    expect_identical(proxyC:::convertMatrix(1:3), matrix(as.numeric(1:3), 3, 1))
+    expect_identical(proxyC:::convertMatrix(c(TRUE, FALSE)), matrix(c(1, 0), 2, 1))
+
+    # empty input keeps its shape
+    expect_identical(proxyC:::convertMatrix(matrix(numeric(0), 0, 0)), matrix(numeric(0), 0, 0))
+    expect_identical(proxyC:::convertMatrix(matrix(numeric(0), 3, 0)), matrix(numeric(0), 3, 0))
+    expect_identical(proxyC:::convertMatrix(numeric(0)), matrix(numeric(0), 0, 1))
+    expect_s4_class(proxyC:::convertMatrix(rsparsematrix(0, 0, 0)), "dgCMatrix")
+    expect_identical(dim(proxyC:::convertMatrix(rsparsematrix(0, 0, 0))), c(0L, 0L))
+
+    # NA is kept
+    dmat_na <- dmat
+    dmat_na[1, 1] <- NA
+    smat_na <- smat
+    smat_na[1, 1] <- NA
+    expect_identical(proxyC:::convertMatrix(dmat_na), dmat_na)
+    expect_identical(as.matrix(proxyC:::convertMatrix(smat_na)), as.matrix(smat_na))
+    expect_identical(proxyC:::convertMatrix(NA), matrix(NA_real_, 1, 1))
+
+    # anything else is an error
+    expect_error(proxyC:::convertMatrix(NULL))
+    expect_error(proxyC:::convertMatrix(as.data.frame(dmat)))
+    expect_error(proxyC:::convertMatrix(matrix(letters[1:4], 2, 2)),
+                 "x must be a numeric or logical matrix")
+    expect_error(proxyC:::convertMatrix(letters[1:4]),
+                 "x must be a numeric or logical matrix")
+})
+
 test_that("options are working", {
 
     smat <- rsparsematrix(50, 50, 0.5)
