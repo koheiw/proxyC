@@ -66,6 +66,20 @@ test_that("colMax, rowMax, colMin, rowMin are working", {
     expect_equal(rowMins(mt), apply(mt, 1, min))
     expect_equal(names(rowMins(mt)), rownames(mt))
 
+    # disable use_nan
+    expect_all_false(
+        is.nan(colMaxs(mt, use_nan = FALSE))
+    )
+    expect_all_false(
+        is.nan(rowMaxs(mt, use_nan = FALSE))
+    )
+    expect_all_false(
+        is.nan(colMins(mt, use_nan = FALSE))
+    )
+    expect_all_false(
+        is.nan(rowMins(mt, use_nan = FALSE))
+    )
+
     # enable use_nan
     expect_identical(
         is.nan(colMaxs(mt, use_nan = TRUE)),
