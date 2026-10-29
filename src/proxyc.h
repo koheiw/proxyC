@@ -158,7 +158,7 @@ namespace proxyc{
 
     template <typename T>
     inline std::vector<double> to_vector(const arma::SpBase<double, T>& expr) {
-        return arma::conv_to<std::vector<double>>::from(arma::mat(arma::sp_mat(expr.get_ref())));
+        return arma::conv_to<std::vector<double>>::from(arma::sp_mat(expr.get_ref()).as_dense());
     }
 
     inline std::vector<double> to_vector(const arma::rowvec& v) {
