@@ -177,6 +177,11 @@ namespace proxyc{
         return arma::conv_to< std::vector<int> >::from(v);
     }
 
+    inline arma::mat to_dense(const SEXP s) {
+        NumericMatrix x_ = Rcpp::as<NumericMatrix>(s);
+        arma::mat x(x_.begin(), x_.nrow(), x_.ncol(), false, true);
+        return x;
+    }
 }
 
 #endif
