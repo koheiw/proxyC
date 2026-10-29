@@ -72,7 +72,8 @@ dist(
   a pattern matrix created using
   [`mask()`](https://koheiw.github.io/proxyC/reference/mask.md) for
   masked similarity/distance computation. The shape of the matrix must
-  be the same as the resulting matrix.
+  be the same as the resulting matrix. Cannot be used when
+  `diag = TRUE`.
 
 - min_simil:
 

@@ -46,3 +46,7 @@ tcrossprod(x, y = NULL, min_prod = NULL, sparse = TRUE, digits = 14)
   determines rounding of small values towards zero. Use primarily to
   correct floating point errors. Rounding is performed in C++ in a
   similar way as [base::zapsmall](https://rdrr.io/r/base/zapsmall.html).
+
+## Value
+
+a [Matrix::Matrix](https://rdrr.io/pkg/Matrix/man/Matrix.html) object
