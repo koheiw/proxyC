@@ -25,6 +25,9 @@ between documents or features in \code{x} and \code{y} is computed.}
 to correct floating point errors. Rounding is performed in C++ in a similar
 way as \link[base:zapsmall]{base::zapsmall}.}
 }
+\value{
+a \link[Matrix:Matrix]{Matrix::Matrix} object
+}
 \description{
 Compute the (transposed) cross-product of large sparse matrices using the same
 infrastructure as \code{\link[=simil]{simil()}} and \code{\link[=dist]{dist()}}.
