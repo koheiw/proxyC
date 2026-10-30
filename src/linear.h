@@ -1,5 +1,6 @@
 #include "proxyc.h"
-#include "dev.h"
+#include "utility.h"
+//#include "dev.h"
 using namespace proxyc;
 using namespace arma;
 
@@ -92,10 +93,10 @@ S4 iter_linear(M1& mt1,
         square2 = rowvec(sqrt(mat(sum(mt2 % mt2, 0))));
         break;
     case 3: // correlation
-        square1 = stddev(mt1, 1);
-        center1 = mean(mt1);
-        square2 = stddev(mt2, 1);
-        center2 = mean(mt2);
+        square1 = proxyc::stddev(mt1, 1);
+        center1 = proxyc::mean(mt1);
+        square2 = proxyc::stddev(mt2, 1);
+        center2 = proxyc::mean(mt2);
         break;
     case 4: // euclidean distance
         square1 = rowvec(mat(sum(mt1 % mt1, 0)));

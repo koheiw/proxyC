@@ -66,6 +66,20 @@ test_that("colMax, rowMax, colMin, rowMin are working", {
     expect_equal(rowMins(mt), apply(mt, 1, min))
     expect_equal(names(rowMins(mt)), rownames(mt))
 
+    # disable use_nan
+    expect_all_false(
+        is.nan(colMaxs(mt, use_nan = FALSE))
+    )
+    expect_all_false(
+        is.nan(rowMaxs(mt, use_nan = FALSE))
+    )
+    expect_all_false(
+        is.nan(colMins(mt, use_nan = FALSE))
+    )
+    expect_all_false(
+        is.nan(rowMins(mt, use_nan = FALSE))
+    )
+
     # enable use_nan
     expect_identical(
         is.nan(colMaxs(mt, use_nan = TRUE)),
@@ -338,4 +352,36 @@ test_that("convertMatrix works", {
         proxyC:::convertMatrix(as.matrix(mat0)),
         "matrix"
     )
+})
+
+test_that("functions works with empty matrices", {
+
+    smat <- rsparsematrix(0, 10, 0)
+    dmat <- as.matrix(smat)
+
+    expect_identical(rowSds(smat), numeric())
+    expect_identical(colSds(smat), rep(NaN, 10))
+    expect_identical(rowSds(dmat), numeric())
+    expect_identical(colSds(dmat), rep(NaN, 10))
+
+    expect_identical(rowZeros(smat), integer())
+    expect_identical(colZeros(smat), integer(10))
+    expect_identical(rowZeros(dmat), integer())
+    expect_identical(colZeros(dmat), integer(10))
+
+    expect_identical(rowMins(smat), numeric())
+    expect_identical(colMins(smat), rep(Inf, 10))
+    expect_identical(rowMins(dmat), numeric())
+    expect_identical(colMins(dmat), rep(Inf, 10))
+
+    expect_identical(rowMaxs(smat), numeric())
+    expect_identical(colMaxs(smat), rep(-Inf, 10))
+    expect_identical(rowMaxs(dmat), numeric())
+    expect_identical(colMaxs(dmat), rep(-Inf, 10))
+
+    expect_identical(maxRow(smat), rep(NA_integer_, 10))
+    expect_identical(maxCol(smat), integer())
+    expect_identical(maxRow(dmat), rep(NA_integer_, 10))
+    expect_identical(maxCol(dmat), integer())
+
 })

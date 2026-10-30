@@ -94,59 +94,59 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_nz
-IntegerVector cpp_nz(SEXP s);
+IntegerVector cpp_nz(const SEXP s);
 RcppExport SEXP _proxyC_cpp_nz(SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type s(sSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_nz(s));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_sd
-NumericVector cpp_sd(SEXP s, const bool use_nan);
+NumericVector cpp_sd(const SEXP s, const bool use_nan);
 RcppExport SEXP _proxyC_cpp_sd(SEXP sSEXP, SEXP use_nanSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type s(sSEXP);
     Rcpp::traits::input_parameter< const bool >::type use_nan(use_nanSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_sd(s, use_nan));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_max
-NumericVector cpp_max(SEXP s, const bool use_nan);
+NumericVector cpp_max(const SEXP s, const bool use_nan);
 RcppExport SEXP _proxyC_cpp_max(SEXP sSEXP, SEXP use_nanSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type s(sSEXP);
     Rcpp::traits::input_parameter< const bool >::type use_nan(use_nanSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_max(s, use_nan));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_min
-NumericVector cpp_min(SEXP s, const bool use_nan);
+NumericVector cpp_min(const SEXP s, const bool use_nan);
 RcppExport SEXP _proxyC_cpp_min(SEXP sSEXP, SEXP use_nanSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type s(sSEXP);
     Rcpp::traits::input_parameter< const bool >::type use_nan(use_nanSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_min(s, use_nan));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_maxrow
-IntegerVector cpp_maxrow(SEXP s, const int mode, const bool use_nan);
+IntegerVector cpp_maxrow(const SEXP s, const int mode, const bool use_nan);
 RcppExport SEXP _proxyC_cpp_maxrow(SEXP sSEXP, SEXP modeSEXP, SEXP use_nanSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type s(sSEXP);
     Rcpp::traits::input_parameter< const int >::type mode(modeSEXP);
     Rcpp::traits::input_parameter< const bool >::type use_nan(use_nanSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_maxrow(s, mode, use_nan));

@@ -254,4 +254,64 @@ test_that("input checks are working", {
         proxyC:::proxy(mat_test, min_proxy = c(-1, 0)),
         "min_proxy must a single numeric value"
     )
+    expect_error(
+        proxyC:::proxy(mat_test, rank = c(1, 2)),
+        "rank must a single integer value"
+    )
+})
+
+
+test_that("works empty matrices", {
+
+    smat <- rsparsematrix(0, 10, 0)
+    dmat <- as.matrix(smat)
+
+    #method <- c("cosine", "correlation", "euclidean", "dice")
+    method <- eval(formals(proxyC:::proxy)$method)
+    for (m in method) {
+
+        # sparse
+        expect_equal(
+            as.matrix(proxyC:::proxy(smat, method = m, margin = 1,
+                                     use_nan = FALSE)),
+            matrix(0, nrow = 0, ncol = 0)
+        )
+        expect_equal(
+            as.matrix(proxyC:::proxy(smat, method = m, margin = 2,
+                                     use_nan = FALSE)),
+            matrix(0, nrow = 10, ncol = 10)
+        )
+        expect_equal(
+            as.matrix(proxyC:::proxy(smat, method = m, margin = 1, diag = TRUE,
+                                     use_nan = FALSE)),
+            matrix(0, nrow = 0, ncol = 0)
+        )
+        expect_equal(
+            diag(proxyC:::proxy(smat, method = m, margin = 2, diag = TRUE,
+                                use_nan = FALSE)),
+            rep(0, 10)
+        )
+
+        # dense
+        expect_equal(
+            as.matrix(proxyC:::proxy(dmat, method = m, margin = 1,
+                                     use_nan = FALSE)),
+            matrix(0, nrow = 0, ncol = 0)
+        )
+        expect_equal(
+            as.matrix(proxyC:::proxy(dmat, method = m, margin = 2,
+                                     use_nan = FALSE)),
+            matrix(0, nrow = 10, ncol = 10)
+        )
+        expect_equal(
+            as.matrix(proxyC:::proxy(dmat, method = m, margin = 1, diag = TRUE,
+                                     use_nan = FALSE)),
+            matrix(0, nrow = 0, ncol = 0)
+        )
+        expect_equal(
+            diag(proxyC:::proxy(dmat, method = m, margin = 2, diag = TRUE,
+                                use_nan = FALSE)),
+            rep(0, 10)
+        )
+    }
 })
