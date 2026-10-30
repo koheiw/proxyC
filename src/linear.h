@@ -58,6 +58,7 @@ void calc_linear(const uword i,
 
 template <typename M1, typename M2>
 S4 iter_linear(M1& mt1,
+                   const bool free_mt1,
                    const M2& mt2,
                    const int method,
                    arma::sp_mat& mask,
@@ -123,7 +124,8 @@ S4 iter_linear(M1& mt1,
     Triplets simil_tri;
     // only the transpose is used from here on
     M1 mt1t = trans(mt1);
-    free_if_owned(mt1);
+    if (free_mt1)
+        mt1.reset(); // not for a view on R's memory (see to_dense())
     std::size_t I = ncol2;
 #if PROXYC_USE_TBB
     tbb::task_arena arena(thread);

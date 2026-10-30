@@ -21,25 +21,28 @@ S4 cpp_linear(SEXP s1,
               const int margin = 2,
               const bool boolean = false) {
 
+    // note: mt1 is freed inside iter_linear() once it has been transposed,
+    // unless it is a view on R's memory (sparse input is always a copy)
+    const bool free_mt1 = Rf_isS4(s1) || !is_view(margin, boolean);
     if (Rf_isS4(s1) && Rf_isS4(s2)) {
         arma::sp_mat mt1 = to_sparse(s1, margin, boolean);
         const arma::sp_mat mt2 = to_sparse(s2, margin, boolean);
-        return iter_linear(mt1, mt2, method, mask, rank, limit, symm, drop0,
+        return iter_linear(mt1, free_mt1, mt2, method, mask, rank, limit, symm, drop0,
                            use_nan, use_mask, sparse, digits, thread);
     } else if (Rf_isS4(s1) && !Rf_isS4(s2)) {
         arma::sp_mat mt1 = to_sparse(s1, margin, boolean);
         const arma::mat mt2 = to_dense(s2, margin, boolean);
-        return iter_linear(mt1, mt2, method, mask, rank, limit, symm, drop0,
+        return iter_linear(mt1, free_mt1, mt2, method, mask, rank, limit, symm, drop0,
                            use_nan, use_mask, sparse, digits, thread);
     } else if (!Rf_isS4(s1) && Rf_isS4(s2)) {
         arma::mat mt1 = to_dense(s1, margin, boolean);
         const arma::sp_mat mt2 = to_sparse(s2, margin, boolean);
-        return iter_linear(mt1, mt2, method, mask, rank, limit, symm, drop0,
+        return iter_linear(mt1, free_mt1, mt2, method, mask, rank, limit, symm, drop0,
                            use_nan, use_mask, sparse, digits, thread);
     } else {
         arma::mat mt1 = to_dense(s1, margin, boolean);
         const arma::mat mt2 = to_dense(s2, margin, boolean);
-        return iter_linear(mt1, mt2, method, mask, rank, limit, symm, drop0,
+        return iter_linear(mt1, free_mt1, mt2, method, mask, rank, limit, symm, drop0,
                            use_nan, use_mask, sparse, digits, thread);
     }
 }

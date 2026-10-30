@@ -193,13 +193,18 @@ namespace proxyc{
         return mt;
     }
 
+    // whether to_dense() returns a view on R's memory (true) or a copy (false)
+    inline bool is_view(const int margin, const bool boolean) {
+        return margin == 2 && !boolean;
+    }
+
     // a dense R matrix as an armadillo matrix with the items to compare as columns.
     // With margin = 2 and no binarisation, the matrix is a view on R's memory (no copy),
-    // so it must not be modified; otherwise it is a copy
+    // so it must not be modified or freed; otherwise it is a copy (see is_view())
     inline arma::mat to_dense(SEXP s, const int margin, const bool boolean) {
         if (TYPEOF(s) != REALSXP)
             throw std::invalid_argument("dense input must be a double matrix");
-        if (margin == 2 && !boolean)
+        if (is_view(margin, boolean))
             return arma::mat(REAL(s), Rf_nrows(s), Rf_ncols(s), false, true); // view
         const arma::mat x(REAL(s), Rf_nrows(s), Rf_ncols(s), false, true); // view, read only
         arma::mat mt;
@@ -211,17 +216,6 @@ namespace proxyc{
         if (boolean)
             mt.transform(binarise); // in place, on the copy
         return mt;
-    }
-
-    // free a matrix that is no longer needed
-    inline void free_if_owned(arma::sp_mat& mt) {
-        mt.reset();
-    }
-
-    // a dense matrix that is a view on R's memory (see to_dense()) is left alone
-    inline void free_if_owned(arma::mat& mt) {
-        if (mt.mem_state == 0)
-            mt.reset();
     }
 
 }
