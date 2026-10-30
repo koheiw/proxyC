@@ -20,6 +20,9 @@
   and
   [`rowMins()`](https://koheiw.github.io/proxyC/reference/colMaxs.md) to
   avoid the use of [`apply()`](https://rdrr.io/r/base/apply.html).
+- Fix [`colSds()`](https://koheiw.github.io/proxyC/reference/colSds.md)
+  and [`rowSds()`](https://koheiw.github.io/proxyC/reference/colSds.md)
+  to return `NaN` for empty matrices.
 
 ## proxyC 0.5.2
 

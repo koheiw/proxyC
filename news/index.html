@@ -45,6 +45,7 @@
 <ul><li>Significantly reduces the computation time and storage when dense matrices are given to <code><a href="../reference/simil.html">simil()</a></code> or <code><a href="../reference/simil.html">dist()</a></code>. They no longer automatically convert dense matrices to sparse matrices.</li>
 <li>Add <code><a href="../reference/maxCol.html">maxCol()</a></code> and <code><a href="../reference/maxCol.html">maxRow()</a></code> to replace <code><a href="https://rdrr.io/r/base/maxCol.html" class="external-link">base::max.col()</a></code> for sparse matrices.</li>
 <li>Add <code><a href="../reference/colMaxs.html">colMaxs()</a></code>, <code><a href="../reference/colMaxs.html">rowMaxs()</a></code>, <code><a href="../reference/colMaxs.html">colMins()</a></code> and <code><a href="../reference/colMaxs.html">rowMins()</a></code> to avoid the use of <code><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply()</a></code>.</li>
+<li>Fix <code><a href="../reference/colSds.html">colSds()</a></code> and <code><a href="../reference/colSds.html">rowSds()</a></code> to return <code>NaN</code> for empty matrices.</li>
 </ul></div>
 </div>
     <div class="section level2">
