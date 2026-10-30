@@ -116,7 +116,7 @@ Flooring by `min_simil` makes the resulting object much smaller.
 proxyC::simil(sm10k, margin = 2, method = "cosine") %>% 
   object.size() %>% 
   print(units = "MB")
-## 762.7 Mb
+## 763 Mb
 proxyC::simil(sm10k, margin = 2, method = "cosine", min_simil = 0.9) %>% 
   object.size() %>% 
   print(units = "MB")
