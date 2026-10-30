@@ -9,7 +9,7 @@ Version](https://www.r-pkg.org/badges/version/proxyC)](https://CRAN.R-project.or
 [![Total
 Downloads](https://cranlogs.r-pkg.org/badges/grand-total/proxyC?color=orange)](https://CRAN.R-project.org/package=proxyC)
 [![R build
-status](https://github.com/proxyC/proxyC/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/proxyC/proxyC/actions/workflows/check-standard.yaml)
+status](https://github.com/koheiw/proxyC/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/koheiw/proxyC/actions/workflows/check-standard.yaml)
 [![codecov](https://codecov.io/gh/koheiw/proxyC/branch/master/graph/badge.svg)](https://app.codecov.io/gh/koheiw/proxyC)
 <!-- badges: end -->
 
@@ -122,7 +122,7 @@ Flooring by `min_simil` makes the resulting object much smaller.
 proxyC::simil(sm10k, margin = 2, method = "cosine") %>% 
   object.size() %>% 
   print(units = "MB")
-## 762.7 Mb
+## 763 Mb
 proxyC::simil(sm10k, margin = 2, method = "cosine", min_simil = 0.9) %>% 
   object.size() %>% 
   print(units = "MB")
