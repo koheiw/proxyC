@@ -9,7 +9,7 @@ Version](https://www.r-pkg.org/badges/version/proxyC)](https://CRAN.R-project.or
 [![Total
 Downloads](https://cranlogs.r-pkg.org/badges/grand-total/proxyC?color=orange)](https://CRAN.R-project.org/package=proxyC)
 [![R build
-status](https://github.com/koheiw/proxyC/workflows/R-CMD-check/badge.svg)](https://github.com/koheiw/proxyC/actions)
+status](https://github.com/proxyC/proxyC/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/proxyC/proxyC/actions/workflows/check-standard.yaml)
 [![codecov](https://codecov.io/gh/koheiw/proxyC/branch/master/graph/badge.svg)](https://app.codecov.io/gh/koheiw/proxyC)
 <!-- badges: end -->
 
@@ -17,7 +17,10 @@ status](https://github.com/koheiw/proxyC/workflows/R-CMD-check/badge.svg)](https
 efficiently in C++. It is optimized for large sparse matrices using the
 Armadillo and Intel TBB libraries. Among several built-in
 similarity/distance measures, computation of correlation, cosine
-similarity and Euclidean distance is particularly fast.
+similarity and Euclidean distance is particularly fast. The functions
+also support both dense (`base::matrix`) and sparse
+(`Matrix::sparseMatrix()`) matrix formats, minimizing the execution time
+and memory usage.
 
 This code was originally written for
 [**quanteda**](https://github.com/quanteda/quanteda) to compute
@@ -74,17 +77,28 @@ With sparse matrices, **proxyC** is roughly 10 to 100 times faster than
 **proxy**.
 
 ``` r
+bm0 <- microbenchmark(
+    "proxy  1k dense" = proxy::simil(dm1k, margin = 2, method = "cosine"),
+    "proxyC 1k dense" = proxyC::simil(dm1k, margin = 2, method = "cosine"),
+    "proxyC 1k sparse" = proxyC::simil(sm1k, margin = 2, method = "cosine"),
+    times = 10
+)
+autoplot(bm0)
+```
+
+![](man/figures/unnamed-chunk-5-1.png)<!-- -->
+
+``` r
 bm1 <- microbenchmark(
-    "proxy 1k" = proxy::simil(dm1k, method = "cosine"),
-    "proxyC 1k" = proxyC::simil(sm1k, margin = 2, method = "cosine"),
-    "proxy 10k" = proxy::simil(dm10k, method = "cosine"),
-    "proxyC 10k" = proxyC::simil(sm10k, margin = 2, method = "cosine"),
+    "proxy  10k dense" = proxy::simil(dm10k, margin = 2, method = "cosine"),
+    "proxyC 10k dense" = proxyC::simil(dm10k, margin = 2, method = "cosine"),
+    "proxyC 10k sparse" = proxyC::simil(sm10k, margin = 2, method = "cosine"),
     times = 10
 )
 autoplot(bm1)
 ```
 
-![](man/figures/unnamed-chunk-5-1.png)<!-- -->
+![](man/figures/unnamed-chunk-6-1.png)<!-- -->
 
 ## Cosine similarity greater than 0.9
 
@@ -100,7 +114,7 @@ bm2 <- microbenchmark(
 autoplot(bm2)
 ```
 
-![](man/figures/unnamed-chunk-6-1.png)<!-- -->
+![](man/figures/unnamed-chunk-7-1.png)<!-- -->
 
 Flooring by `min_simil` makes the resulting object much smaller.
 
@@ -108,7 +122,7 @@ Flooring by `min_simil` makes the resulting object much smaller.
 proxyC::simil(sm10k, margin = 2, method = "cosine") %>% 
   object.size() %>% 
   print(units = "MB")
-## 763 Mb
+## 762.7 Mb
 proxyC::simil(sm10k, margin = 2, method = "cosine", min_simil = 0.9) %>% 
   object.size() %>% 
   print(units = "MB")
@@ -128,4 +142,4 @@ bm3 <- microbenchmark(
 autoplot(bm3)
 ```
 
-![](man/figures/unnamed-chunk-8-1.png)<!-- -->
+![](man/figures/unnamed-chunk-9-1.png)<!-- -->

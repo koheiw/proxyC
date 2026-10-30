@@ -21,11 +21,11 @@ knitr::opts_chunk$set(
 [![CRAN Version](https://www.r-pkg.org/badges/version/proxyC)](https://CRAN.R-project.org/package=proxyC)
 [![Downloads](https://cranlogs.r-pkg.org/badges/proxyC)](https://CRAN.R-project.org/package=proxyC)
 [![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/proxyC?color=orange)](https://CRAN.R-project.org/package=proxyC)
-[![R build status](https://github.com/koheiw/proxyC/workflows/R-CMD-check/badge.svg)](https://github.com/koheiw/proxyC/actions)
+[![R build status](https://github.com/proxyC/proxyC/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/proxyC/proxyC/actions/workflows/check-standard.yaml)
 [![codecov](https://codecov.io/gh/koheiw/proxyC/branch/master/graph/badge.svg)](https://app.codecov.io/gh/koheiw/proxyC)
 <!-- badges: end -->
 
-**proxyC** computes proximity between rows or columns of large matrices efficiently in C++. It is optimized for large sparse matrices using the Armadillo and Intel TBB libraries. Among several built-in similarity/distance measures, computation of correlation, cosine similarity and Euclidean distance is particularly fast.
+**proxyC** computes proximity between rows or columns of large matrices efficiently in C++. It is optimized for large sparse matrices using the Armadillo and Intel TBB libraries. Among several built-in similarity/distance measures, computation of correlation, cosine similarity and Euclidean distance is particularly fast. The functions also support both dense (`base::matrix`) and sparse (`Matrix::sparseMatrix()`) matrix formats, minimizing the execution time and memory usage.
 
 This code was originally written for [**quanteda**](https://github.com/quanteda/quanteda) to compute similarity/distance between documents or features in large corpora, but separated as a stand-alone package to make it available for broader data scientific purposes.
 
@@ -67,14 +67,23 @@ dm10k <- as.matrix(sm10k)
 
 ## Cosine similarity between columns
 
-With sparse matrices, **proxyC** is roughly 10 to 100 times faster than **proxy**. 
+With sparse matrices, **proxyC** is roughly 10 to 100 times faster than **proxy**.
+
+```{r, cahce=TRUE}
+bm0 <- microbenchmark(
+    "proxy  1k dense" = proxy::simil(dm1k, margin = 2, method = "cosine"),
+    "proxyC 1k dense" = proxyC::simil(dm1k, margin = 2, method = "cosine"),
+    "proxyC 1k sparse" = proxyC::simil(sm1k, margin = 2, method = "cosine"),
+    times = 10
+)
+autoplot(bm0)
+```
 
 ```{r, cahce=TRUE}
 bm1 <- microbenchmark(
-    "proxy 1k" = proxy::simil(dm1k, method = "cosine"),
-    "proxyC 1k" = proxyC::simil(sm1k, margin = 2, method = "cosine"),
-    "proxy 10k" = proxy::simil(dm10k, method = "cosine"),
-    "proxyC 10k" = proxyC::simil(sm10k, margin = 2, method = "cosine"),
+    "proxy  10k dense" = proxy::simil(dm10k, margin = 2, method = "cosine"),
+    "proxyC 10k dense" = proxyC::simil(dm10k, margin = 2, method = "cosine"),
+    "proxyC 10k sparse" = proxyC::simil(sm10k, margin = 2, method = "cosine"),
     times = 10
 )
 autoplot(bm1)
