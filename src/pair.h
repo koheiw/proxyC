@@ -164,6 +164,8 @@ void calc_pair(const uword i,
     if (use_mask)
         mask_i = colvec(mask.col(i));
     for (uword j = 0; j < ncol; j++) {
+
+        // skip unmased
         if (use_mask && mask_i.at(j) == 0) {
             simils.push_back(std::numeric_limits<double>::quiet_NaN());
             continue;
@@ -171,6 +173,13 @@ void calc_pair(const uword i,
         if (diag && j != i) continue;
         if (symm && j > i) continue;
         col_j = mt1.col(j);
+
+        // skip zero-length
+        if (col_j.n_rows == 0) {
+            if (use_nan)
+                simils.push_back(std::numeric_limits<double>::quiet_NaN());
+            continue;
+        }
         switch (method) {
         case 1:
             simil = simil_cosine(col_i, col_j);
