@@ -58,7 +58,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p><strong>proxyC</strong> computes proximity between rows or columns of large matrices efficiently in C++. It is optimized for large sparse matrices using the Armadillo and Intel TBB libraries. Among several built-in similarity/distance measures, computation of correlation, cosine similarity and Euclidean distance is particularly fast.</p>
+<p><strong>proxyC</strong> computes proximity between rows or columns of large matrices efficiently in C++. It is optimized for large sparse matrices using the Armadillo and Intel TBB libraries. Among several built-in similarity/distance measures, computation of correlation, cosine similarity and Euclidean distance is particularly fast. The functions also support both dense (<code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">base::matrix</a></code>) and sparse (<code><a href="https://rdrr.io/pkg/Matrix/man/sparseMatrix.html" class="external-link">Matrix::sparseMatrix()</a></code>) matrix formats, minimizing the execution time and memory usage.</p>
 <p>This code was originally written for <a href="https://github.com/quanteda/quanteda" class="external-link"><strong>quanteda</strong></a> to compute similarity/distance between documents or features in large corpora, but separated as a stand-alone package to make it available for broader data scientific purposes.</p>
 <div class="section level2">
 <h2 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
@@ -101,34 +101,42 @@
 </h2>
 <p>With sparse matrices, <strong>proxyC</strong> is roughly 10 to 100 times faster than <strong>proxy</strong>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bm0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span>
+<span>    <span class="st">"proxy  1k dense"</span> <span class="op">=</span> <span class="fu">proxy</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/proxy/man/dist.html" class="external-link">simil</a></span><span class="op">(</span><span class="va">dm1k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span><span class="op">)</span>,</span>
+<span>    <span class="st">"proxyC 1k dense"</span> <span class="op">=</span> <span class="fu">proxyC</span><span class="fu">::</span><span class="fu"><a href="reference/simil.html">simil</a></span><span class="op">(</span><span class="va">dm1k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span><span class="op">)</span>,</span>
+<span>    <span class="st">"proxyC 1k sparse"</span> <span class="op">=</span> <span class="fu">proxyC</span><span class="fu">::</span><span class="fu"><a href="reference/simil.html">simil</a></span><span class="op">(</span><span class="va">sm1k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span><span class="op">)</span>,</span>
+<span>    times <span class="op">=</span> <span class="fl">10</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bm0</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/unnamed-chunk-5-1.png"><!-- --></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span>
-<span>    <span class="st">"proxy 1k"</span> <span class="op">=</span> <span class="fu">proxy</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/proxy/man/dist.html" class="external-link">simil</a></span><span class="op">(</span><span class="va">dm1k</span>, method <span class="op">=</span> <span class="st">"cosine"</span><span class="op">)</span>,</span>
-<span>    <span class="st">"proxyC 1k"</span> <span class="op">=</span> <span class="fu">proxyC</span><span class="fu">::</span><span class="fu"><a href="reference/simil.html">simil</a></span><span class="op">(</span><span class="va">sm1k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span><span class="op">)</span>,</span>
-<span>    <span class="st">"proxy 10k"</span> <span class="op">=</span> <span class="fu">proxy</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/proxy/man/dist.html" class="external-link">simil</a></span><span class="op">(</span><span class="va">dm10k</span>, method <span class="op">=</span> <span class="st">"cosine"</span><span class="op">)</span>,</span>
-<span>    <span class="st">"proxyC 10k"</span> <span class="op">=</span> <span class="fu">proxyC</span><span class="fu">::</span><span class="fu"><a href="reference/simil.html">simil</a></span><span class="op">(</span><span class="va">sm10k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span><span class="op">)</span>,</span>
+<span>    <span class="st">"proxy  10k dense"</span> <span class="op">=</span> <span class="fu">proxy</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/proxy/man/dist.html" class="external-link">simil</a></span><span class="op">(</span><span class="va">dm10k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span><span class="op">)</span>,</span>
+<span>    <span class="st">"proxyC 10k dense"</span> <span class="op">=</span> <span class="fu">proxyC</span><span class="fu">::</span><span class="fu"><a href="reference/simil.html">simil</a></span><span class="op">(</span><span class="va">dm10k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span><span class="op">)</span>,</span>
+<span>    <span class="st">"proxyC 10k sparse"</span> <span class="op">=</span> <span class="fu">proxyC</span><span class="fu">::</span><span class="fu"><a href="reference/simil.html">simil</a></span><span class="op">(</span><span class="va">sm10k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span><span class="op">)</span>,</span>
 <span>    times <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bm1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/unnamed-chunk-5-1.png"><!-- --></p>
+<p><img src="reference/figures/unnamed-chunk-6-1.png"><!-- --></p>
 </div>
 <div class="section level2">
 <h2 id="cosine-similarity-greater-than-09">Cosine similarity greater than 0.9<a class="anchor" aria-label="anchor" href="#cosine-similarity-greater-than-09"></a>
 </h2>
 <p>If <code>min_simil</code> is used, <strong>proxyC</strong> becomes even faster because small similarity scores are floored to zero.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span>
 <span>    <span class="st">"proxyC all"</span> <span class="op">=</span> <span class="fu">proxyC</span><span class="fu">::</span><span class="fu"><a href="reference/simil.html">simil</a></span><span class="op">(</span><span class="va">sm1k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span><span class="op">)</span>,</span>
 <span>    <span class="st">"proxyC min_simil"</span> <span class="op">=</span> <span class="fu">proxyC</span><span class="fu">::</span><span class="fu"><a href="reference/simil.html">simil</a></span><span class="op">(</span><span class="va">sm1k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span>, min_simil <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span>,</span>
 <span>    times <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bm2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/unnamed-chunk-6-1.png"><!-- --></p>
+<p><img src="reference/figures/unnamed-chunk-7-1.png"><!-- --></p>
 <p>Flooring by <code>min_simil</code> makes the resulting object much smaller.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">proxyC</span><span class="fu">::</span><span class="fu"><a href="reference/simil.html">simil</a></span><span class="op">(</span><span class="va">sm10k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"MB"</span><span class="op">)</span></span>
-<span><span class="co">## 763 Mb</span></span>
+<span><span class="co">## 762.7 Mb</span></span>
 <span><span class="fu">proxyC</span><span class="fu">::</span><span class="fu"><a href="reference/simil.html">simil</a></span><span class="op">(</span><span class="va">sm10k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"cosine"</span>, min_simil <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"MB"</span><span class="op">)</span></span>
@@ -138,14 +146,14 @@
 <h2 id="top-10-correlation">Top-10 correlation<a class="anchor" aria-label="anchor" href="#top-10-correlation"></a>
 </h2>
 <p>If <code>rank</code> is used, <strong>proxyC</strong> only returns top-n values.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bm3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span>
 <span>    <span class="st">"proxyC rank"</span> <span class="op">=</span> <span class="fu">proxyC</span><span class="fu">::</span><span class="fu"><a href="reference/simil.html">simil</a></span><span class="op">(</span><span class="va">sm1k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"correlation"</span>, rank <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
 <span>    <span class="st">"proxyC all"</span> <span class="op">=</span> <span class="fu">proxyC</span><span class="fu">::</span><span class="fu"><a href="reference/simil.html">simil</a></span><span class="op">(</span><span class="va">sm1k</span>, margin <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"correlation"</span><span class="op">)</span>,</span>
 <span>    times <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bm3</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/unnamed-chunk-8-1.png"><!-- --></p>
+<p><img src="reference/figures/unnamed-chunk-9-1.png"><!-- --></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -186,7 +194,7 @@
 <li><a href="https://CRAN.R-project.org/package=proxyC" class="external-link"><img src="https://www.r-pkg.org/badges/version/proxyC" alt="CRAN Version"></a></li>
 <li><a href="https://CRAN.R-project.org/package=proxyC" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/proxyC" alt="Downloads"></a></li>
 <li><a href="https://CRAN.R-project.org/package=proxyC" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/proxyC?color=orange" alt="Total Downloads"></a></li>
-<li><a href="https://github.com/koheiw/proxyC/actions" class="external-link"><img src="https://github.com/koheiw/proxyC/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://github.com/proxyC/proxyC/actions/workflows/check-standard.yaml" class="external-link"><img src="https://github.com/proxyC/proxyC/actions/workflows/check-standard.yaml/badge.svg" alt="R build status"></a></li>
 <li><a href="https://app.codecov.io/gh/koheiw/proxyC" class="external-link"><img src="https://codecov.io/gh/koheiw/proxyC/branch/master/graph/badge.svg" alt="codecov"></a></li>
 </ul>
 </div>
